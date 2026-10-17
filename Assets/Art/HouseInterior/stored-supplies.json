@@ -1,0 +1,294 @@
+{
+  "moved_pickups": 15,
+  "items": [
+    {
+      "name": "PICKUP_Food_01",
+      "resource": "food",
+      "container": "Kitchen_BaseCabinet",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.3050000071525574,
+          -0.14499950408935547,
+          0.4311999976634979
+        ],
+        [
+          -0.15500003099441528,
+          0.005000114440917969,
+          0.5911999940872192
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Food_02",
+      "resource": "food",
+      "container": "Kitchen_BaseCabinet",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.07499998807907104,
+          -0.14499950408935547,
+          0.4311999976634979
+        ],
+        [
+          0.07499998807907104,
+          0.005000114440917969,
+          0.5911999940872192
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Food_03",
+      "resource": "food",
+      "container": "Kitchen_BaseCabinet",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          0.15500003099441528,
+          -0.14499950408935547,
+          0.4311999976634979
+        ],
+        [
+          0.3050000071525574,
+          0.005000114440917969,
+          0.5911999940872192
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Water_01",
+      "resource": "water",
+      "container": "Kitchen_BaseCabinet.002",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.2936060428619385,
+          -0.08360576629638672,
+          0.4311999976634979
+        ],
+        [
+          -0.18639397621154785,
+          0.023606300354003906,
+          0.7912000417709351
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Water_02",
+      "resource": "water",
+      "container": "Kitchen_BaseCabinet.002",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.05360603332519531,
+          -0.08360576629638672,
+          0.4311999976634979
+        ],
+        [
+          0.05360603332519531,
+          0.023606300354003906,
+          0.7912000417709351
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Water_03",
+      "resource": "water",
+      "container": "Kitchen_BaseCabinet.002",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          0.18639397621154785,
+          -0.08360576629638672,
+          0.4311999976634979
+        ],
+        [
+          0.2936060428619385,
+          0.023606300354003906,
+          0.7912000417709351
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_FirstAid",
+      "resource": "first_aid",
+      "container": "Bath_MedicineCabinet",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.2799997329711914,
+          -0.0695033073425293,
+          -0.15000009536743164
+        ],
+        [
+          0.039999961853027344,
+          0.04550313949584961,
+          0.06694507598876953
+        ]
+      ]
+    },
+    {
+      "name": "PROP_Basement_Bandages",
+      "resource": "decorative",
+      "container": "Bath_MedicineCabinet",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          0.056621551513671875,
+          -0.07664012908935547,
+          0.1700000762939453
+        ],
+        [
+          0.1833782196044922,
+          0.0566401481628418,
+          0.32155323028564453
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Basement_FirstAid_02",
+      "resource": "first_aid",
+      "container": "Bath_Vanity",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.37999916076660156,
+          -0.07828497886657715,
+          0.03800010681152344
+        ],
+        [
+          0.0,
+          0.05828499794006348,
+          0.2956225872039795
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Backpack",
+      "resource": "backpack",
+      "container": "Master_Wardrobe",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.5,
+          -0.17055177688598633,
+          0.03800010681152344
+        ],
+        [
+          0.0,
+          0.09055185317993164,
+          0.5045630931854248
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Blanket",
+      "resource": "blanket",
+      "container": "Master_Wardrobe",
+      "follows_drawer": false,
+      "local_bounds": [
+        [
+          -0.24499988555908203,
+          -0.25999975204467773,
+          1.2640001773834229
+        ],
+        [
+          0.4049997329711914,
+          0.2199997901916504,
+          1.4649999141693115
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Batteries",
+      "resource": "batteries",
+      "container": "Study_Bedside__Drawer_02",
+      "follows_drawer": true,
+      "local_bounds": [
+        [
+          -0.13216674327850342,
+          -0.0950002670288086,
+          0.28099989891052246
+        ],
+        [
+          -0.02783334255218506,
+          0.06499958038330078,
+          0.3853332996368408
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Flashlight",
+      "resource": "flashlight",
+      "container": "Kitchen_BaseCabinet.003__Drawer_03",
+      "follows_drawer": true,
+      "local_bounds": [
+        [
+          0.10422873497009277,
+          -0.18500041961669922,
+          0.6110000014305115
+        ],
+        [
+          0.1957714557647705,
+          0.1549997329711914,
+          0.7011520266532898
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Basement_Toolkit_01",
+      "resource": "tools",
+      "container": "Basement_Workbench__Drawer_01",
+      "follows_drawer": true,
+      "local_bounds": [
+        [
+          -0.04927641153335571,
+          -0.15169884264469147,
+          0.5720000267028809
+        ],
+        [
+          0.3692764937877655,
+          0.09169883280992508,
+          0.8836400508880615
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Basement_Tape_01",
+      "resource": "repair_tape",
+      "container": "Basement_Workbench__Drawer_01",
+      "follows_drawer": true,
+      "local_bounds": [
+        [
+          -0.4350000023841858,
+          -0.2150000035762787,
+          0.5720000267028809
+        ],
+        [
+          -0.2649999260902405,
+          -0.04500003531575203,
+          0.627000093460083
+        ]
+      ]
+    },
+    {
+      "name": "PICKUP_Basement_Tape_02",
+      "resource": "repair_tape",
+      "container": "Basement_Workbench__Drawer_01",
+      "follows_drawer": true,
+      "local_bounds": [
+        [
+          -0.4350000023841858,
+          0.015000012703239918,
+          0.5720000267028809
+        ],
+        [
+          -0.2649998962879181,
+          0.18500001728534698,
+          0.627000093460083
+        ]
+      ]
+    }
+  ],
+  "total_pickups": 38
+}

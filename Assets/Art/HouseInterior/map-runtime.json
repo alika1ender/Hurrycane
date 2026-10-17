@@ -1,0 +1,2671 @@
+{
+  "materials": [
+    {
+      "name": "HC_BasementFloor",
+      "color": [
+        0.25999999046325684,
+        0.2800000011920929,
+        0.25999999046325684,
+        1.0
+      ],
+      "roughness": 0.8500000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/concrete_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/concrete_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/concrete_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_BasementPaint",
+      "color": [
+        0.1899999976158142,
+        0.28999999165534973,
+        0.25,
+        1.0
+      ],
+      "roughness": 0.800000011920929,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/painted_plaster_wall_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/painted_plaster_wall_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/painted_plaster_wall_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Black",
+      "color": [
+        0.00800000037997961,
+        0.013000000268220901,
+        0.01600000075995922,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Blue",
+      "color": [
+        0.07000000029802322,
+        0.2800000011920929,
+        0.4300000071525574,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_BookBlue",
+      "color": [
+        0.09000000357627869,
+        0.1899999976158142,
+        0.23999999463558197,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_BookRed",
+      "color": [
+        0.4000000059604645,
+        0.10499999672174454,
+        0.06499999761581421,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_BookYellow",
+      "color": [
+        0.5899999737739563,
+        0.3799999952316284,
+        0.11999999731779099,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Brass",
+      "color": [
+        0.5299999713897705,
+        0.3400000035762787,
+        0.11999999731779099,
+        1.0
+      ],
+      "roughness": 0.30000001192092896,
+      "metallic": 0.699999988079071,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Bulb",
+      "color": [
+        1.0,
+        0.6800000071525574,
+        0.3199999928474426,
+        1.0
+      ],
+      "roughness": 0.4000000059604645,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        0.6800000071525574,
+        0.3199999928474426,
+        1.0
+      ],
+      "emission_strength": 3.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Cardboard",
+      "color": [
+        0.4300000071525574,
+        0.2800000011920929,
+        0.12999999523162842,
+        1.0
+      ],
+      "roughness": 0.8999999761581421,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Ceramic",
+      "color": [
+        0.8700000047683716,
+        0.8999999761581421,
+        0.8399999737739563,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Charcoal",
+      "color": [
+        0.026000000536441803,
+        0.039000000804662704,
+        0.04399999976158142,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Concrete",
+      "color": [
+        0.3199999928474426,
+        0.3400000035762787,
+        0.3100000023841858,
+        1.0
+      ],
+      "roughness": 0.8999999761581421,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/concrete_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/concrete_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/concrete_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_ConcreteLight",
+      "color": [
+        0.46000000834465027,
+        0.4699999988079071,
+        0.4000000059604645,
+        1.0
+      ],
+      "roughness": 0.8500000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/concrete_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/concrete_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/concrete_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Coral",
+      "color": [
+        0.6499999761581421,
+        0.27000001072883606,
+        0.20000000298023224,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_CounterStone",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/Marble012_2K-JPG_Color.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/Marble012_2K-JPG_NormalGL.jpg",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/Marble012_2K-JPG_Roughness.jpg",
+      "emission_map": "",
+      "normal_strength": 0.11999999731779099
+    },
+    {
+      "name": "HC_Cream",
+      "color": [
+        0.8299999833106995,
+        0.7900000214576721,
+        0.6499999761581421,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_CurtainIvory",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/CurtainIvory_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.1599999964237213
+    },
+    {
+      "name": "HC_FabricIvory",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FabricIvory_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.20000000298023224
+    },
+    {
+      "name": "HC_FabricOchre",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FabricOchre_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.20000000298023224
+    },
+    {
+      "name": "HC_FabricRust",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FabricRust_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.25
+    },
+    {
+      "name": "HC_FabricSlate",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FabricSlate_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.2199999988079071
+    },
+    {
+      "name": "HC_FurnitureOak",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FurnitureOak_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/oak_veneer_01_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/oak_veneer_01_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.18000000715255737
+    },
+    {
+      "name": "HC_FurnitureWalnut",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/FurnitureWalnut_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/oak_veneer_01_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/oak_veneer_01_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.1599999964237213
+    },
+    {
+      "name": "HC_Grout",
+      "color": [
+        0.2199999988079071,
+        0.28999999165534973,
+        0.27000001072883606,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_HazardYellow",
+      "color": [
+        0.9200000166893005,
+        0.5699999928474426,
+        0.09000000357627869,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Leaf",
+      "color": [
+        0.11999999731779099,
+        0.2800000011920929,
+        0.11999999731779099,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_LeafLight",
+      "color": [
+        0.28999999165534973,
+        0.4399999976158142,
+        0.1599999964237213,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Mustard",
+      "color": [
+        0.75,
+        0.4300000071525574,
+        0.10000000149011612,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Oak0",
+      "color": [
+        0.3400000035762787,
+        0.20000000298023224,
+        0.0949999988079071,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Oak1",
+      "color": [
+        0.3619999885559082,
+        0.21400000154972076,
+        0.10300000011920929,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Oak2",
+      "color": [
+        0.3840000033378601,
+        0.2280000001192093,
+        0.11100000143051147,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Oak3",
+      "color": [
+        0.4059999883174896,
+        0.24199999868869781,
+        0.11900000274181366,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Oak4",
+      "color": [
+        0.42800000309944153,
+        0.25600001215934753,
+        0.12700000405311584,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Oak5",
+      "color": [
+        0.44999998807907104,
+        0.27000001072883606,
+        0.13500000536441803,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/wood_floor_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/wood_floor_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/wood_floor_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_PackingTape",
+      "color": [
+        0.6600000262260437,
+        0.47999998927116394,
+        0.23999999463558197,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_PaintCeiling",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/PaintCeiling_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/Plaster001_2K-JPG_NormalGL.jpg",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/Plaster001_2K-JPG_Roughness.jpg",
+      "emission_map": "",
+      "normal_strength": 0.07000000029802322
+    },
+    {
+      "name": "HC_PaintWarm",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/PaintWarm_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/Plaster001_2K-JPG_NormalGL.jpg",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/Plaster001_2K-JPG_Roughness.jpg",
+      "emission_map": "",
+      "normal_strength": 0.10000000149011612
+    },
+    {
+      "name": "HC_Paper",
+      "color": [
+        0.8799999952316284,
+        0.8199999928474426,
+        0.6600000262260437,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_PipeSteel",
+      "color": [
+        0.2199999988079071,
+        0.25999999046325684,
+        0.25,
+        1.0
+      ],
+      "roughness": 0.44999998807907104,
+      "metallic": 0.6499999761581421,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_PorcelainBlue",
+      "color": [
+        0.3700000047683716,
+        0.6200000047683716,
+        0.6600000262260437,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Red",
+      "color": [
+        0.6399999856948853,
+        0.05999999865889549,
+        0.03500000014901161,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_RugOat",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/RugOat_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/Carpet004_2K-JPG_NormalGL.jpg",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/Carpet004_2K-JPG_Roughness.jpg",
+      "emission_map": "",
+      "normal_strength": 0.30000001192092896
+    },
+    {
+      "name": "HC_RugSlate",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/RugSlate_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/Carpet004_2K-JPG_NormalGL.jpg",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/Carpet004_2K-JPG_Roughness.jpg",
+      "emission_map": "",
+      "normal_strength": 0.30000001192092896
+    },
+    {
+      "name": "HC_Rust",
+      "color": [
+        0.4300000071525574,
+        0.11999999731779099,
+        0.06499999761581421,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Sage",
+      "color": [
+        0.23000000417232513,
+        0.3799999952316284,
+        0.28999999165534973,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_SageLight",
+      "color": [
+        0.3700000047683716,
+        0.5099999904632568,
+        0.3799999952316284,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Screen",
+      "color": [
+        0.014999999664723873,
+        0.10000000149011612,
+        0.12999999523162842,
+        1.0
+      ],
+      "roughness": 0.30000001192092896,
+      "metallic": 0.0,
+      "emission": [
+        0.014999999664723873,
+        0.10000000149011612,
+        0.12999999523162842,
+        1.0
+      ],
+      "emission_strength": 0.20000000298023224,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookBlue0",
+      "color": [
+        0.02500000037252903,
+        0.07500000298023224,
+        0.18000000715255737,
+        1.0
+      ],
+      "roughness": 0.7200000286102295,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookBlue1",
+      "color": [
+        0.03500000014901161,
+        0.15000000596046448,
+        0.3199999928474426,
+        1.0
+      ],
+      "roughness": 0.7200000286102295,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookBlue2",
+      "color": [
+        0.07000000029802322,
+        0.25,
+        0.4699999988079071,
+        1.0
+      ],
+      "roughness": 0.7200000286102295,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookBlue3",
+      "color": [
+        0.15000000596046448,
+        0.3799999952316284,
+        0.5799999833106995,
+        1.0
+      ],
+      "roughness": 0.7200000286102295,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookBlue4",
+      "color": [
+        0.27000001072883606,
+        0.49000000953674316,
+        0.6899999976158142,
+        1.0
+      ],
+      "roughness": 0.7200000286102295,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfBookRed",
+      "color": [
+        0.6499999761581421,
+        0.02500000037252903,
+        0.03500000014901161,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_ShelfSteel",
+      "color": [
+        0.04500000178813934,
+        0.14000000059604645,
+        0.14000000059604645,
+        1.0
+      ],
+      "roughness": 0.41999998688697815,
+      "metallic": 0.550000011920929,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Soil",
+      "color": [
+        0.04500000178813934,
+        0.027000000700354576,
+        0.014000000432133675,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Steel",
+      "color": [
+        0.3799999952316284,
+        0.4399999976158142,
+        0.4399999976158142,
+        1.0
+      ],
+      "roughness": 0.27000001072883606,
+      "metallic": 0.75,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_TVStormScreen",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.550000011920929,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.5,
+      "base_map": "Assets/Art/HouseInterior/Textures/TV_StormWarning.png",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "Assets/Art/HouseInterior/Textures/TV_StormWarning.png",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Teal",
+      "color": [
+        0.054999999701976776,
+        0.2199999988079071,
+        0.20499999821186066,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_Terracotta",
+      "color": [
+        0.5400000214576721,
+        0.18000000715255737,
+        0.0949999988079071,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_TileCream",
+      "color": [
+        0.699999988079071,
+        0.7200000286102295,
+        0.6200000047683716,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/interior_tiles_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/interior_tiles_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/interior_tiles_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_TileSage",
+      "color": [
+        0.3199999928474426,
+        0.46000000834465027,
+        0.4300000071525574,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/interior_tiles_diff_2k.jpg",
+      "normal_map": "Assets/Art/HouseInterior/Textures/interior_tiles_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/interior_tiles_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_TowelCotton",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/TowelCotton_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/terry_cloth_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/terry_cloth_rough_2k.png",
+      "emission_map": "",
+      "normal_strength": 0.3499999940395355
+    },
+    {
+      "name": "HC_Trim",
+      "color": [
+        0.8799999952316284,
+        0.8299999833106995,
+        0.699999988079071,
+        1.0
+      ],
+      "roughness": 0.6000000238418579,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "HC_UpholsteryTeal",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.699999988079071,
+      "metallic": 0.0,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/UpholsteryTeal_color.png",
+      "normal_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_nor_gl_2k.png",
+      "roughness_map": "Assets/Art/HouseInterior/Textures/fabric_pattern_07_rough_2k.jpg",
+      "emission_map": "",
+      "normal_strength": 0.25
+    },
+    {
+      "name": "HC_Window",
+      "color": [
+        0.2800000011920929,
+        0.4699999988079071,
+        0.5299999713897705,
+        1.0
+      ],
+      "roughness": 0.30000001192092896,
+      "metallic": 0.0,
+      "emission": [
+        0.2800000011920929,
+        0.4699999988079071,
+        0.5299999713897705,
+        1.0
+      ],
+      "emission_strength": 0.3799999952316284,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_Black",
+      "color": [
+        0.03521668538451195,
+        0.03521668538451195,
+        0.03521668538451195,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.03521668538451195,
+        0.03521668538451195,
+        0.03521668538451195,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_Brown",
+      "color": [
+        0.11443537473678589,
+        0.08865559101104736,
+        0.05612849444150925,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.11443537473678589,
+        0.08865559101104736,
+        0.05612849444150925,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_DarkGreen",
+      "color": [
+        0.08744194358587265,
+        0.15232062339782715,
+        0.05986013635993004,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.08744194358587265,
+        0.15232062339782715,
+        0.05986013635993004,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_Grey",
+      "color": [
+        0.2597948908805847,
+        0.25713229179382324,
+        0.24924027919769287,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.2597948908805847,
+        0.25713229179382324,
+        0.24924027919769287,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_LightMetal",
+      "color": [
+        0.1733521670103073,
+        0.1733521670103073,
+        0.1733521670103073,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.1733521670103073,
+        0.1733521670103073,
+        0.1733521670103073,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_LightOrange",
+      "color": [
+        0.548847496509552,
+        0.32919058203697205,
+        0.10517245531082153,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.548847496509552,
+        0.32919058203697205,
+        0.10517245531082153,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_Plant_Green",
+      "color": [
+        0.24706675112247467,
+        0.39310935139656067,
+        0.05337448790669441,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.24706675112247467,
+        0.39310935139656067,
+        0.05337448790669441,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Interior_White",
+      "color": [
+        0.44797539710998535,
+        0.443290650844574,
+        0.4294084906578064,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.44797539710998535,
+        0.443290650844574,
+        0.4294084906578064,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_KayKit_furniture_texture",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "emission_strength": 1.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/KayKit_FurnitureAtlas.png",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 0.0
+    },
+    {
+      "name": "LIB_Kenney_colormap",
+      "color": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "emission_strength": 1.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/Kenney_Food_colormap.png",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 0.0
+    },
+    {
+      "name": "LIB_Survival_Black",
+      "color": [
+        0.033101364970207214,
+        0.033101364970207214,
+        0.033101364970207214,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.033101364970207214,
+        0.033101364970207214,
+        0.033101364970207214,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Brown",
+      "color": [
+        0.17885959148406982,
+        0.12677308917045593,
+        0.051317352801561356,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.17885959148406982,
+        0.12677308917045593,
+        0.051317352801561356,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_DarkGrey",
+      "color": [
+        0.06680474430322647,
+        0.06680474430322647,
+        0.06680474430322647,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.06680474430322647,
+        0.06680474430322647,
+        0.06680474430322647,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_DarkRed",
+      "color": [
+        0.12370710074901581,
+        0.024471990764141083,
+        0.023205481469631195,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.12370710074901581,
+        0.024471990764141083,
+        0.023205481469631195,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_DarkWood",
+      "color": [
+        0.14238348603248596,
+        0.08724373579025269,
+        0.044256653636693954,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.14238348603248596,
+        0.08724373579025269,
+        0.044256653636693954,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_DarkYellow",
+      "color": [
+        0.18446631729602814,
+        0.1268276423215866,
+        0.03814882040023804,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.18446631729602814,
+        0.1268276423215866,
+        0.03814882040023804,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Gold",
+      "color": [
+        0.23301252722740173,
+        0.14876703917980194,
+        0.014888079836964607,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.23301252722740173,
+        0.14876703917980194,
+        0.014888079836964607,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Green",
+      "color": [
+        0.06071806326508522,
+        0.05050992593169212,
+        0.018883628770709038,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.06071806326508522,
+        0.05050992593169212,
+        0.018883628770709038,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Grey",
+      "color": [
+        0.14239658415317535,
+        0.14239658415317535,
+        0.14239658415317535,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.14239658415317535,
+        0.14239658415317535,
+        0.14239658415317535,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_LightBlue",
+      "color": [
+        0.3719523549079895,
+        0.4958133101463318,
+        0.6382647156715393,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.3719523549079895,
+        0.4958133101463318,
+        0.6382647156715393,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_LightGreen",
+      "color": [
+        0.1065310686826706,
+        0.09168826043605804,
+        0.03984183818101883,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.1065310686826706,
+        0.09168826043605804,
+        0.03984183818101883,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_LightGrey",
+      "color": [
+        0.37574493885040283,
+        0.37574493885040283,
+        0.37574493885040283,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.37574493885040283,
+        0.37574493885040283,
+        0.37574493885040283,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Match",
+      "color": [
+        0.4769851267337799,
+        0.4078575670719147,
+        0.26343122124671936,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.4769851267337799,
+        0.4078575670719147,
+        0.26343122124671936,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Orange",
+      "color": [
+        0.27382591366767883,
+        0.11981796473264694,
+        0.04423549026250839,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.27382591366767883,
+        0.11981796473264694,
+        0.04423549026250839,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Plastic",
+      "color": [
+        0.22031214833259583,
+        0.4027954638004303,
+        0.6382647156715393,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.22031214833259583,
+        0.4027954638004303,
+        0.6382647156715393,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Red",
+      "color": [
+        0.21402914822101593,
+        0.039549391716718674,
+        0.03738441318273544,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.21402914822101593,
+        0.039549391716718674,
+        0.03738441318273544,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_White",
+      "color": [
+        0.698187530040741,
+        0.698187530040741,
+        0.698187530040741,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.698187530040741,
+        0.698187530040741,
+        0.698187530040741,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "LIB_Survival_Yellow",
+      "color": [
+        0.27382591366767883,
+        0.1869039088487625,
+        0.05440109595656395,
+        1.0
+      ],
+      "roughness": 0.6499999761581421,
+      "metallic": 0.0,
+      "emission": [
+        0.27382591366767883,
+        0.1869039088487625,
+        0.05440109595656395,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    },
+    {
+      "name": "TV Texture",
+      "color": [
+        0.800000011920929,
+        0.800000011920929,
+        0.800000011920929,
+        1.0
+      ],
+      "roughness": 0.5,
+      "metallic": 0.75,
+      "emission": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "emission_strength": 0.0,
+      "base_map": "Assets/Art/HouseInterior/Textures/Animimo_TV_Atlas.png",
+      "normal_map": "",
+      "roughness_map": "",
+      "emission_map": "",
+      "normal_strength": 1.0
+    }
+  ],
+  "lights": [
+    {
+      "name": "Light_Living",
+      "position": [
+        2.5,
+        2.700000047683716,
+        2.940000057220459
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 345.6000061035156
+    },
+    {
+      "name": "Light_Kitchen",
+      "position": [
+        2.9000000953674316,
+        7.599999904632568,
+        2.940000057220459
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 377.20001220703125
+    },
+    {
+      "name": "Light_Hall",
+      "position": [
+        7.0,
+        5.0,
+        2.950000047683716
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 320.0
+    },
+    {
+      "name": "Light_Stair",
+      "position": [
+        11.0,
+        6.0,
+        5.900000095367432
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 650.0
+    },
+    {
+      "name": "Light_Master",
+      "position": [
+        2.700000047683716,
+        2.799999952316284,
+        6.199999809265137
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 327.6000061035156
+    },
+    {
+      "name": "Light_Study",
+      "position": [
+        2.700000047683716,
+        7.5,
+        6.199999809265137
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 351.0
+    },
+    {
+      "name": "Light_Bath",
+      "position": [
+        10.100000381469727,
+        1.2000000476837158,
+        5.860000133514404
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 180.0
+    },
+    {
+      "name": "Light_Landing",
+      "position": [
+        7.099999904632568,
+        6.0,
+        6.199999809265137
+      ],
+      "color": [
+        1.0,
+        0.8299999833106995,
+        0.6499999761581421
+      ],
+      "energy": 304.0
+    },
+    {
+      "name": "Cool_WindowLight",
+      "position": [
+        0.30000001192092896,
+        3.0,
+        1.7000000476837158
+      ],
+      "color": [
+        0.5699999928474426,
+        0.7599999904632568,
+        1.0
+      ],
+      "energy": 180.0
+    },
+    {
+      "name": "Cool_WindowLight.001",
+      "position": [
+        0.30000001192092896,
+        3.0,
+        5.0
+      ],
+      "color": [
+        0.5699999928474426,
+        0.7599999904632568,
+        1.0
+      ],
+      "energy": 180.0
+    },
+    {
+      "name": "Light_BasementStorage",
+      "position": [
+        4.5,
+        7.599999904632568,
+        -0.7200000286102295
+      ],
+      "color": [
+        0.7799999713897705,
+        0.8899999856948853,
+        1.0
+      ],
+      "energy": 600.0
+    },
+    {
+      "name": "Light_BasementBench",
+      "position": [
+        3.4000000953674316,
+        2.200000047683716,
+        -0.699999988079071
+      ],
+      "color": [
+        1.0,
+        0.7799999713897705,
+        0.47999998927116394
+      ],
+      "energy": 350.0
+    },
+    {
+      "name": "Light_BasementAisle",
+      "position": [
+        7.0,
+        4.0,
+        -0.699999988079071
+      ],
+      "color": [
+        1.0,
+        0.8799999952316284,
+        0.6800000071525574
+      ],
+      "energy": 400.0
+    },
+    {
+      "name": "Light_BasementStair",
+      "position": [
+        9.699999809265137,
+        6.0,
+        0.6499999761581421
+      ],
+      "color": [
+        1.0,
+        0.7300000190734863,
+        0.4000000059604645
+      ],
+      "energy": 180.0
+    },
+    {
+      "name": "Beauty_LivingWindow",
+      "position": [
+        2.299999952316284,
+        0.2800000011920929,
+        1.75
+      ],
+      "color": [
+        0.6299999952316284,
+        0.7699999809265137,
+        1.0
+      ],
+      "energy": 190.0
+    },
+    {
+      "name": "Beauty_KitchenWindow",
+      "position": [
+        2.049999952316284,
+        9.699999809265137,
+        1.899999976158142
+      ],
+      "color": [
+        0.6700000166893005,
+        0.800000011920929,
+        1.0
+      ],
+      "energy": 160.0
+    },
+    {
+      "name": "Beauty_MasterWindow",
+      "position": [
+        2.4000000953674316,
+        0.2800000011920929,
+        5.0
+      ],
+      "color": [
+        0.6399999856948853,
+        0.7799999713897705,
+        1.0
+      ],
+      "energy": 150.0
+    },
+    {
+      "name": "Beauty_LivingLamp",
+      "position": [
+        0.8500000238418579,
+        4.650000095367432,
+        1.0800000429153442
+      ],
+      "color": [
+        1.0,
+        0.6499999761581421,
+        0.3400000035762787
+      ],
+      "energy": 45.0
+    },
+    {
+      "name": "Beauty_StudyLamp",
+      "position": [
+        4.179999828338623,
+        9.5,
+        4.480000019073486
+      ],
+      "color": [
+        1.0,
+        0.75,
+        0.44999998807907104
+      ],
+      "energy": 30.0
+    },
+    {
+      "name": "Beauty_FloorLamp",
+      "position": [
+        1.6799999475479126,
+        0.8500000238418579,
+        1.350000023841858
+      ],
+      "color": [
+        1.0,
+        0.7200000286102295,
+        0.4000000059604645
+      ],
+      "energy": 45.0
+    }
+  ],
+  "hinges": [
+    {
+      "name": "UF_MasterDoor_DoorPivot",
+      "kind": "hinged_door",
+      "open_angle_unity_deg": -90,
+      "slide_distance_m": 0,
+      "starts_open": true
+    },
+    {
+      "name": "UF_StudyDoor_DoorPivot",
+      "kind": "hinged_door",
+      "open_angle_unity_deg": -90,
+      "slide_distance_m": 0,
+      "starts_open": true
+    },
+    {
+      "name": "UF_BathDoor_DoorPivot",
+      "kind": "hinged_door",
+      "open_angle_unity_deg": -90,
+      "slide_distance_m": 0,
+      "starts_open": true
+    },
+    {
+      "name": "Fridge_DoorPivot",
+      "kind": "hinged_door",
+      "open_angle_unity_deg": 90,
+      "slide_distance_m": 0,
+      "starts_open": false
+    },
+    {
+      "name": "Freezer_DoorPivot",
+      "kind": "hinged_door",
+      "open_angle_unity_deg": 90,
+      "slide_distance_m": 0,
+      "starts_open": false
+    }
+  ],
+  "pickups": [
+    {
+      "name": "PICKUP_Water_01",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Water_02",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Water_03",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Water_04",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Food_01",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Food_02",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Food_03",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Food_04",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Radio",
+      "kind": "radio"
+    },
+    {
+      "name": "PICKUP_Flashlight",
+      "kind": "flashlight"
+    },
+    {
+      "name": "PICKUP_FirstAid",
+      "kind": "first_aid"
+    },
+    {
+      "name": "PICKUP_Batteries",
+      "kind": "batteries"
+    },
+    {
+      "name": "PICKUP_Blanket",
+      "kind": "blanket"
+    },
+    {
+      "name": "PICKUP_Backpack",
+      "kind": "backpack"
+    },
+    {
+      "name": "PICKUP_Basement_Water_01",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_02",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_03",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_04",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_05",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_06",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_07",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Water_08",
+      "kind": "water"
+    },
+    {
+      "name": "PICKUP_Basement_Food_01",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_Food_02",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_Food_03",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_Food_04",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_Food_05",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_Food_06",
+      "kind": "food"
+    },
+    {
+      "name": "PICKUP_Basement_FirstAid_01",
+      "kind": "first_aid"
+    },
+    {
+      "name": "PICKUP_Basement_FirstAid_02",
+      "kind": "first_aid"
+    },
+    {
+      "name": "PICKUP_Basement_Batteries_01",
+      "kind": "batteries"
+    },
+    {
+      "name": "PICKUP_Basement_Batteries_02",
+      "kind": "batteries"
+    },
+    {
+      "name": "PICKUP_Basement_Batteries_03",
+      "kind": "batteries"
+    },
+    {
+      "name": "PICKUP_Basement_Batteries_04",
+      "kind": "batteries"
+    },
+    {
+      "name": "PICKUP_Basement_Toolkit_01",
+      "kind": "tools"
+    },
+    {
+      "name": "PICKUP_Basement_Toolkit_02",
+      "kind": "tools"
+    },
+    {
+      "name": "PICKUP_Basement_Tape_01",
+      "kind": "repair_tape"
+    },
+    {
+      "name": "PICKUP_Basement_Tape_02",
+      "kind": "repair_tape"
+    }
+  ],
+  "fixes": [
+    "Hollow accessible fridge with shelves",
+    "Moving fridge note and collider links",
+    "Draped bedcovers",
+    "Basement shelter supply drop",
+    "Storm warning TV display",
+    "Household safety fixtures",
+    "Unity material and light metadata"
+  ]
+}

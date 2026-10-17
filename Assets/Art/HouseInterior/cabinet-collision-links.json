@@ -1,0 +1,384 @@
+{
+  "items": [
+    {
+      "collider": "COL_Door_Leaf",
+      "controller": "UF_MasterDoor_DoorPivot"
+    },
+    {
+      "collider": "COL_Door_Leaf.001",
+      "controller": "UF_StudyDoor_DoorPivot"
+    },
+    {
+      "collider": "COL_Door_Leaf.002",
+      "controller": "UF_BathDoor_DoorPivot"
+    },
+    {
+      "collider": "COL_Freezer_Door",
+      "controller": "Freezer_DoorPivot"
+    },
+    {
+      "collider": "COL_Fridge_Door",
+      "controller": "Fridge_DoorPivot"
+    },
+    {
+      "collider": "COL_BenchDrawer",
+      "controller": "Basement_Workbench__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.015",
+      "controller": "Basement_Workbench__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.015",
+      "controller": "Basement_Workbench__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.030",
+      "controller": "Basement_Workbench__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.031",
+      "controller": "Basement_Workbench__Drawer_01"
+    },
+    {
+      "collider": "COL_Bath_MedicineCabinet_SingleDoorFront",
+      "controller": "Bath_MedicineCabinet__Door"
+    },
+    {
+      "collider": "COL_Bath_Vanity_SingleDoorFront",
+      "controller": "Bath_Vanity__Door"
+    },
+    {
+      "collider": "COL_Kitchen_BaseCabinet_SingleDoorFront",
+      "controller": "Kitchen_BaseCabinet__Door"
+    },
+    {
+      "collider": "COL_Kitchen_BaseCabinet.001_SingleDoorFront",
+      "controller": "Kitchen_BaseCabinet.001__Door"
+    },
+    {
+      "collider": "COL_Kitchen_BaseCabinet.002_SingleDoorFront",
+      "controller": "Kitchen_BaseCabinet.002__Door"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.001",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_01"
+    },
+    {
+      "collider": "COL_DrawerFront",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.001",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.001",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.002",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.003",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_02"
+    },
+    {
+      "collider": "COL_DrawerFront.001",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.002",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.002",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.004",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.005",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_03"
+    },
+    {
+      "collider": "COL_DrawerFront.002",
+      "controller": "Kitchen_BaseCabinet.003__Drawer_03"
+    },
+    {
+      "collider": "COL_Kitchen_UpperCabinet_SingleDoorFront",
+      "controller": "Kitchen_UpperCabinet__Door"
+    },
+    {
+      "collider": "COL_Kitchen_UpperWest_SingleDoorFront",
+      "controller": "Kitchen_UpperWest__Door"
+    },
+    {
+      "collider": "COL_Kitchen_WestCabinet_SingleDoorFront",
+      "controller": "Kitchen_WestCabinet__Door"
+    },
+    {
+      "collider": "COL_Living_MediaConsole_SingleDoorFront",
+      "controller": "Living_MediaConsole__Door"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.003",
+      "controller": "Master_Dresser__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.003",
+      "controller": "Master_Dresser__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.006",
+      "controller": "Master_Dresser__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.007",
+      "controller": "Master_Dresser__Drawer_01"
+    },
+    {
+      "collider": "COL_DrawerFront.009",
+      "controller": "Master_Dresser__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.004",
+      "controller": "Master_Dresser__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.004",
+      "controller": "Master_Dresser__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.008",
+      "controller": "Master_Dresser__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.009",
+      "controller": "Master_Dresser__Drawer_02"
+    },
+    {
+      "collider": "COL_DrawerFront.010",
+      "controller": "Master_Dresser__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.005",
+      "controller": "Master_Dresser__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.005",
+      "controller": "Master_Dresser__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.010",
+      "controller": "Master_Dresser__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.011",
+      "controller": "Master_Dresser__Drawer_03"
+    },
+    {
+      "collider": "COL_DrawerFront.011",
+      "controller": "Master_Dresser__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.006",
+      "controller": "Master_Nightstand__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.006",
+      "controller": "Master_Nightstand__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.012",
+      "controller": "Master_Nightstand__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.013",
+      "controller": "Master_Nightstand__Drawer_01"
+    },
+    {
+      "collider": "COL_DrawerFront.003",
+      "controller": "Master_Nightstand__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.007",
+      "controller": "Master_Nightstand__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.007",
+      "controller": "Master_Nightstand__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.014",
+      "controller": "Master_Nightstand__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.015",
+      "controller": "Master_Nightstand__Drawer_02"
+    },
+    {
+      "collider": "COL_DrawerFront.004",
+      "controller": "Master_Nightstand__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.008",
+      "controller": "Master_Nightstand__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.008",
+      "controller": "Master_Nightstand__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.016",
+      "controller": "Master_Nightstand__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.017",
+      "controller": "Master_Nightstand__Drawer_03"
+    },
+    {
+      "collider": "COL_DrawerFront.005",
+      "controller": "Master_Nightstand__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.009",
+      "controller": "Master_Nightstand.001__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.009",
+      "controller": "Master_Nightstand.001__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.018",
+      "controller": "Master_Nightstand.001__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.019",
+      "controller": "Master_Nightstand.001__Drawer_01"
+    },
+    {
+      "collider": "COL_DrawerFront.006",
+      "controller": "Master_Nightstand.001__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.010",
+      "controller": "Master_Nightstand.001__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.010",
+      "controller": "Master_Nightstand.001__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.020",
+      "controller": "Master_Nightstand.001__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.021",
+      "controller": "Master_Nightstand.001__Drawer_02"
+    },
+    {
+      "collider": "COL_DrawerFront.007",
+      "controller": "Master_Nightstand.001__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.011",
+      "controller": "Master_Nightstand.001__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.011",
+      "controller": "Master_Nightstand.001__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.022",
+      "controller": "Master_Nightstand.001__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.023",
+      "controller": "Master_Nightstand.001__Drawer_03"
+    },
+    {
+      "collider": "COL_DrawerFront.008",
+      "controller": "Master_Nightstand.001__Drawer_03"
+    },
+    {
+      "collider": "COL_Master_Wardrobe_SingleDoorFront",
+      "controller": "Master_Wardrobe__Door"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.012",
+      "controller": "Study_Bedside__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.012",
+      "controller": "Study_Bedside__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.024",
+      "controller": "Study_Bedside__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.025",
+      "controller": "Study_Bedside__Drawer_01"
+    },
+    {
+      "collider": "COL_DrawerFront.012",
+      "controller": "Study_Bedside__Drawer_01"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.013",
+      "controller": "Study_Bedside__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.013",
+      "controller": "Study_Bedside__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.026",
+      "controller": "Study_Bedside__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.027",
+      "controller": "Study_Bedside__Drawer_02"
+    },
+    {
+      "collider": "COL_DrawerFront.013",
+      "controller": "Study_Bedside__Drawer_02"
+    },
+    {
+      "collider": "COL_Drawer_TrayBack.014",
+      "controller": "Study_Bedside__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TrayBottom.014",
+      "controller": "Study_Bedside__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.028",
+      "controller": "Study_Bedside__Drawer_03"
+    },
+    {
+      "collider": "COL_Drawer_TraySide.029",
+      "controller": "Study_Bedside__Drawer_03"
+    },
+    {
+      "collider": "COL_DrawerFront.014",
+      "controller": "Study_Bedside__Drawer_03"
+    }
+  ]
+}

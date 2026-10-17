@@ -1,0 +1,8 @@
+Built Assets/Scenes/HouseMap.unity
+Materials: 95
+Static supply props: 38
+Openable doors/drawers: 31
+Moving collision proxies: 95
+Collision proxies: 427
+Coordinate axes: (-1.00, 0.00, 0.00), (0.00, 0.00, -1.00), (0.00, 1.00, 0.00)
+Spawn: (-7.00, 0.07, -1.20)

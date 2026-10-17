@@ -1,0 +1,347 @@
+{
+  "preview_frames": {
+    "closed": 1,
+    "open": 25,
+    "closed_again": 73
+  },
+  "items": [
+    {
+      "name": "Basement_Workbench__Drawer_01",
+      "cabinet": "Basement_Workbench",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.42,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Bath_MedicineCabinet__Door",
+      "cabinet": "Bath_MedicineCabinet",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Bath_Vanity__Door",
+      "cabinet": "Bath_Vanity",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet.001__Door",
+      "cabinet": "Kitchen_BaseCabinet.001",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet.002__Door",
+      "cabinet": "Kitchen_BaseCabinet.002",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet.003__Drawer_01",
+      "cabinet": "Kitchen_BaseCabinet.003",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.5184000205993652,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet.003__Drawer_02",
+      "cabinet": "Kitchen_BaseCabinet.003",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.5184000205993652,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet.003__Drawer_03",
+      "cabinet": "Kitchen_BaseCabinet.003",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.5184000205993652,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_BaseCabinet__Door",
+      "cabinet": "Kitchen_BaseCabinet",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": 90.0,
+      "open_angle_unity_deg": -90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_UpperCabinet__Door",
+      "cabinet": "Kitchen_UpperCabinet",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_UpperWest__Door",
+      "cabinet": "Kitchen_UpperWest",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Kitchen_WestCabinet__Door",
+      "cabinet": "Kitchen_WestCabinet",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Living_MediaConsole__Door",
+      "cabinet": "Living_MediaConsole",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Dresser__Drawer_01",
+      "cabinet": "Master_Dresser",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.4392000102996826,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Dresser__Drawer_02",
+      "cabinet": "Master_Dresser",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.4392000102996826,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Dresser__Drawer_03",
+      "cabinet": "Master_Dresser",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.4392000102996826,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand.001__Drawer_01",
+      "cabinet": "Master_Nightstand.001",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand.001__Drawer_02",
+      "cabinet": "Master_Nightstand.001",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand.001__Drawer_03",
+      "cabinet": "Master_Nightstand.001",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand__Drawer_01",
+      "cabinet": "Master_Nightstand",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand__Drawer_02",
+      "cabinet": "Master_Nightstand",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Nightstand__Drawer_03",
+      "cabinet": "Master_Nightstand",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.3815999794006347,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Master_Wardrobe__Door",
+      "cabinet": "Master_Wardrobe",
+      "kind": "cabinet_door",
+      "open_angle_blender_deg": -90.0,
+      "open_angle_unity_deg": 90.0,
+      "slide_distance_m": 0.0,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Study_Bedside__Drawer_01",
+      "cabinet": "Study_Bedside",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.36,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Study_Bedside__Drawer_02",
+      "cabinet": "Study_Bedside",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.36,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "name": "Study_Bedside__Drawer_03",
+      "cabinet": "Study_Bedside",
+      "kind": "cabinet_drawer",
+      "open_angle_blender_deg": 0,
+      "open_angle_unity_deg": 0,
+      "slide_distance_m": 0.36,
+      "unity_slide_axis": [
+        0,
+        -1,
+        0
+      ]
+    }
+  ]
+}
