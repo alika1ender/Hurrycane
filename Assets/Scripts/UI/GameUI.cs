@@ -62,6 +62,7 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.HitLanded += OnHit;
         FloodSystem.FloodStarted += OnFlood;
         HandheldSystem.MessageReceived += OnText;
+        GameSession.NewGameStarted += OnNewGame;
     }
     void OnDisable()
     {
@@ -71,6 +72,7 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.HitLanded -= OnHit;
         FloodSystem.FloodStarted -= OnFlood;
         HandheldSystem.MessageReceived -= OnText;
+        GameSession.NewGameStarted -= OnNewGame;
     }
     void OnText(PhoneMessage message) => Toast("Broski:  " + message.text, UiKit.Amber);
     void OnFlood() => Toast("Water is pouring down the basement stairs!", UiKit.Red);
@@ -125,9 +127,11 @@ public sealed class GameUI : MonoBehaviour
         BuildPhone();
         BuildHandbook();
         BuildCutscene();
+        BuildTip();
         BuildAlert();
         BuildMenu();
         BuildPause();
+        BuildControls(); // above pause, so CONTROLS from the pause menu shows on top
     }
 
     void BuildPhone()
@@ -343,6 +347,27 @@ public sealed class GameUI : MonoBehaviour
         var shade = UiKit.Panel(transform, "Alert", new Color(0, 0, 0, .88f), false);
         shade.rectTransform.Stretch();
         alertOverlay = shade.gameObject;
+        var artwork = Resources.Load<Texture2D>("HurrycaneUI/PhoneAlert");
+        if (artwork)
+        {
+            // The supplied artwork includes its own handset, clock, message and warning.
+            var area = UiKit.Node("PhoneArtworkArea", shade.transform).Stretch();
+            area.anchorMin = new Vector2(.05f, .11f);
+            area.anchorMax = new Vector2(.95f, .97f);
+            var image = UiKit.Node("PhoneArtwork", area).gameObject.AddComponent<RawImage>();
+            image.texture = artwork;
+            image.raycastTarget = false;
+            var fit = image.gameObject.AddComponent<AspectRatioFitter>();
+            fit.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            fit.aspectRatio = artwork.width / (float)artwork.height;
+            alertFooter = UiKit.Label(shade.transform, "Continue", UiKit.SemiBold, 25,
+                UiKit.TextColor, TextAnchor.MiddleCenter, true);
+            alertFooter.rectTransform.anchorMin = new Vector2(.05f, .015f);
+            alertFooter.rectTransform.anchorMax = new Vector2(.95f, .095f);
+            alertFooter.rectTransform.offsetMin = alertFooter.rectTransform.offsetMax = Vector2.zero;
+            alertFooter.text = "Click or press Space to open the alert";
+            return;
+        }
         var phone = UiKit.Panel(shade.transform, "Phone", new Color(.02f, .02f, .03f, 1));
         phone.rectTransform.Place(new Vector2(.5f, .5f), Vector2.zero, new Vector2(470, 760));
         var screen = UiKit.Panel(phone.transform, "Screen", new Color(.09f, .1f, .13f, 1));
@@ -389,6 +414,7 @@ public sealed class GameUI : MonoBehaviour
         title.text = "PAUSED";
         pauseSubtitle = UiKit.Label(panel.transform, "Subtitle", UiKit.Medium, 26, UiKit.Dim, TextAnchor.MiddleCenter);
         UiKit.Button(panel.transform, "Resume", "RESUME", PauseMenu.Resume, out _, 32).Size(-1, 64);
+        UiKit.Button(panel.transform, "Controls", "CONTROLS", OpenControlsFromMenu, out _, 26).Size(-1, 52);
         var restartTitle = UiKit.Label(panel.transform, "RestartTitle", UiKit.SemiBold, 22, UiKit.Dim, TextAnchor.MiddleLeft);
         restartTitle.text = "RESTART FROM THE START OF A DAY";
         pauseCards = UiKit.Node("Cards", panel.transform);
@@ -441,6 +467,7 @@ public sealed class GameUI : MonoBehaviour
         }
         UiKit.Button(menuButtons, "NewGame", saves.Count > 0 ? "NEW GAME  <size=22><color=#9AA0AA>(replaces your saves)</color></size>" : "NEW GAME",
             () => { if (GameSession.Instance) GameSession.Instance.StartNewGame(); }, out _, 34).Size(-1, 72);
+        UiKit.Button(menuButtons, "Controls", "HOW TO PLAY", OpenControlsFromMenu, out _, 30).Size(-1, 60);
         UiKit.Button(menuButtons, "Quit", "QUIT", Quit, out _, 30).Size(-1, 60);
     }
 
@@ -500,6 +527,170 @@ public sealed class GameUI : MonoBehaviour
         skipHint.text = cutscene.QuickSkip ? "Space  skip" : cutscene.SkipProgress > 0 ? "Skipping " + new string('.', 1 + (int)(cutscene.SkipProgress * 3)) : "Hold Space  skip";
     }
 
+    // ------------------------------------------------------------------ controls card & first-time tips
+
+    GameObject controlsOverlay, tipCard;
+    Text controlsButtonLabel, tipKey, tipTitle, tipText;
+    CanvasGroup tipGroup;
+    bool controlsFromMenu;
+    float tipUntil;
+    readonly Queue<string[]> tipQueue = new Queue<string[]>();
+    /// <summary>Tips already shown this game (reset on New Game).</summary>
+    static readonly HashSet<string> tipsShown = new HashSet<string>();
+
+    static readonly string[][] ControlGroups =
+    {
+        new[] { "MOVE", "W A S D", "Walk", "Shift", "Sprint (not while carrying)", "Mouse", "Look around" },
+        new[] { "DO THINGS", "E", "Tap: take items, open doors and drawers", "Hold E", "Hold until the ring fills: board up, repair, store, wipe", "G", "Drop what's in your arms" },
+        new[] { "GEAR", "Tab", "Raise the phone / handbook (tasks, floor plan)", "F", "Flashlight (in the blackout)", "Hold H", "Use first aid", "Hold Q", "Breathe to calm a racing heart" },
+        new[] { "GAME", "Esc", "Pause, controls, restart a day", "Space", "Continue / skip a cutscene (hold)" },
+    };
+
+    void BuildControls()
+    {
+        var shade = UiKit.Panel(transform, "Controls", new Color(0, 0, 0, .86f), false);
+        shade.rectTransform.Stretch(); shade.raycastTarget = true;
+        controlsOverlay = shade.gameObject;
+        var panel = UiKit.Panel(shade.transform, "Panel", UiKit.PanelColor);
+        panel.rectTransform.Place(new Vector2(.5f, .5f), Vector2.zero, new Vector2(1380, 0));
+        panel.Layout<VerticalLayoutGroup>(40, 18, TextAnchor.UpperCenter);
+        panel.Fit(false, true);
+        UiKit.Label(panel.transform, "Title", UiKit.Bold, 64, UiKit.TextColor, TextAnchor.MiddleCenter).text = "HOW TO PLAY";
+        UiKit.Label(panel.transform, "Goal", UiKit.Medium, 28, UiKit.Dim, TextAnchor.MiddleCenter, true).text =
+            "<color=#F2A93B>Preparation Time:</color> board up windows (toolkit + planks) and stock the basement.   " +
+            "<color=#E5484D>Disaster Time:</color> the storm hits; repair breaks with tape and keep away from glass.   " +
+            "Survive three days. Day 3 is the only one you can lose.";
+
+        var columns = UiKit.Node("Columns", panel.transform);
+        var row = columns.Layout<HorizontalLayoutGroup>(0, 26, TextAnchor.UpperCenter);
+        row.childForceExpandWidth = true;
+        foreach (var group in ControlGroups)
+        {
+            var column = UiKit.Panel(columns, group[0], new Color(1, 1, 1, .04f));
+            column.Layout<VerticalLayoutGroup>(18, 12, TextAnchor.UpperLeft);
+            column.Size(-1, -1, 1);
+            UiKit.Label(column.transform, "Heading", UiKit.SemiBold, 22, UiKit.Amber).text = group[0];
+            for (int i = 1; i + 1 < group.Length; i += 2)
+            {
+                var line = UiKit.Node("Key", column.transform);
+                line.Layout<HorizontalLayoutGroup>(0, 12, TextAnchor.MiddleLeft);
+                KeyCap(line, group[i]);
+                var text = UiKit.Label(line, "Text", UiKit.Medium, 22, UiKit.TextColor, TextAnchor.MiddleLeft, true);
+                text.text = group[i + 1];
+                text.Size(-1, -1, 1);
+            }
+        }
+        UiKit.Label(panel.transform, "Hints", UiKit.Medium, 22, UiKit.Dim, TextAnchor.MiddleCenter, true).text =
+            "Look at something to see what E does. Your phone (top right) always shows the next task. Esc shows these controls again.";
+        var button = UiKit.Button(panel.transform, "Go", "LET'S GO", OnControlsButton, out controlsButtonLabel, 32);
+        button.Size(360, 64);
+        controlsOverlay.SetActive(false);
+    }
+
+    /// <summary>A light key cap sized to its label, e.g. [Tab] or [Hold E].</summary>
+    static void KeyCap(Transform parent, string key)
+    {
+        var cap = UiKit.Panel(parent, "Cap", UiKit.TextColor);
+        cap.Layout<HorizontalLayoutGroup>(0, 0, TextAnchor.MiddleCenter).padding = new RectOffset(10, 10, 4, 4);
+        cap.Size(-1, 38).minWidth = 44;
+        var label = UiKit.Label(cap.transform, "Label", UiKit.Bold, 22, new Color(.08f, .08f, .1f), TextAnchor.MiddleCenter);
+        label.text = key;
+    }
+
+    void OnControlsButton()
+    {
+        if (controlsFromMenu) { controlsFromMenu = false; controlsOverlay.SetActive(false); return; }
+        var director = GameSession.Instance ? GameSession.Instance.GetComponent<DayDirector>() : null;
+        if (director) director.DismissAlert();
+    }
+
+    /// <summary>Menu / pause "CONTROLS" button: the same card, closed by its button.</summary>
+    void OpenControlsFromMenu() { controlsFromMenu = true; controlsOverlay.SetActive(true); }
+
+    void UpdateControls(DayDirector director)
+    {
+        bool intro = director.Phase == DayPhase.Alert && director.ShowingControls;
+        if (intro) { controlsOverlay.SetActive(true); controlsFromMenu = false; }
+        else if (!controlsFromMenu) controlsOverlay.SetActive(false);
+        controlsButtonLabel.text = controlsFromMenu ? "CLOSE" : "LET'S GO  <size=22><color=#9AA0AA>(Space)</color></size>";
+        if (intro) alertOverlay.SetActive(false);
+    }
+
+    void BuildTip()
+    {
+        var panel = UiKit.Panel(transform, "Tip", UiKit.PanelColor);
+        panel.rectTransform.Place(new Vector2(0, .5f), new Vector2(28, 40), new Vector2(470, 0));
+        panel.Layout<HorizontalLayoutGroup>(18, 16, TextAnchor.MiddleLeft);
+        panel.Fit(false, true);
+        tipCard = panel.gameObject;
+        tipGroup = tipCard.AddComponent<CanvasGroup>();
+        tipGroup.blocksRaycasts = false;
+        var cap = UiKit.Panel(panel.transform, "Cap", UiKit.Amber);
+        cap.Layout<HorizontalLayoutGroup>(0, 0, TextAnchor.MiddleCenter).padding = new RectOffset(12, 12, 6, 6);
+        cap.gameObject.AddComponent<LayoutElement>().minWidth = 58;
+        tipKey = UiKit.Label(cap.transform, "Key", UiKit.Bold, 26, new Color(.08f, .08f, .1f), TextAnchor.MiddleCenter);
+        var words = UiKit.Node("Words", panel.transform);
+        words.Layout<VerticalLayoutGroup>(0, 2, TextAnchor.UpperLeft);
+        words.Size(-1, -1, 1);
+        tipTitle = UiKit.Label(words, "Title", UiKit.SemiBold, 22, UiKit.Amber);
+        tipText = UiKit.Label(words, "Text", UiKit.Medium, 24, UiKit.TextColor, TextAnchor.UpperLeft, true);
+        tipCard.SetActive(false);
+    }
+
+    void Tip(string id, string key, string title, string text)
+    {
+        if (tipsShown.Contains(id)) return;
+        tipsShown.Add(id);
+        tipQueue.Enqueue(new[] { key, title, text });
+    }
+
+    /// <summary>First-time tips: each control is explained the first time it matters (once per new game).</summary>
+    void UpdateTips(GameSession session, DayDirector director, bool playing)
+    {
+        if (playing && explorer.enabled)
+        {
+            var focus = explorer.Focus;
+            var inventory = explorer.Inventory;
+            var power = session.GetComponent<PowerSystem>();
+            var pulse = session.GetComponent<PulseSystem>();
+            var health = session.GetComponent<HealthSystem>();
+            var hand = session.GetComponent<HandheldSystem>();
+            if (focus != null && focus.HoldSeconds <= 0 && focus.Unavailable(explorer) == null)
+                Tip("tap", "E", "TAP E", "Takes items and opens doors and drawers. Small items go in your pockets.");
+            if (focus != null && focus.HoldSeconds > 0)
+                Tip("hold", "E", "HOLD E", "Keep holding until the ring fills. Let go and the progress waits for 5 seconds.");
+            if (inventory.Armful.Count > 0)
+                Tip("arms", "G", "YOUR ARMS ARE FULL", "You can't sprint while carrying. Press G to drop it. Arms hold one kind of thing at a time.");
+            if (director.Today.taskSource == "phone" && director.Phase == DayPhase.Preparation && director.Today.Length(DayPhase.Preparation) - director.TimeLeft > 6)
+                Tip("phone", "Tab", "YOUR PHONE", "Top right shows the next task. Tab raises the phone for messages.");
+            if (hand && hand.HasHandbook)
+                Tip("handbook", "Tab", "THE HANDBOOK", "Tab opens it: today's full checklist and a live floor plan of every window.");
+            if (power && power.PowerOut && power.HasFlashlight && !power.FlashlightOn)
+                Tip("flashlight", "F", "IT'S DARK", "F switches the flashlight on. It drains; spare batteries refill it automatically.");
+            if (pulse && pulse.Zone != PulseZone.Calm)
+                Tip("breathe", "Q", "HEART RACING", "Hold Q and stand still to breathe. A racing heart slows your work on Day 3.");
+            if (health && health.CanUseFirstAid && session.health < 70)
+                Tip("firstaid", "H", "HURT", "Hold H to use a first aid kit (+30 health).");
+            if (director.Phase == DayPhase.Disaster)
+                Tip("storm", "!", "THE STORM IS HERE", "Everything takes 1.5x longer. A creaking window is about to give. Step away!");
+            if (director.Today.Length(director.Phase) - director.TimeLeft > 40 && director.Phase == DayPhase.Preparation)
+                Tip("pause", "Esc", "NEED A BREAK?", "Esc pauses the game, shows the controls and lets you restart a day.");
+        }
+
+        if (Time.unscaledTime >= tipUntil && tipQueue.Count > 0 && playing)
+        {
+            var next = tipQueue.Dequeue();
+            tipKey.text = next[0]; tipTitle.text = next[1]; tipText.text = next[2];
+            tipUntil = Time.unscaledTime + 6.5f;
+            tipCard.SetActive(true);
+        }
+        float left = tipUntil - Time.unscaledTime;
+        tipGroup.alpha = playing ? Mathf.Clamp01(left / .5f) * Mathf.Clamp01((6.5f - left) / .3f) : 0;
+        if (left <= 0) tipCard.SetActive(false);
+    }
+
+    void OnNewGame() { tipsShown.Clear(); tipQueue.Clear(); tipUntil = 0; }
+
     // ------------------------------------------------------------------ update
 
     void Update()
@@ -544,6 +735,8 @@ public sealed class GameUI : MonoBehaviour
             UpdateTasks(session, director);
         }
         UpdateHandheld(session, director, playing);
+        UpdateControls(director);
+        UpdateTips(session, director, playing);
         UpdateToasts();
         bannerGroup.alpha = Mathf.Clamp01((bannerUntil - Time.unscaledTime) / .6f);
         var flash = damageFlash.color; flash.a = Mathf.MoveTowards(flash.a, 0, Time.unscaledDeltaTime * .8f); damageFlash.color = flash;

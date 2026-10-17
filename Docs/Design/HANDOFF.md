@@ -14,6 +14,12 @@ Template:
 
 ---
 
+## 2026-10-17 23:58 · Claude (for Ali)
+**Worked on:** teaching the controls. Code: `UI/GameUI.cs` (controls card, tips, menu and pause buttons), `Systems/DayDirector.cs` (two-step alert, `SkipIntro`) and `Systems/GameSession.cs` (`NewGameStarted`). Updated 07 and 09.
+**Done:** a How to play card after the Day 1 alert (every key, grouped, with the goal), which can be reopened from the menu and pause screens. One-time key tips when each control first matters. Tested in Play mode (captures `WalkthroughPreviews/ui/23_how_to_play`, `24_tip`); the door/drawer test passes 31/31.
+**Note:** this checkout also has someone's uncommitted work from about 23:17-23:30 (`TVBroadcast.cs`, `PhoneAlert.png` and its use in `GameUI.BuildAlert`, plus edits to `CutsceneSystem`, `Switchable` and `GameplaySetup`). I didn't touch it; it compiles together with this work.
+**Next:** playtest notes from Ali.
+
 ## 2026-10-17 20:35 · Claude (for Ali)
 **Worked on:** the main menu, the opening cutscene and the ending cutscene. Code: `Systems/CutsceneSystem.cs`, plus menu and cutscene overlays in `UI/GameUI.cs`, and flow changes in `DayDirector`/`GameSession` (new phases `Menu`, `Opening`, `Ending`). Data: `cutscenes.json` (captions) and `showMainMenu` in `days.json`. Updated 01, 07, 08, 09 and 10.
 **Done:**

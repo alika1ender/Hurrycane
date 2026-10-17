@@ -68,8 +68,12 @@ public sealed class GameSession : MonoBehaviour
     static bool skipMenuOnce;
 
     /// <summary>Main menu NEW GAME: throw away old saves and start Day 1 here (no reload).</summary>
+    /// <summary>Raised when a fresh game begins (menu New Game or Play again), e.g. to show first-time control tips again.</summary>
+    public static event Action NewGameStarted;
+
     public void StartNewGame()
     {
+        NewGameStarted?.Invoke();
         var controller = player.GetComponent<CharacterController>();
         controller.enabled = false;
         player.transform.SetPositionAndRotation(startPosition, startRotation);

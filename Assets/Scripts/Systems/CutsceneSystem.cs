@@ -35,7 +35,7 @@ public sealed class CutsceneSystem : MonoBehaviour
     Action onDone;
     Coroutine running, captions;
     Vector3 homePosition; Quaternion homeRotation;
-    Renderer tv; int tvSlot = -1; Material tvNews, tvMatch;
+    TVBroadcast tv;
     GameObject street;
     Light sun;
     float skipHeld;
@@ -57,15 +57,7 @@ public sealed class CutsceneSystem : MonoBehaviour
     public void Bind(MapExplorer explorer)
     {
         player = explorer;
-        tv = FindObjectsByType<Renderer>(FindObjectsInactive.Exclude).FirstOrDefault(r => r.name == "Living_TV_Animimo_Visual");
-        if (tv) tvSlot = Array.FindIndex(tv.sharedMaterials, m => m && m.name.Contains("TVStorm"));
-        if (tvSlot >= 0)
-        {
-            tvNews = tv.sharedMaterials[tvSlot];
-            tvMatch = new Material(Shader.Find("Universal Render Pipeline/Lit")) { name = "TV_Match" };
-            tvMatch.SetColor("_BaseColor", new Color(.1f, .35f, .12f));
-            tvMatch.EnableKeyword("_EMISSION"); tvMatch.SetColor("_EmissionColor", new Color(.2f, .6f, .22f));
-        }
+        tv = FindAnyObjectByType<TVBroadcast>();
     }
 
     // ------------------------------------------------------------------ public entry points
@@ -109,7 +101,7 @@ public sealed class CutsceneSystem : MonoBehaviour
         if (Kind == "opening")
         {
             PlayerPrefs.SetInt(SeenKey, 1);
-            SetTv(tvNews);
+            SetTv(TVFrame.StormWatch);
             // Gameplay starts where the day's save put Cane, not on the sofa.
             player.transform.SetPositionAndRotation(homePosition, homeRotation);
             player.viewCamera.transform.localRotation = Quaternion.identity;
@@ -133,21 +125,24 @@ public sealed class CutsceneSystem : MonoBehaviour
     {
         var seat = new Vector3(-1.05f, 1.2f, -2.72f);
         var tvCenter = new Vector3(-5.22f, 1.18f, -4.22f);
-        SetTv(tvNews);
+        SetTv(TVFrame.Anchor);
         Fade = 1;
         Shot(seat, tvCenter);
         yield return Tween(1.2f, t => Fade = 1 - t);
-        yield return Wait(9.8f);                                      // the news
+        SetTv(TVFrame.StormWatch);
+        yield return Wait(6.3f);                                      // forecast through 7.5 s
+        SetTv(TVFrame.Prepare);
+        yield return Wait(3.5f);                                      // preparation advice through 11 s
         yield return Tween(1.2f, t => Shot(seat, Vector3.Lerp(tvCenter, tvCenter + new Vector3(1.5f, -.4f, 2.2f), Smooth(t))));   // waves it off
         yield return Wait(1.6f);
         yield return Tween(.8f, t => Shot(seat, Vector3.Lerp(tvCenter + new Vector3(1.5f, -.4f, 2.2f), tvCenter, Smooth(t))));
-        SetTv(tvMatch);                                               // ~14.6 s: the match
+        SetTv(TVFrame.Match);                                         // ~14.6 s: the match
         yield return Wait(4f);
         // Eyes get heavy: two slow blinks, then the head drops and they close.
         yield return Blink(.9f); yield return Wait(1.2f); yield return Blink(1.3f);
         yield return Tween(2.4f, t => { Eyelids = Smooth(t); Shot(seat, tvCenter + Vector3.down * .9f * t); });
         Fade = 1; Eyelids = 0;                                        // ~24.3 s
-        SetTv(tvNews);
+        SetTv(TVFrame.StormWatch);
         yield return Wait(3f);                                        // "The next morning"
         Shot(seat, tvCenter);
         Eyelids = 1; Fade = 0;
@@ -265,10 +260,9 @@ public sealed class CutsceneSystem : MonoBehaviour
 
     // ------------------------------------------------------------------ helpers
 
-    void SetTv(Material screen)
+    void SetTv(TVFrame frame)
     {
-        if (!tv || tvSlot < 0 || !screen) return;
-        var slots = tv.sharedMaterials; slots[tvSlot] = screen; tv.sharedMaterials = slots;
+        if (tv) tv.Show(frame);
     }
 
     /// <summary>Puts the first-person camera at an eye point looking at a target (moves the player; it's disabled meanwhile).</summary>

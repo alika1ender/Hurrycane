@@ -35,10 +35,15 @@ public sealed class Switchable : MonoBehaviour, IInteractable
     }
     public static IEnumerable<Switchable> All => all;
 
-    public void SetOff(bool off) => Off = off;
+    public void SetOff(bool off)
+    {
+        Off = off;
+        var tv = GetComponent<TVBroadcast>();
+        if (tv) tv.RefreshPower();
+    }
 
     public string Prompt => Off ? doneText : verb;
     public float HoldSeconds => Off ? 0 : holdSeconds;
     public string Unavailable(MapExplorer user) => Off ? "Already done" : null;
-    public void Use(MapExplorer user) { if (!Off) Off = true; }
+    public void Use(MapExplorer user) { if (!Off) SetOff(true); }
 }

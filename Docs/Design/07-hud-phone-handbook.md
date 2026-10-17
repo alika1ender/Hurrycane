@@ -43,6 +43,11 @@ Style: **emergency broadcast**. Dark translucent rounded panels and white **Barl
 
 - **Main menu and cutscene overlays (built):** the menu has a dark side panel with the HURRY**CANE** title, a tagline and buttons. Cutscenes get letterbox bars, speaker-tagged captions, closing eyelids, a siren wash, fades and a "Hold Space skip" hint.
 
+- **Teaching the controls (built):**
+  - **How to play card:** after the Day 1 alert, before the clock starts, a card lists every key in four groups (MOVE, DO THINGS, GEAR, GAME) with key caps, plus a one-line summary of the goal. Space or LET'S GO starts Preparation. It's also on the main menu (HOW TO PLAY) and the pause menu (CONTROLS).
+  - **First-time tips:** a key-cap card at mid-left, about 6.5 s each and one at a time, the first time each control matters: tap E, hold E, full arms (G), the phone (Tab), the handbook (Tab), the dark (F), a racing heart (Q), hurt (H), the storm arriving, and Esc. Each shows once per new game.
+  - **Always on:** the bottom-right key strip, the E prompt under the crosshair, and the Q/H hints above the vitals.
+
 Still missing: real phone and book models (cubes for now), the illustrated category pages (Water, Windows, Power, First aid).
 
 ## Decisions (proposed 2026-10-17, change freely)

@@ -95,6 +95,8 @@ public static class GameplaySetup
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
         if (stash && stashProxy && !stashProxy.GetComponent<InteractionProxy>()) stashProxy.gameObject.AddComponent<InteractionProxy>().Configure(stash);
         AddSwitches(byName);
+        if (byName.TryGetValue("Living_TV_Animimo", out var television) && !television.GetComponent<TVBroadcast>())
+            television.gameObject.AddComponent<TVBroadcast>();
         AddLooseItems(byName);
         var stack = Object.FindAnyObjectByType<PlankStack>();
         if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);

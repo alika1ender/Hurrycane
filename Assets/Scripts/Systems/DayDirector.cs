@@ -62,7 +62,7 @@ public sealed class DayDirector : MonoBehaviour
 
     void OnDayStarted(int day)
     {
-        AlertRead = false;
+        AlertRead = false; ShowingControls = false;
         if (Today.alertFirst)
         {
             SetControl(false);
@@ -78,10 +78,18 @@ public sealed class DayDirector : MonoBehaviour
     public void DismissAlert()
     {
         if (Phase != DayPhase.Alert) return;
-        AlertRead = true;
+        // First press reads the alert; then the "How to play" card shows before the clock starts (second press).
+        if (!AlertRead) { AlertRead = true; ShowingControls = true; return; }
+        ShowingControls = false;
         SetControl(true);
         EnterPhase(DayPhase.Preparation);
     }
+
+    /// <summary>True while the Day 1 "How to play" card is up (still in the Alert phase, so no clock runs).</summary>
+    public bool ShowingControls { get; private set; }
+
+    /// <summary>For tests and tools: past the alert and the controls card straight into Preparation.</summary>
+    public void SkipIntro() { if (Phase != DayPhase.Alert) return; AlertRead = true; ShowingControls = true; DismissAlert(); }
 
     void Update()
     {
