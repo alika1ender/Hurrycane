@@ -124,7 +124,9 @@ public sealed class GameUI : MonoBehaviour
         BuildScore();
         BuildPhone();
         BuildHandbook();
+        BuildCutscene();
         BuildAlert();
+        BuildMenu();
         BuildPause();
     }
 
@@ -396,6 +398,108 @@ public sealed class GameUI : MonoBehaviour
         pauseOverlay.SetActive(false);
     }
 
+    // ------------------------------------------------------------------ main menu & cutscenes
+
+    GameObject menuOverlay, cutsceneOverlay;
+    RectTransform menuButtons, letterTop, letterBottom, lidTop, lidBottom;
+    Text captionText, skipHint;
+    Image sirenRed, sirenBlue, cutFade;
+
+    void BuildMenu()
+    {
+        var shade = UiKit.Panel(transform, "Menu", new Color(.02f, .03f, .05f, .55f), false);
+        shade.rectTransform.Stretch(); shade.raycastTarget = true;
+        menuOverlay = shade.gameObject;
+        var side = UiKit.Panel(shade.transform, "Side", new Color(.02f, .03f, .05f, .82f), false);
+        side.rectTransform.anchorMin = Vector2.zero; side.rectTransform.anchorMax = new Vector2(0, 1); side.rectTransform.pivot = new Vector2(0, .5f);
+        side.rectTransform.sizeDelta = new Vector2(720, 0); side.rectTransform.anchoredPosition = Vector2.zero;
+        var title = UiKit.Label(side.transform, "Title", UiKit.Bold, 150, UiKit.TextColor);
+        title.rectTransform.Place(new Vector2(0, 1), new Vector2(90, -150), new Vector2(620, 170));
+        title.text = "HURRY<color=#F2A93B>CANE</color>";
+        var tagline = UiKit.Label(side.transform, "Tagline", UiKit.Medium, 34, UiKit.Dim, TextAnchor.UpperLeft, true);
+        tagline.rectTransform.Place(new Vector2(0, 1), new Vector2(96, -320), new Vector2(560, 90));
+        tagline.text = "One house. Three days. One hurricane.\nGet ready before it hits.";
+        menuButtons = UiKit.Node("Buttons", side.transform).Place(new Vector2(0, 1), new Vector2(96, -460), new Vector2(460, 0));
+        menuButtons.pivot = new Vector2(0, 1);
+        menuButtons.Layout<VerticalLayoutGroup>(0, 14, TextAnchor.UpperLeft);
+        menuButtons.Fit(false, true);
+        var foot = UiKit.Label(side.transform, "Foot", UiKit.Medium, 22, new Color(1, 1, 1, .35f), TextAnchor.LowerLeft, true);
+        foot.rectTransform.Place(new Vector2(0, 0), new Vector2(96, 50), new Vector2(560, 60));
+        foot.text = "Game Jam build · WASD move · E use · Tab phone/handbook · Esc pause";
+        menuOverlay.SetActive(false);
+    }
+
+    void FillMenu()
+    {
+        foreach (Transform child in menuButtons) Destroy(child.gameObject);
+        var saves = SaveSystem.All();
+        if (saves.Count > 0)
+        {
+            var last = saves[saves.Count - 1];
+            UiKit.Button(menuButtons, "Continue", "CONTINUE  <size=24><color=#9AA0AA>Day " + last.day + " · Health " + Mathf.RoundToInt(last.health) + "</color></size>",
+                GameSession.ContinueLatest, out _, 34).Size(-1, 72);
+        }
+        UiKit.Button(menuButtons, "NewGame", saves.Count > 0 ? "NEW GAME  <size=22><color=#9AA0AA>(replaces your saves)</color></size>" : "NEW GAME",
+            () => { if (GameSession.Instance) GameSession.Instance.StartNewGame(); }, out _, 34).Size(-1, 72);
+        UiKit.Button(menuButtons, "Quit", "QUIT", Quit, out _, 30).Size(-1, 60);
+    }
+
+    static void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+    void BuildCutscene()
+    {
+        var root = UiKit.Node("Cutscene", transform).Stretch();
+        cutsceneOverlay = root.gameObject;
+        sirenRed = UiKit.Panel(root, "SirenRed", new Color(.9f, .1f, .1f, 0), false); sirenRed.rectTransform.Stretch();
+        sirenBlue = UiKit.Panel(root, "SirenBlue", new Color(.1f, .25f, .95f, 0), false); sirenBlue.rectTransform.Stretch();
+        // Eyelids: two black bars that close from top and bottom.
+        lidTop = Bar(root, "LidTop", new Vector2(.5f, 1)); lidBottom = Bar(root, "LidBottom", new Vector2(.5f, 0));
+        cutFade = UiKit.Panel(root, "Fade", new Color(0, 0, 0, 0), false); cutFade.rectTransform.Stretch();
+        // Cinema letterbox.
+        letterTop = Bar(root, "LetterTop", new Vector2(.5f, 1)); letterTop.sizeDelta = new Vector2(0, 110);
+        letterBottom = Bar(root, "LetterBottom", new Vector2(.5f, 0)); letterBottom.sizeDelta = new Vector2(0, 110);
+        captionText = UiKit.Label(root, "Caption", UiKit.SemiBold, 36, UiKit.TextColor, TextAnchor.MiddleCenter, true);
+        captionText.rectTransform.Place(new Vector2(.5f, 0), new Vector2(0, 150), new Vector2(1400, 120));
+        captionText.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(2, -2);
+        skipHint = UiKit.Label(root, "Skip", UiKit.Medium, 22, new Color(1, 1, 1, .55f), TextAnchor.MiddleRight);
+        skipHint.rectTransform.Place(new Vector2(1, 0), new Vector2(-40, 40), new Vector2(500, 30));
+        cutsceneOverlay.SetActive(false);
+    }
+
+    static RectTransform Bar(Transform parent, string name, Vector2 anchor)
+    {
+        var image = UiKit.Panel(parent, name, Color.black, false);
+        var rt = image.rectTransform;
+        rt.anchorMin = new Vector2(0, anchor.y); rt.anchorMax = new Vector2(1, anchor.y); rt.pivot = anchor;
+        rt.anchoredPosition = Vector2.zero; rt.sizeDelta = Vector2.zero;
+        return rt;
+    }
+
+    void UpdateCutscene(CutsceneSystem cutscene, bool show)
+    {
+        show = show && cutscene && cutscene.Playing;
+        cutsceneOverlay.SetActive(show);
+        if (!show) return;
+        float half = ((RectTransform)transform).rect.height * .5f;
+        lidTop.sizeDelta = new Vector2(0, half * cutscene.Eyelids);
+        lidBottom.sizeDelta = new Vector2(0, half * cutscene.Eyelids);
+        cutFade.color = new Color(0, 0, 0, cutscene.Fade);
+        bool red = Mathf.Repeat(Time.unscaledTime * 2.2f, 1) < .5f;
+        sirenRed.color = new Color(.9f, .1f, .1f, red ? cutscene.Siren * .35f : 0);
+        sirenBlue.color = new Color(.1f, .25f, .95f, red ? 0 : cutscene.Siren * .35f);
+        string speaker = cutscene.Speaker;
+        captionText.text = string.IsNullOrEmpty(cutscene.Caption) ? "" :
+            (string.IsNullOrEmpty(speaker) ? "<i>" + cutscene.Caption + "</i>" : "<color=#F2A93B>" + speaker.ToUpperInvariant() + "</color>   " + cutscene.Caption);
+        skipHint.text = cutscene.QuickSkip ? "Space  skip" : cutscene.SkipProgress > 0 ? "Skipping " + new string('.', 1 + (int)(cutscene.SkipProgress * 3)) : "Hold Space  skip";
+    }
+
     // ------------------------------------------------------------------ update
 
     void Update()
@@ -408,8 +512,11 @@ public sealed class GameUI : MonoBehaviour
         bool alert = phase == DayPhase.Alert;
         bool night = phase == DayPhase.Night;
         bool ended = phase == DayPhase.Ended, gameOver = phase == DayPhase.GameOver;
+        bool playing = phase >= DayPhase.Preparation && phase <= DayPhase.AfterDisaster;
         alertOverlay.SetActive(alert);
-        hud.gameObject.SetActive(!alert && !night && !ended && !gameOver);
+        hud.gameObject.SetActive(playing);
+        menuOverlay.SetActive(phase == DayPhase.Menu);
+        UpdateCutscene(session.GetComponent<CutsceneSystem>(), phase == DayPhase.Opening || phase == DayPhase.Ending);
         UpdateNight(night, director);
         if (phase != shownPhase)
         {
@@ -418,6 +525,7 @@ public sealed class GameUI : MonoBehaviour
             scoreOverlay.SetActive(ended);
             if (gameOver) FillCards(gameOverCards);
             if (ended) FillScore(director);
+            if (phase == DayPhase.Menu) FillMenu();
         }
         var health = session.GetComponent<HealthSystem>();
         faintGroup.alpha = Mathf.MoveTowards(faintGroup.alpha, health && health.Fainted ? 1 : 0, Time.unscaledDeltaTime * .7f);
@@ -426,7 +534,7 @@ public sealed class GameUI : MonoBehaviour
         bool paused = pause && pause.Open;
         if (paused != pauseWasOpen) { pauseWasOpen = paused; pauseOverlay.SetActive(paused); if (paused) FillPauseCards(session, director); }
 
-        if (!alert && !night && !ended && !gameOver)
+        if (playing)
         {
             UpdateTimer(director, session);
             UpdateHealth(session);
@@ -435,7 +543,7 @@ public sealed class GameUI : MonoBehaviour
             UpdateInventory();
             UpdateTasks(session, director);
         }
-        UpdateHandheld(session, director, !alert && !night && !ended && !gameOver);
+        UpdateHandheld(session, director, playing);
         UpdateToasts();
         bannerGroup.alpha = Mathf.Clamp01((bannerUntil - Time.unscaledTime) / .6f);
         var flash = damageFlash.color; flash.a = Mathf.MoveTowards(flash.a, 0, Time.unscaledDeltaTime * .8f); damageFlash.color = flash;

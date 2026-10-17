@@ -99,6 +99,9 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
         Striking = false;
         Hit(forced);
     }
+    /// <summary>Ending cutscene: make intact glass see-through so the street outside shows (normal glass reads as daylight).</summary>
+    public void SetGlassClear(bool clear) => visuals?.SetClearGlass(clear, state);
+
     /// <summary>Stops a strike that is still in its warning (the day ended or the game is over).</summary>
     public void CancelStrike()
     {

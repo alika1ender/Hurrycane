@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public sealed class DaysConfig
 {
+    /// <summary>Show the main menu when the scene starts.</summary>
+    public bool showMainMenu = true;
     public float stormHoldMultiplier = 1.5f, warningLeadSeconds = 3, hitWindowStart = .15f, hitWindowEnd = .85f, minSecondsBetweenHits = 6;
     public float prepBreakWindowSeconds = 30, prepBreakFactor = .25f, injuryRadius = 2, nightSeconds = 6;
     public float recoveryEnough = 50, recoverySome = 30, recoveryNone = 10;

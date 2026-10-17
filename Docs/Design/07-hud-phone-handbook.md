@@ -41,6 +41,8 @@ Style: **emergency broadcast**. Dark translucent rounded panels and white **Barl
   - **Handbook:** a red book with cream pages. The left page is the full checklist with hints; the right page is a **live floor plan** of both floors, with every opening colour-coded by state, numbered, and a white dot for Cane.
   - **Compact panel:** on Days 2-3 it keeps showing the phone-style next task ("Pick up the handbook") until the handbook is carried, and it shows "Tab open ..." and unread messages.
 
+- **Main menu and cutscene overlays (built):** the menu has a dark side panel with the HURRY**CANE** title, a tagline and buttons. Cutscenes get letterbox bars, speaker-tagged captions, closing eyelids, a siren wash, fades and a "Hold Space skip" hint.
+
 Still missing: real phone and book models (cubes for now), the illustrated category pages (Water, Windows, Power, First aid).
 
 ## Decisions (proposed 2026-10-17, change freely)

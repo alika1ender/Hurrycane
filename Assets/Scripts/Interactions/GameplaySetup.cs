@@ -123,6 +123,7 @@ public static class GameplaySetup
             host.AddComponent<FloodSystem>().Bind(explorer, StairBarrier.Create(explorer, director.Config.flood));
             host.AddComponent<PuddleSystem>().Bind(explorer, DoorGap.Create(explorer, director.Config.doorGap));
             host.AddComponent<HandheldSystem>().Bind(explorer);
+            host.AddComponent<CutsceneSystem>().Bind(explorer);
             newSession.Begin(explorer, config.startDay);
         }
     }

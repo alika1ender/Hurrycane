@@ -18,7 +18,7 @@ After Day 3's After-Disaster timer: ending cutscene (the city in ruins seen from
 ## Implemented (2026-10-17)
 `Assets/Scripts/Systems/Score.cs`, shown by `GameUI`. When Day 3's After-Disaster timer ends (and Cane is alive), the score screen opens: "THE STORM HAS PASSED", one row per part (points, out-of, and the raw numbers), the total out of 1000, the rank in colour, the rank line, a "Did you know?" fact, and PLAY AGAIN (a new game).
 - Supplies = water + food (carried + stash) + first aid uses; 16 or more gives full points. Tasks = required tasks done / required, over all days. Reinforcements = openings ever boarded (max 15). Damage repaired = 1 - (cracked or broken now / storm hits); 100 if nothing was hit.
-- **Not built yet:** the ending cutscene (the view of the ruined city). The screen shows a one-line placeholder instead.
+- **Ending cutscene (built, `CutsceneSystem`, about 23 s):** at the foot of the basement stairs ("The wind has stopped."), then up and through the stair hall, entry hall and living room to W01 ("Morning. Day four."), in full daylight with the room lights still off. W01's glass turns clear (boards stay if boarded). Outside is a **placeholder ruined street**: mud, standing water, a fallen tree, a broken fence, scattered boards, and roofless houses across the road, lit by a morning sun. Broski: "bro u alive??", then fade to the score. The street should be replaced with real art.
 
 ## Decisions (proposed 2026-10-17, change freely)
 - **Supplies left** = water + food + first aid uses, in the shelter stash plus carried, at the end of Day 3. Full 100 points at 16 or more; it scales linearly below that. Hoarding everything is not needed.

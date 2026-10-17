@@ -14,6 +14,7 @@ public sealed class OpeningVisuals
     readonly Renderer mesh;
     readonly int glassSlot = -1;
     readonly Material glass, glassCracked, glassBroken;
+    Material glassClear;
     readonly Vector3 meshHome, center;
 
     public OpeningVisuals(Collider proxy, bool isDoor)
@@ -81,6 +82,20 @@ public sealed class OpeningVisuals
         if (!glass) return;
         var slots = mesh.sharedMaterials;
         slots[glassSlot] = state == OpeningState.Broken ? glassBroken : state == OpeningState.Cracked ? glassCracked : glass;
+        mesh.sharedMaterials = slots;
+    }
+
+    /// <summary>Swaps intact glass for a faint, see-through pane (or back). Broken glass stays gone.</summary>
+    public void SetClearGlass(bool clear, OpeningState state)
+    {
+        if (!glass || state == OpeningState.Broken) return;
+        if (clear && !glassClear)
+        {
+            glassClear = new Material(glassBroken) { name = glass.name + "_Clear" };
+            var c = glass.GetColor("_BaseColor"); c.a = .12f; glassClear.SetColor("_BaseColor", c);
+        }
+        var slots = mesh.sharedMaterials;
+        slots[glassSlot] = clear ? glassClear : state == OpeningState.Cracked ? glassCracked : glass;
         mesh.sharedMaterials = slots;
     }
 

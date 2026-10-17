@@ -14,6 +14,16 @@ Template:
 
 ---
 
+## 2026-10-17 20:35 · Claude (for Ali)
+**Worked on:** the main menu, the opening cutscene and the ending cutscene. Code: `Systems/CutsceneSystem.cs`, plus menu and cutscene overlays in `UI/GameUI.cs`, and flow changes in `DayDirector`/`GameSession` (new phases `Menu`, `Opening`, `Ending`). Data: `cutscenes.json` (captions) and `showMainMenu` in `days.json`. Updated 01, 07, 08, 09 and 10.
+**Done:**
+- Main menu: Continue (latest day) / New Game / Quit, over a living room shot.
+- Opening (~37 s): the sofa, TV news, "Tomorrow. It's always tomorrow.", the match, dozing off, the next morning, sirens, the storm warning, the phone buzz, then the alert. Hold Space to skip.
+- Ending (~23 s): up from the basement and through the house to W01, morning light, a placeholder ruined street outside, "bro u alive??", then the score.
+- Tested in Play mode with Game view captures (`WalkthroughPreviews/ui/20_menu`, `21_opening_*`, `22_ending_*`): the whole flow menu → opening → alert → (fast-forward) → ending → score; skipping drops Cane at the front-door spawn. The door/drawer test passes 31/31.
+**Next:** everything in the design is now in the game. What's left: a hands-on playtest and tuning (timings, workload, break chances), sound (none yet: sirens, rain, glass, heartbeat, TV), and real art for the placeholders (planks, towels, puddles, handbook, phone, flood water, the ending street).
+**Blocked / questions:** unchanged (water and planks in the arms; Day 1 door chance; cracked-boarded repair rule; Q3).
+
 ## 2026-10-17 20:00 · Claude (for Ali)
 **Worked on:** the last two disabled tasks, plus the phone and handbook in hand. Code: `Interactions/LooseItem.cs`, `Systems/HandheldSystem.cs`, a handbook prop in `GeneratedProps`, and GameUI phone/handbook screens. Data: `loose.json`, `phone.json`; in `tasks.json`, `d2_handbook` and `d2_loose` are on and `d3_loose` is new. Updated 04, 07 and 09.
 **Done:**

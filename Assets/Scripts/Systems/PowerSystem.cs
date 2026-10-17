@@ -73,6 +73,17 @@ public sealed class PowerSystem : MonoBehaviour
         RenderSettings.ambientGroundColor = ambientGround * f;
     }
 
+    /// <summary>Ending: full morning daylight (ambient back to normal), room lights stay off, window glow lamps off.</summary>
+    public void SetDaylight()
+    {
+        ReadLights();
+        RenderSettings.ambientSkyColor = ambientSky * 1.1f;
+        RenderSettings.ambientEquatorColor = ambientEquator * 1.1f;
+        RenderSettings.ambientGroundColor = ambientGround;
+        foreach (var light in FindObjectsByType<Light>(FindObjectsInactive.Exclude))
+            if (light.name.Contains("Window")) light.enabled = false; // their glare hides the view outside
+    }
+
     void OnDestroy()
     {
         // Put the scene's ambient back so leaving Play mode never leaves the editor dark.

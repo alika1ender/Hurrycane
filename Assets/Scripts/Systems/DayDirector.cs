@@ -4,7 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum DayPhase { Alert, Preparation, Disaster, AfterDisaster, Night, Ended, GameOver }
+// Order matters: code compares phases (e.g. Phase >= Preparation && Phase <= AfterDisaster means "playing").
+public enum DayPhase { Menu, Opening, Alert, Preparation, Disaster, AfterDisaster, Night, Ending, Ended, GameOver }
 
 /// <summary>
 /// Runs a day (Docs/Design/01, 03): optional alert, then Preparation → Disaster → After-Disaster on the clock only,
@@ -25,7 +26,7 @@ public sealed class DayDirector : MonoBehaviour
     MapExplorer player;
     float phaseClock;
 
-    public DayPhase Phase { get; private set; } = DayPhase.Ended;
+    public DayPhase Phase { get; private set; } = DayPhase.Menu;
     public float TimeLeft { get; private set; }
     public bool AlertRead { get; private set; }
     /// <summary>Text for the night card / ending card.</summary>
@@ -62,7 +63,14 @@ public sealed class DayDirector : MonoBehaviour
     void OnDayStarted(int day)
     {
         AlertRead = false;
-        if (Today.alertFirst) { SetControl(false); EnterPhase(DayPhase.Alert); }
+        if (Today.alertFirst)
+        {
+            SetControl(false);
+            // Day 1: the opening cutscene on the sofa, then the phone alert (Docs/Design/01).
+            var cutscene = GetComponent<CutsceneSystem>();
+            if (cutscene) { Phase = DayPhase.Opening; PhaseChanged?.Invoke(Phase); cutscene.PlayOpening(() => EnterPhase(DayPhase.Alert)); }
+            else EnterPhase(DayPhase.Alert);
+        }
         else { SetControl(true); EnterPhase(DayPhase.Preparation); }
     }
 
@@ -84,7 +92,7 @@ public sealed class DayDirector : MonoBehaviour
                 DismissAlert();
             return;
         }
-        if (Phase == DayPhase.Ended || Phase == DayPhase.GameOver) return;
+        if (Phase == DayPhase.Menu || Phase == DayPhase.Opening || Phase == DayPhase.Ending || Phase == DayPhase.Ended || Phase == DayPhase.GameOver) return;
         float dt = Time.deltaTime * debugTimeScale;
         TimeLeft -= dt;
         if (Phase == DayPhase.Night) { if (TimeLeft <= 0) session.StartDay(session.CurrentDay + 1); return; }
@@ -187,9 +195,11 @@ public sealed class DayDirector : MonoBehaviour
         if (session.CurrentDay >= 3)
         {
             Score = global::Score.Compute(session, player);
-            Phase = DayPhase.Ended;
             NightText = "The storm has passed\n\nThe city outside is in ruins. Your house is still standing.";
-            PhaseChanged?.Invoke(Phase);
+            // The ending walk to the window (Docs/Design/08), then the score screen.
+            var cutscene = GetComponent<CutsceneSystem>();
+            if (cutscene) { Phase = DayPhase.Ending; PhaseChanged?.Invoke(Phase); cutscene.PlayEnding(() => { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); }); }
+            else { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); }
             return;
         }
         NightText = "Day " + session.CurrentDay + " survived\n\n" + OvernightRecovery();
@@ -213,6 +223,16 @@ public sealed class DayDirector : MonoBehaviour
     void CancelStrikes()
     {
         foreach (var opening in FindObjectsByType<BreakableOpening>(FindObjectsInactive.Exclude)) opening.CancelStrike();
+    }
+
+    /// <summary>The main menu over a still shot of the living room. Nothing runs until New Game or Continue.</summary>
+    public void ShowMenu()
+    {
+        SetControl(false);
+        var cutscene = GetComponent<CutsceneSystem>();
+        if (cutscene) cutscene.MenuShot();
+        Phase = DayPhase.Menu;
+        PhaseChanged?.Invoke(Phase);
     }
 
     /// <summary>Day 3 at zero health: the restart menu, no score (Docs/Design/06).</summary>

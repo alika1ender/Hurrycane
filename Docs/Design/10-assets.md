@@ -22,6 +22,7 @@ Tick these off as they land in the repo, and note the asset path. Ordered by whe
 - [ ] Shelter stash marker in the basement (a floor mat or tape outline)
 - [ ] Flood water for the basement stairs and basement (a placeholder murky plane exists, `FloodSystem`; it needs a real water shader and water pouring down the stairs)
 - [ ] Blackout: lamps and fluorescent tubes keep glowing because their glow is baked into their materials. They need an "off" material or emission switched off by code.
+- [ ] Ending view: the ruined street outside W01 (a placeholder primitive diorama exists in `CutsceneSystem.BuildStreet`)
 - [ ] Rain and wind visuals on in-play windows (rain streaks; cut first if short on time)
 - [ ] Ending view: a ruined street outside W01 (a matte painting or billboard is fine)
 

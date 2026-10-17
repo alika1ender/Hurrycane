@@ -1,0 +1,20 @@
+{
+    "_about": "Captions for the opening and ending cutscenes (Docs/Design/01, 08). 'at' and 'duration' are seconds from the start. Camera moves and effects are timed in CutsceneSystem.cs (opening ~37 s, ending ~23 s); keep captions inside those lengths.",
+    "opening": [
+        { "at": 1.0,  "duration": 6.0, "speaker": "TV",    "text": "...a tropical storm off the coast is expected to strengthen into a hurricane by tomorrow evening..." },
+        { "at": 7.5,  "duration": 3.5, "speaker": "TV",    "text": "...residents are urged to begin preparations now." },
+        { "at": 11.2, "duration": 3.0, "speaker": "Cane",  "text": "Tomorrow. It's always tomorrow." },
+        { "at": 14.5, "duration": 3.5, "speaker": "",      "text": "(he flips to the match)" },
+        { "at": 18.0, "duration": 4.0, "speaker": "TV",    "text": "...and it's a corner kick... the keeper is off his line..." },
+        { "at": 24.5, "duration": 2.6, "speaker": "",      "text": "The next morning" },
+        { "at": 27.4, "duration": 3.4, "speaker": "",      "text": "(sirens wailing outside)" },
+        { "at": 31.0, "duration": 3.0, "speaker": "TV",    "text": "HURRICANE IS COMING. Landfall expected this evening." },
+        { "at": 34.2, "duration": 2.4, "speaker": "",      "text": "(your phone buzzes)" }
+    ],
+    "ending": [
+        { "at": 0.8,  "duration": 3.4, "speaker": "",       "text": "The wind has stopped." },
+        { "at": 5.5,  "duration": 4.0, "speaker": "",       "text": "Morning. Day four." },
+        { "at": 14.0, "duration": 5.0, "speaker": "",       "text": "Outside, the street is in ruins. The house is still standing." },
+        { "at": 19.4, "duration": 2.6, "speaker": "Broski", "text": "bro u alive??" }
+    ]
+}

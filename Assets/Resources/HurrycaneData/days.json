@@ -1,4 +1,5 @@
 {
+    "showMainMenu": true,
     "stormHoldMultiplier": 1.5,
     "warningLeadSeconds": 3,
     "hitWindowStart": 0.15,

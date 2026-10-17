@@ -36,6 +36,7 @@ public sealed class GameSession : MonoBehaviour
     {
         SaveSystem.DeleteAll();
         pendingRestore = null;
+        skipMenuOnce = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().path);
     }
 
@@ -51,9 +52,38 @@ public sealed class GameSession : MonoBehaviour
             DayStarted?.Invoke(CurrentDay);
             return;
         }
-        // No main menu yet: entering the scene is a new game.
+        this.firstDay = firstDay;
+        // Remember where the scene put Cane (by the front door) before the menu moves the camera.
+        startPosition = player.transform.position; startRotation = player.transform.rotation;
+        var director = GetComponent<DayDirector>();
+        bool menu = !skipMenuOnce && director && director.Config.showMainMenu;
+        skipMenuOnce = false;
+        if (menu) director.ShowMenu();
+        else StartNewGame();
+    }
+
+    int firstDay = 1;
+    Vector3 startPosition; Quaternion startRotation;
+    /// <summary>Set by "Play again" / "New game" on end screens so the reload goes straight into Day 1.</summary>
+    static bool skipMenuOnce;
+
+    /// <summary>Main menu NEW GAME: throw away old saves and start Day 1 here (no reload).</summary>
+    public void StartNewGame()
+    {
+        var controller = player.GetComponent<CharacterController>();
+        controller.enabled = false;
+        player.transform.SetPositionAndRotation(startPosition, startRotation);
+        player.viewCamera.transform.localRotation = Quaternion.identity;
+        controller.enabled = true;
         SaveSystem.DeleteAll();
         StartDay(firstDay);
+    }
+
+    /// <summary>Main menu CONTINUE: restart from the latest saved day.</summary>
+    public static void ContinueLatest()
+    {
+        var saves = SaveSystem.All();
+        if (saves.Count > 0) RestartFromDay(saves[saves.Count - 1].day);
     }
 
     /// <summary>Begins a day: brings that day's windows into play, then autosaves. The phase timer will call this each morning.</summary>
