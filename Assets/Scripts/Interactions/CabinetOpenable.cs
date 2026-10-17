@@ -5,7 +5,7 @@ using UnityEngine;
 /// Poses are stored parent-local, so the motion is exact regardless of FBX axis conversion.
 /// </summary>
 [DisallowMultipleComponent]
-public sealed class CabinetOpenable : MonoBehaviour
+public sealed class CabinetOpenable : MonoBehaviour, IInteractable
 {
     [SerializeField] bool isDrawer;
     [SerializeField] bool isRoomDoor;
@@ -37,6 +37,10 @@ public sealed class CabinetOpenable : MonoBehaviour
     }
 
     public string Verb => (targetOpen ? "Close " : "Open ") + (isDrawer ? "drawer" : "door");
+    string IInteractable.Prompt => Verb + (Blocked ? " (blocked)" : "");
+    float IInteractable.HoldSeconds => 0;
+    string IInteractable.Unavailable(MapExplorer user) => null;
+    void IInteractable.Use(MapExplorer user) => Toggle();
 
     [ContextMenu("Toggle Open / Closed")]
     public void Toggle() => SetOpen(!targetOpen);

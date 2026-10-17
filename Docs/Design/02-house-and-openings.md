@@ -28,6 +28,8 @@
 | W13 | `COL_Window_Glass.006` | Stair hall, west (ground) | -12, 1.69, -6.5 | Day 3 |
 | W14 | `COL_Window_Glass.012` | Stair hall, west (upstairs) | -12, 4.94, -6.5 | Day 3 |
 
+**Verified in the scene 2026-10-17:** all 14 window colliders exist once and their centers match this table within 0.35 m. The glass panes are 1.38 m tall (bathroom 1.0 m). Front door `COL_EntryDoor_Closed`: center (-7, 1.17, 0), 1.43 m wide, 2.34 m tall. All of these are invisible `COL_*` collision proxies under `HouseCollisions`. Gameplay on them needs an `InteractionProxy` (see [09](09-architecture-and-build-order.md)).
+
 New windows per day: 3, then 5, then 6. Windows not yet "in play" are never rolled for breakage. In-play windows rattle and show on the handbook map. Reinforced windows stay reinforced until they break.
 
 ## Decisions (proposed 2026-10-17, change freely)

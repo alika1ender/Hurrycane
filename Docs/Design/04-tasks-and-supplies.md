@@ -24,13 +24,14 @@ Task hints: Day 1 phone shows a location hint, Day 2 less, Day 3 only the handbo
 
 ## Decisions (proposed 2026-10-17, change freely)
 
-### Carrying
+### Carrying (implemented, see [09](09-architecture-and-build-order.md))
 - **Pockets** (unlimited, no slowdown): flashlight, batteries, first aid, toolkit, tape, phone, handbook.
 - **Armful** (one kind at a time, no sprinting): up to 6 water/food items, or up to 8 plank sets, or up to 4 towels, or the blanket. Picking up a different armful kind asks you to drop the current one.
 - Fainting drops the armful only. Pockets are kept.
+- The backpack goes in the pockets (Cane wears it). The radio is not carried: it is switched on where it stands.
 
-### The shelter stash
-A marked corner of the basement (`MARKER_ShelterStash`, to be added). "Bring supplies to the shelter" tasks count only the items placed there. Overnight, Cane eats 1 food and drinks 1 water from the stash (see [06](06-health-and-saves.md)).
+### The shelter stash (implemented)
+The existing low platform `Basement_ShelterStash` in the basement (no new marker needed). It holds about 21 items per layer. "Bring supplies to the shelter" tasks count only the items placed there. Overnight, Cane eats 1 food and drinks 1 water from the stash (see [06](06-health-and-saves.md)).
 
 ### Wiping puddles (replaces mopping)
 There is no mop. With a towel in the armful, hold E on a puddle for 4 s to remove it. One towel wipes any number of puddles.

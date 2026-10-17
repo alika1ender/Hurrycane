@@ -14,6 +14,15 @@ Template:
 
 ---
 
+## 2026-10-17 07:10 · Claude (for Ali)
+**Worked on:** build steps 1-2 (code in `Assets/Scripts/Interactions/`), plus 02, 04 and 09.
+**Done:**
+- Step 1: all 14 windows and the front door are confirmed in `HouseMap.unity`, and their positions match the design table.
+- Step 2: pickup, carry (pockets and armful), drop (G), hold-to-use with a progress bar, the radio switch, and the shelter stash. Everything is wired at runtime by `GameplaySetup`, and the scene file is untouched. A summary of each script is in [09](09-architecture-and-build-order.md), "What exists in code".
+- Tested in Play mode through the Unity MCP: all 37 pickups are reachable, carry rules, stash and hold timing work, and the door/drawer test passes 31/31.
+**Next:** build step 3, `HouseState` and start-of-day snapshots. Or step 4, `BreakableOpening` on the 14 `COL_Window_*` proxies and the door, implementing `IInteractable` (reinforce needs a toolkit plus a plank set, a 5 s hold). Plank sets and towels have item kinds but no props yet: placeholder cubes named `PICKUP_Plank_*` / `PICKUP_Towel_*` would be picked up automatically.
+**Blocked / questions:** Unity throttles itself when its window is in the background, so the MCP bridge and request-file triggers don't respond until someone clicks into the editor.
+
 ## 2026-10-17 · Claude (for Ali)
 **Worked on:** all modules 01-10.
 **Done:** Ali decided Q1 (simple boards), Q2 (towels instead of sandbags), Q4 (phone prop plus overlay) and Q5 (flooding via the stairs only). I filled every "Still to design" gap with a proposed answer under a "Decisions (proposed)" heading. Main additions:

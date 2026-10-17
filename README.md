@@ -10,7 +10,7 @@ First-person hurricane preparation game prototype.
 4. Open this folder in Unity Hub using Unity **6000.5.3f1**. Let Unity restore packages and import assets.
 5. Open `Assets/Scenes/HouseMap.unity` and press Play.
 
-Controls: WASD to move, mouse to look, Shift to sprint, E to open/close doors and drawers.
+Controls: WASD to move, mouse to look, Shift to sprint, E to use (tap to open doors/drawers and take items, hold for some actions such as storing supplies in the basement shelter), G to drop what you carry in your arms.
 
 The scene includes the two-storey house, basement, furnished rooms, materials, supplies, and 31 doors/drawers. Cabinet fronts use single hinged leaves. Kitchen curtains have been removed and countertop props repositioned.
 
