@@ -218,4 +218,3 @@ Cut first if time runs out: surge mechanic on Day 2, Broski texts after the open
 4. Phone: a simple first-person prop with a UI overlay?
 5. Is Day 3 flooding only via the basement stairs (no basement windows)?
 6. Health bar placement on the HUD.
-7. Local note: the project targets 6000.5.3f1. A throwaway copy opened on 6000.4.4f1 needed `com.unity.modules.physicscore2d` removed and URP lowered to 17.4.0 to compile. Do not commit those changes to the shared repo.
