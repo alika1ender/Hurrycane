@@ -48,6 +48,34 @@ public sealed class PlayerInventory : MonoBehaviour
 
     public int Count(ItemKind kind) => pockets.Count(p => p.Kind == kind) + armful.Count(p => p.Kind == kind);
     public bool Has(ItemKind kind) => Count(kind) > 0;
+    /// <summary>Uses left across all carried items of a multi-use kind (repair tape rolls).</summary>
+    public int Uses(ItemKind kind) => pockets.Where(p => p.Kind == kind).Sum(p => p.UsesLeft);
+
+    /// <summary>Spends uses from the emptiest rolls first; used-up rolls are destroyed. False (and nothing spent) if short.</summary>
+    public bool ConsumeUses(ItemKind kind, int count)
+    {
+        if (Uses(kind) < count) return false;
+        foreach (var item in pockets.Where(p => p.Kind == kind && p.UsesLeft > 0).OrderBy(p => p.UsesLeft).ToList())
+        {
+            int take = Mathf.Min(count, item.UsesLeft);
+            item.UsesLeft -= take; count -= take;
+            if (item.UsesLeft == 0) { pockets.Remove(item); Destroy(item.gameObject); }
+            if (count == 0) break;
+        }
+        Changed?.Invoke();
+        return true;
+    }
+
+    /// <summary>Uses up one carried item of this kind from the arms (e.g. a plank set nailed to a window).</summary>
+    public bool ConsumeArmful(ItemKind kind)
+    {
+        var item = armful.FirstOrDefault(p => p.Kind == kind);
+        if (!item) return false;
+        armful.Remove(item);
+        Destroy(item.gameObject);
+        Changed?.Invoke();
+        return true;
+    }
 
     /// <summary>Why this pickup can't be taken right now, or null.</summary>
     public string CannotTake(Pickup item)
@@ -89,7 +117,8 @@ public sealed class PlayerInventory : MonoBehaviour
     /// <summary>One line for the debug HUD, e.g. "Pockets: Toolkit, Flashlight · Arms: Water x3 (3/6)".</summary>
     public string Summary()
     {
-        string List(IEnumerable<Pickup> items) => string.Join(", ", items.GroupBy(p => p.Kind).Select(g => Pickup.DisplayName(g.Key) + (g.Count() > 1 ? " x" + g.Count() : "")));
+        string List(IEnumerable<Pickup> items) => string.Join(", ", items.GroupBy(p => p.Kind).Select(g => Pickup.DisplayName(g.Key) + (g.Count() > 1 ? " x" + g.Count() : "")
+            + (g.Sum(p => p.UsesLeft) > 0 ? " (" + g.Sum(p => p.UsesLeft) + " uses)" : "")));
         string arms = armful.Count == 0 ? "empty" : List(armful) + " (" + armful.Count + "/" + Capacity(ArmfulGroup.Value) + ")";
         return "Pockets: " + (pockets.Count == 0 ? "empty" : List(pockets)) + "   ·   Arms: " + arms;
     }

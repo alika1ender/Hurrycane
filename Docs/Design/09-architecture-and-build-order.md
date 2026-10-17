@@ -14,7 +14,7 @@
 1. ~~Open `HouseMap.unity`, confirm the 14 window objects and the front door.~~ **Done 2026-10-17**, see [02](02-house-and-openings.md).
 2. ~~Extend `MapExplorer` with pickup, carry and hold-to-use, using the `PICKUP_*` objects.~~ **Done 2026-10-17**, see "What exists in code" below.
 3. `HouseState` with start-of-day snapshots and the restart menu.
-4. Windows and door as reusable breakable objects with the states: out of play, unreinforced, reinforced, cracked, broken, repaired.
+4. ~~Windows and door as reusable breakable objects with the states: out of play, unreinforced, reinforced, cracked, broken, repaired.~~ **Done 2026-10-17** (rolls and timing come with step 6).
 5. Task engine with phase windows and durations; phone and handbook UI.
 6. Phase timer, HUD, pulse system.
 7. Day 1 fully playable, then Day 2 (blackout, handbook), then Day 3 and the ending.
@@ -31,6 +31,12 @@ All files are in `Assets/Scripts/Interactions/`.
 - `ShelterStash`: on `Basement_ShelterStash`. Hold E for 1.5 s with water, food or the blanket to store them in rows on the platform. `Count(kind)` feeds overnight recovery and the score.
 - `InteractionProxy`: put on an invisible `COL_*` proxy to forward E to the real object. The stash needs it; the windows and the door will too.
 - `GameplaySetup`: adds all of the above **at runtime** when the scene loads (pickups get a fitted BoxCollider). The scene file is not changed, so **Hurrycane > Rebuild House Map** can't wipe gameplay. Don't add these components to the scene by hand.
+- `Openings/BreakableOpening`: on each `COL_*` window or door proxy (no `InteractionProxy` needed, since it sits on the collider itself). It has `State`, `Hit()`, `Strike()` (3 s warning, then hit), `SetInPlay()`, `SetState()` (for snapshots), and the static events `StateChanged` and `WarningStarted`. `Prompt` is null while out of play, which hides it.
+- `Openings/OpeningVisuals`: placeholder boards, cracks and tape, plus swapping the glass material slot. Replace it when the art exists.
+- `Openings/PlankStack`: the workbench stack, which hands out `PICKUP_PlankSet` cubes into the arms.
+- `Openings/OpeningsConfig` + `Resources/HurrycaneData/openings.json`: the opening list (id, collider, room, first day), hold times, tape uses, the plank count and `startDay` (temporary until HouseState runs the days).
+- `PlayerInventory.Uses/ConsumeUses/ConsumeArmful` and `Pickup.UsesLeft` (tape rolls). `MapExplorer.Target` shows what E would hit without using it.
+- **Testing tip:** in Play mode, Unity freezes time while the editor is in the background. Run `Application.runInBackground = true` (for example through MCP `execute_code`) so coroutines and timers advance.
 - The aim ray prefers a pickup up to 0.45 m behind the first thing hit (items in open cabinets and on shelves behind their collision boxes), unless a closed door or drawer is in the way.
 - Tested 2026-10-17 in Play mode: all 37 pickups can be taken by aiming (with cabinets open), carry limits work, drop and stash placement work, hold/resume/x1.5 timing works, and the door/drawer test still passes 31/31.
 

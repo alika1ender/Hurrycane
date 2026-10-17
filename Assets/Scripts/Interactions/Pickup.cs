@@ -7,6 +7,9 @@ public sealed class Pickup : MonoBehaviour, IInteractable
     [SerializeField] ItemKind kind;
 
     public ItemKind Kind => kind;
+    /// <summary>Uses left on a multi-use item (repair tape roll). 0 for ordinary items.</summary>
+    public int UsesLeft { get => usesLeft; set => usesLeft = Mathf.Max(0, value); }
+    [SerializeField] int usesLeft;
     /// <summary>Set while the item sits in the basement shelter stash.</summary>
     public ShelterStash Stash { get; set; }
 
@@ -19,7 +22,7 @@ public sealed class Pickup : MonoBehaviour, IInteractable
         user.Inventory.Take(this);
     }
 
-    public void Configure(ItemKind itemKind) => kind = itemKind;
+    public void Configure(ItemKind itemKind, int uses = 0) { kind = itemKind; usesLeft = uses; }
 
     /// <summary>
     /// Reactivates the item at a world point. With dropToFloor the item falls straight down onto the first surface

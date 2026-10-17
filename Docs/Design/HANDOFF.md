@@ -14,6 +14,13 @@ Template:
 
 ---
 
+## 2026-10-17 07:40 · Claude (for Ali)
+**Worked on:** build step 4, breakable windows and door (`Assets/Scripts/Openings/`, `Resources/HurrycaneData/openings.json`), plus 03, 09 and 10.
+**Done:** all 15 openings have the six states. Board up / brace (toolkit plus a plank set from the new workbench stack), repair (toolkit plus tape; 4 uses per roll, the door takes 2), upgrade repaired to boarded, storm `Hit()` following the 03 table, and `Strike()` with a 3 s shake warning. Day 1 openings (W01-W03 and the door) are in play; the others show no prompt. Placeholder visuals were checked in screenshots (`WalkthroughPreviews/step4/`, not committed).
+Tested in Play mode: the full flow for windows and door, out-of-play handling, tape and plank use, the strike timing, all 37 pickups, and the door/drawer test (31/31).
+**Next:** step 3 (`HouseState` plus snapshots, which can use `BreakableOpening.SetState`) or step 5/6 (task engine, phase timer, break rolls). Ali should decide the "repairing a cracked boarded window" quirk in 03.
+**Blocked / questions:** none. For timed tests in the background, set `Application.runInBackground = true` (see 09).
+
 ## 2026-10-17 07:10 · Claude (for Ali)
 **Worked on:** build steps 1-2 (code in `Assets/Scripts/Interactions/`), plus 02, 04 and 09.
 **Done:**

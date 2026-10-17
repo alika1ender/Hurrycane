@@ -9,7 +9,7 @@ TV with storm warning screen (`TV_StormWarning`), sofa, radio, all supply pickup
 ## Missing
 Tick these off as they land in the repo, and note the asset path. Ordered by when the build needs them.
 
-- [ ] **Plank set** (decided: simple boards). A pickup stack of plain planks for the basement workbench (18 sets), and a boarded state: 2-3 planks across each window frame. The door brace is 2 diagonal planks. These can start as scaled Unity cubes with a wood material.
+- [ ] **Plank set** (decided: simple boards). *Code placeholders exist (brown cubes, `OpeningVisuals` / `PlankStack`); the real prop just replaces them.* A pickup stack of plain planks for the basement workbench (18 sets), and a boarded state: 2-3 planks across each window frame. The door brace is 2 diagonal planks. These can start as scaled Unity cubes with a wood material.
 - [ ] Cracked and broken states for all 14 windows (a crack decal on the glass; broken = glass removed plus shards on the floor)
 - [ ] Front door reinforced, cracked and broken states
 - [ ] **Towel** prop (decided instead of sandbags): a folded stack (bathroom vanity, basement shelf) and a rolled-up version for the door gap and stairs

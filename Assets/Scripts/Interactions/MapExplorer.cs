@@ -34,6 +34,8 @@ public sealed class MapExplorer : MonoBehaviour
             return inventory;
         }
     }
+    /// <summary>What E would use right now (fresh raycast), without using it.</summary>
+    public IInteractable Target => FindTarget();
     /// <summary>0..1 progress of the current hold, for the HUD.</summary>
     public float HoldProgress => holding ? holdProgress : 0;
 
@@ -119,6 +121,7 @@ public sealed class MapExplorer : MonoBehaviour
         if (count == 0) return null;
         Array.Sort(hits, 0, count, System.Collections.Generic.Comparer<RaycastHit>.Create((a, b) => a.distance.CompareTo(b.distance)));
         var first = hits[0].collider.GetComponentInParent<IInteractable>();
+        if (first != null && first.Prompt == null) first = null; // e.g. windows not in play yet
         for (int i = 0; i < count && hits[i].distance <= hits[0].distance + SeeThroughDepth; i++)
         {
             var target = hits[i].collider.GetComponentInParent<IInteractable>();

@@ -34,6 +34,15 @@ Reinforce = toolkit plus plank set. Repair = toolkit plus repair tape (limited u
 
 The seconds above are workload estimates (hold plus walking). The actual hold times are under "Hold times" below.
 
+## Implemented (2026-10-17)
+In code: `Assets/Scripts/Openings/`. Tuning: `Assets/Resources/HurrycaneData/openings.json`.
+- All 15 openings get a `BreakableOpening` with the six states, the hit table below, the 3 s creak/shake warning (`Strike()`), and the hold times from the table at the end of this file.
+- Reinforce and upgrade use 1 plank set from the arms plus a toolkit. Repair uses tape plus a toolkit (the door needs 2 uses). Out-of-play openings show no prompt and ignore hits.
+- The plank stack (18 sets, take up to 8) sits on the basement workbench. Each tape roll has 4 uses.
+- Placeholder visuals: brown cube boards (3 across a window, an X on the door), dark crack lines, glass faded out when broken, grey tape X when repaired.
+- **Not built yet:** break chances and roll timing (needs `DayConfig` and the phase timer), injury and pulse on a hit, puddles, loose items, and Day 1 staging of planks at the stairs.
+- **Design quirk to decide:** following the table, repairing a *cracked reinforced* window makes it "repaired", so the boards come off and it has to be upgraded again. Alternative: repairing a cracked window keeps the boards and returns it to reinforced.
+
 ## Decisions (proposed 2026-10-17, change freely)
 
 ### What a "hit" does

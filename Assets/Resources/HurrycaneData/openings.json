@@ -1,0 +1,29 @@
+{
+    "startDay": 1,
+    "reinforceWindowSeconds": 5,
+    "braceDoorSeconds": 8,
+    "repairWindowSeconds": 8,
+    "repairDoorSeconds": 12,
+    "upgradeWindowSeconds": 5,
+    "tapeUsesPerRoll": 4,
+    "doorRepairTapeUses": 2,
+    "plankSetsInStack": 18,
+    "warningSeconds": 3,
+    "openings": [
+        { "id": "W01", "collider": "COL_Window_Glass",      "room": "Living room, south",          "firstDay": 1 },
+        { "id": "W02", "collider": "COL_Window_Glass.004",  "room": "Living room, east",           "firstDay": 1 },
+        { "id": "W03", "collider": "COL_Window_Glass.001",  "room": "Entry hall, south-west",      "firstDay": 1 },
+        { "id": "W04", "collider": "COL_Window_Glass.002",  "room": "Kitchen, north",              "firstDay": 2 },
+        { "id": "W05", "collider": "COL_Window_Glass.005",  "room": "Kitchen, east",               "firstDay": 2 },
+        { "id": "W06", "collider": "COL_Window_Glass.003",  "room": "Back hall, north",            "firstDay": 2 },
+        { "id": "W07", "collider": "COL_Window_Glass.007",  "room": "Master bedroom, south",       "firstDay": 2 },
+        { "id": "W08", "collider": "COL_Window_Glass.010",  "room": "Master bedroom, east",        "firstDay": 2 },
+        { "id": "W09", "collider": "COL_Window_Glass.008",  "room": "Study, north",                "firstDay": 3 },
+        { "id": "W10", "collider": "COL_Window_Glass.011",  "room": "Study, east",                 "firstDay": 3 },
+        { "id": "W11", "collider": "COL_Bath_FrostedGlass", "room": "Bathroom, south",             "firstDay": 3 },
+        { "id": "W12", "collider": "COL_Window_Glass.009",  "room": "Landing, north",              "firstDay": 3 },
+        { "id": "W13", "collider": "COL_Window_Glass.006",  "room": "Stair hall, west (ground)",   "firstDay": 3 },
+        { "id": "W14", "collider": "COL_Window_Glass.012",  "room": "Stair hall, west (upstairs)", "firstDay": 3 },
+        { "id": "Door", "collider": "COL_EntryDoor_Closed", "room": "Entry hall, south",           "firstDay": 1, "isDoor": true }
+    ]
+}
