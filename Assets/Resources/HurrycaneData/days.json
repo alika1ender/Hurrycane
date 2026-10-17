@@ -1,0 +1,43 @@
+{
+    "stormHoldMultiplier": 1.5,
+    "warningLeadSeconds": 3,
+    "hitWindowStart": 0.15,
+    "hitWindowEnd": 0.85,
+    "minSecondsBetweenHits": 6,
+    "prepBreakWindowSeconds": 30,
+    "prepBreakFactor": 0.25,
+    "injuryRadius": 2,
+    "nightSeconds": 6,
+    "recoveryEnough": 50,
+    "recoverySome": 30,
+    "recoveryNone": 10,
+    "days": [
+        {
+            "day": 1, "title": "Tutorial",
+            "prepSeconds": 90, "disasterSeconds": 60, "afterSeconds": 30,
+            "taskSource": "phone", "alertFirst": true, "prepBreaks": false,
+            "window": { "unreinforced": 0.30, "repaired": 0.15, "reinforced": 0.0 },
+            "door":   { "unreinforced": 0.50, "repaired": 0.30, "reinforced": 0.0 },
+            "glassDamage": 0, "doorDamage": 0,
+            "scripted": [ { "opening": "W01", "atSeconds": 20, "result": "Cracked" } ]
+        },
+        {
+            "day": 2, "title": "Blackout",
+            "prepSeconds": 150, "disasterSeconds": 105, "afterSeconds": 45,
+            "taskSource": "handbook", "alertFirst": false, "prepBreaks": true,
+            "window": { "unreinforced": 0.50, "repaired": 0.15, "reinforced": 0.10 },
+            "door":   { "unreinforced": 0.70, "repaired": 0.30, "reinforced": 0.20 },
+            "glassDamage": 8, "doorDamage": 10,
+            "scripted": []
+        },
+        {
+            "day": 3, "title": "Survive",
+            "prepSeconds": 180, "disasterSeconds": 150, "afterSeconds": 30,
+            "taskSource": "handbook", "alertFirst": false, "prepBreaks": true,
+            "window": { "unreinforced": 0.80, "repaired": 0.15, "reinforced": 0.10 },
+            "door":   { "unreinforced": 0.95, "repaired": 0.30, "reinforced": 0.20 },
+            "glassDamage": 12, "doorDamage": 18,
+            "scripted": []
+        }
+    ]
+}

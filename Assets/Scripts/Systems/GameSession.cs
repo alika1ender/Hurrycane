@@ -11,6 +11,8 @@ public sealed class GameSession : MonoBehaviour
     public static GameSession Instance { get; private set; }
     /// <summary>Raised when a day starts or is restored, after the autosave.</summary>
     public static event Action<int> DayStarted;
+    /// <summary>Raised at the start of a fresh day, before its autosave (not on restores). For morning setup like Day 1 staging.</summary>
+    public static event Action<int> DayStarting;
     /// <summary>Survives the scene reload that a restart does.</summary>
     static HouseSnapshot pendingRestore;
 
@@ -40,6 +42,7 @@ public sealed class GameSession : MonoBehaviour
     public void StartDay(int day)
     {
         CurrentDay = day;
+        DayStarting?.Invoke(day);
         foreach (var opening in FindObjectsByType<BreakableOpening>(FindObjectsInactive.Include))
             if (opening.FirstDay <= day) opening.SetInPlay(true);
         SaveSystem.Save(HouseState.Capture(this, player));

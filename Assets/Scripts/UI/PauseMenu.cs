@@ -18,8 +18,14 @@ public sealed class PauseMenu : MonoBehaviour
 
     void Awake() => explorer = GetComponent<MapExplorer>();
     void OnEnable() => Active = true;
-    void OnDisable() => Active = false;
-    void Update() { if (!Open) cards = null; }
+    void OnDisable() { Active = false; Time.timeScale = 1; }
+    void Update()
+    {
+        if (!Open) cards = null;
+        // Freeze the day clock, storm and doors while paused; only touch timeScale when the menu opens or closes.
+        if (Open != wasOpen) { Time.timeScale = Open ? 0 : 1; wasOpen = Open; }
+    }
+    bool wasOpen;
 
     void OnGUI()
     {

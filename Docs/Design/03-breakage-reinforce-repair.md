@@ -40,7 +40,9 @@ In code: `Assets/Scripts/Openings/`. Tuning: `Assets/Resources/HurrycaneData/ope
 - Reinforce and upgrade use 1 plank set from the arms plus a toolkit. Repair uses tape plus a toolkit (the door needs 2 uses). Out-of-play openings show no prompt and ignore hits.
 - The plank stack (18 sets, take up to 8) sits on the basement workbench. Each tape roll has 4 uses.
 - Placeholder visuals: brown cube boards (3 across a window, an X on the door), dark crack lines, glass faded out when broken, grey tape X when repaired.
-- **Not built yet:** break chances and roll timing (needs `DayConfig` and the phase timer), injury and pulse on a hit, puddles, loose items, and Day 1 staging of planks at the stairs.
+- **Storm rolls (built in step 6, `DayDirector`):** one roll per in-play opening at the start of Disaster Time, using the chances in `days.json`. Hits land between 15% and 85% of the phase, at least 6 s apart, each after a 3 s warning. Preparation breaks happen in the last 30 s on Days 2-3 at a quarter of the chance. The Day 1 W01 crack lands 20 s into Disaster Time. A break within 2 m costs health (glass 8/12, door 10/18 on Days 2/3).
+- **Followed the rule over the table:** the table gives a reinforced front door 20% on Day 1, but the rule says no reinforced object breaks on Day 1, so `days.json` has 0 for Day 1. Change it there if you want the 20%.
+- **Not built yet:** pulse spikes on a hit, puddles, loose items, and the Day 2 "one scripted break" (04 mentions it but never says which window).
 - **Design quirk to decide:** following the table, repairing a *cracked reinforced* window makes it "repaired", so the boards come off and it has to be upgraded again. Alternative: repairing a cracked window keeps the boards and returns it to reinforced.
 
 ## Decisions (proposed 2026-10-17, change freely)

@@ -16,6 +16,16 @@ Day 1 task source. Notifications and one-way Broski texts (no reply task). Batte
 ## Handbook
 Physical object on the living room table, highlighted. After pickup it opens with a quick key. Illustrated pages by category (Water, Windows, Power, First aid). Shows the full current task list and a floor plan with live window and door states (in play, unreinforced, reinforced, cracked, broken, repaired). Needs no power, so a dead phone never blocks progress.
 
+## Placeholder HUD (implemented 2026-10-17)
+`Assets/Scripts/UI/Hud.cs` (IMGUI until the real UI exists):
+- Top center: "Day N · phase" and an mm:ss timer that pulses red in the last 10 s.
+- Bottom left: a health bar.
+- Top right: the PHONE panel on Day 1 (current task and hint) or the HANDBOOK list on Days 2-3 ([x] done, [-] too late).
+- Toasts: task done, phase change, "a window is creaking" within 8 m.
+- Full-screen overlays: the alert, the night card and the end card.
+
+The phone and handbook are panels, not in-hand props, and Tab does nothing yet. Pulse isn't shown because it isn't built.
+
 ## Decisions (proposed 2026-10-17, change freely)
 
 ### Controls

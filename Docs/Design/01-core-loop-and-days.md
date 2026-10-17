@@ -40,6 +40,9 @@ Draft alert text: "EMERGENCY ALERT: Hurricane warning in effect for your area. L
 - Day 2: power is out from the start. The emergency handbook replaces the phone as the task source.
 - Day 3: flooding comes down the basement stairs and threatens the safe room.
 
+## Implemented (2026-10-17)
+`Assets/Scripts/Systems/DayDirector.cs`, tuning in `Resources/HurrycaneData/days.json`. The day runs: Day 1 alert (phone overlay; click or Space starts the clock), Preparation → Disaster → After-Disaster flipping on the clock only, then the night card (6 s) with overnight recovery, then the next day starts and autosaves. Day 3 ends on a placeholder "storm has passed" card (ending and score are not built yet). Esc pauses the clock. Not built yet: the opening TV cutscene, waking in the master bedroom (Cane stays where he was), Day 3 flooding, and the Preparation-only locks for unplug/utilities (those tasks don't exist yet).
+
 ## Decisions (proposed 2026-10-17, change freely)
 ### End of day and sleep
 - When After-Disaster Time ends, control is taken away. The screen fades to black over 2 s. A **night card** shows for about 6 s: "Day N survived", the overnight recovery result ("Water and food: +50 health"), and a one-line Broski text if any are left.

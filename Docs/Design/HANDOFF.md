@@ -14,6 +14,12 @@ Template:
 
 ---
 
+## 2026-10-17 08:20 · Claude (for Ali)
+**Worked on:** build steps 5-6: `Systems/DayDirector`, `TaskEngine`, `DayConfig`, `UI/Hud`, and `days.json` / `tasks.json`. Updated 01, 03, 04, 07 and 09.
+**Done:** Day 1 can be played start to finish. Alert, then the timed phases, with the task list on the phone panel and Day 1 tools staged by the stairs. The W01 crack, the repair task, the night card with recovery, and Day 2 with its autosave all work. Days 2-3 run with the handbook list, storm rolls, Preparation breaks and injuries. Tested in Play mode with the clock sped up. The door/drawer test (31/31) and the window flow test still pass.
+**Next:** a hands-on playtest of Day 1 for feel and timing (no one has played it with real input yet). Then: pulse (05), fainting and Day 3 game over (06), waking in the master bedroom, puddles and towels (unlocks 4 disabled tasks), and the ending and score (08).
+**Blocked / questions:** (1) Water and planks are both carried in the arms, which slows down Day 1 (see 04). (2) For a reinforced door on Day 1, the 03 table says 20% but the rule says 0; I used 0. (3) The 03 "repairing a cracked boarded window" quirk is still open.
+
 ## 2026-10-17 08:00 · Claude (for Ali)
 **Worked on:** build step 3, saves and restart (`Assets/Scripts/Systems/`, `Assets/Scripts/UI/PauseMenu.cs`), plus wider placeholder planks. Updated 06 and 09.
 **Done:** `GameSession` starts Day 1 and autosaves. Esc opens a pause menu with a Restart card per saved day (day, health, boarded count, water, food). Restarting reloads the scene and restores openings, every item's place (world, pockets, arms, stash), tape uses, the plank stack, the radio, health and the player position. Later days' saves are deleted. Tested in Play mode: Day 1 to Day 2 autosave, a restart from Day 2 restored that exact state, a restart from Day 1 reset everything, and the door/drawer test passes 31/31.**Next:** steps 5-6, the task engine (`TaskDefinition` data from 04, listening to `MapExplorer.Used`, `BreakableOpening.StateChanged` and inventory/stash changes), the phase timer calling `GameSession.StartDay` each morning, the HUD timer, and break rolls with `Strike()` during Disaster Time.

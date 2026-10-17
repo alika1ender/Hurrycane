@@ -37,6 +37,16 @@ public sealed class ShelterStash : MonoBehaviour, IInteractable
         stored.Add(item);
     }
 
+    /// <summary>Eats/drinks one stored item of this kind (overnight recovery). False if none is stored.</summary>
+    public bool Consume(ItemKind kind)
+    {
+        var item = stored.FirstOrDefault(p => p && p.Stash == this && p.Kind == kind);
+        if (!item) return false;
+        stored.Remove(item);
+        Destroy(item.gameObject);
+        return true;
+    }
+
     /// <summary>Forgets what is stored (used before restoring a snapshot, which places items again).</summary>
     public void ClearStored()
     {

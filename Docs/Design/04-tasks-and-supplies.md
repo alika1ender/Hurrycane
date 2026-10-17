@@ -41,6 +41,12 @@ There is no mop. With a towel in the armful, hold E on a puddle for 4 s to remov
 - On Day 1 only, the toolkit and 4 plank sets are staged at the top of the basement stairs, so the trip takes about 10 s.
 - Required workload: 114 s of 150 s (76%).
 
+## Task engine (implemented 2026-10-17)
+The tasks below live in `Assets/Resources/HurrycaneData/tasks.json`, and `TaskEngine` checks each task's `condition` against the live house every frame. Condition words are listed at the top of that file. A task is done for good once its condition is true. If it isn't done by the end of its last allowed phase, it shows "too late". Day 1 shows one task at a time on the phone panel; Days 2-3 show the handbook list.
+- **Turned off for now** (`"disabled": true`), because the thing they need doesn't exist yet: wiping water (puddles and towels), picking up the handbook, the door-gap towels, unplugging, utilities, and loose items.
+- **Day 1 staging is built:** on a new game, the spare toolkit and 4 plank sets appear on the floor next to the basement stairs (the stack then holds 14).
+- **Friction found in testing:** water and planks are both carried in the arms, so after "Take 3 water bottles" the player must drop (G) or stash the water before grabbing planks. Consider letting a few bottles fit in the pockets.
+
 ## Tasks
 Phases: **P** Preparation, **D** Disaster, **A** After-Disaster. Seconds = Preparation cost (x1.5 in D and A). "Req" tasks count for completion score; "Opt" tasks count only if done.
 

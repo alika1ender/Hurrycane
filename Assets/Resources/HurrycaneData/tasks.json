@@ -1,0 +1,36 @@
+{
+    "_conditions": "alert | radio | carry:Kind[:n] | stash:Kind[:n] | supplies:Kind[:n] (carry+stash) | secured:W01,W02 (boarded or cracked behind boards) | fixed:W01 | damaged:W01 | anyDamaged | noneDamaged ; join with & ; phases letters P D A",
+    "tasks": [
+        { "id": "d1_alert",      "day": 1, "text": "Read the government alert",               "hint": "Phone",                                   "phases": "PDA", "seconds": 0,  "required": true,  "condition": "alert" },
+        { "id": "d1_radio",      "day": 1, "text": "Turn on the radio",                       "hint": "It's on the ground floor",                "phases": "PDA", "seconds": 5,  "required": true,  "condition": "radio" },
+        { "id": "d1_flashlight", "day": 1, "text": "Take the flashlight",                     "hint": "Kitchen drawer",                          "phases": "PDA", "seconds": 8,  "required": true,  "condition": "carry:Flashlight" },
+        { "id": "d1_water",      "day": 1, "text": "Take 3 water bottles",                    "hint": "Kitchen cabinet",                         "phases": "PDA", "seconds": 8,  "required": true,  "condition": "supplies:Water:3" },
+        { "id": "d1_tools",      "day": 1, "text": "Grab the toolkit and planks",             "hint": "Top of the basement stairs",              "phases": "PD",  "seconds": 10, "required": true,  "condition": "carry:Toolkit&carry:PlankSet" },
+        { "id": "d1_board",      "day": 1, "text": "Board up the living room and entry windows", "hint": "Hold E on each window with planks",    "phases": "PD",  "seconds": 36, "required": true,  "condition": "secured:W01,W02,W03" },
+        { "id": "d1_door",       "day": 1, "text": "Brace the front door",                    "hint": "Hold E on the front door with planks",    "phases": "PD",  "seconds": 20, "required": true,  "condition": "secured:Door" },
+        { "id": "d1_repair",     "day": 1, "text": "Repair the cracked living room window",   "hint": "Repair tape is in the basement workbench drawer", "phases": "DA", "seconds": 27, "required": true, "condition": "fixed:W01", "appearsWhen": "damaged:W01" },
+        { "id": "d1_firstaid",   "day": 1, "text": "Bonus: take the first aid kit",           "hint": "Bathroom medicine cabinet, upstairs",     "phases": "PDA", "seconds": 14, "required": false, "condition": "carry:FirstAid" },
+        { "id": "d1_wipe",       "day": 1, "text": "Wipe up the water",                       "hint": "Needs puddles + towels (not built yet)",  "phases": "A",   "seconds": 10, "required": true,  "condition": "noneDamaged", "disabled": true },
+
+        { "id": "d2_handbook",   "day": 2, "text": "Pick up the handbook",                    "hint": "Living room table",                       "phases": "PDA", "seconds": 5,  "required": true,  "condition": "", "disabled": true },
+        { "id": "d2_tools",      "day": 2, "text": "Fetch toolkit and planks",                "hint": "Basement workbench",                      "phases": "PD",  "seconds": 20, "required": true,  "condition": "carry:Toolkit&carry:PlankSet" },
+        { "id": "d2_board",      "day": 2, "text": "Board up the kitchen, back hall and bedroom windows", "hint": "W04-W08",                 "phases": "PD",  "seconds": 60, "required": true,  "condition": "secured:W04,W05,W06,W07,W08" },
+        { "id": "d2_doorgap",    "day": 2, "text": "Block the front door gap with towels",    "hint": "Needs towels (not built yet)",            "phases": "PD",  "seconds": 12, "required": true,  "condition": "", "disabled": true },
+        { "id": "d2_shelter",    "day": 2, "text": "Bring water and food to the shelter (4 + 4)", "hint": "Basement shelter platform",          "phases": "PDA", "seconds": 30, "required": true,  "condition": "stash:Water:4&stash:Food:4" },
+        { "id": "d2_radio",      "day": 2, "text": "Find batteries and use the radio",        "hint": "Study bedside drawer",                    "phases": "PDA", "seconds": 12, "required": true,  "condition": "carry:Batteries&radio" },
+        { "id": "d2_unplug",     "day": 2, "text": "Unplug appliances",                       "hint": "Not built yet",                           "phases": "P",   "seconds": 12, "required": true,  "condition": "", "disabled": true },
+        { "id": "d2_utilities",  "day": 2, "text": "Shut the utility valve and fuse panel",    "hint": "Not built yet",                           "phases": "P",   "seconds": 15, "required": true,  "condition": "", "disabled": true },
+        { "id": "d2_loose",      "day": 2, "text": "Move loose items away from windows",      "hint": "Not built yet",                           "phases": "PD",  "seconds": 15, "required": true,  "condition": "", "disabled": true },
+        { "id": "d2_firstaid",   "day": 2, "text": "Take a first aid kit",                    "hint": "Bathroom or basement",                    "phases": "PDA", "seconds": 14, "required": false, "condition": "carry:FirstAid" },
+        { "id": "d2_repair",     "day": 2, "text": "Repair the damage",                       "hint": "Toolkit + repair tape",                   "phases": "DA",  "seconds": 54, "required": true,  "condition": "noneDamaged", "appearsWhen": "anyDamaged" },
+
+        { "id": "d3_shelter",    "day": 3, "text": "Stock the shelter: 6 water and 6 food",   "hint": "Basement shelves",                        "phases": "PDA", "seconds": 30, "required": true,  "condition": "stash:Water:6&stash:Food:6" },
+        { "id": "d3_medical",    "day": 3, "text": "Keep first aid on you",                   "hint": "Bathroom or basement",                    "phases": "PDA", "seconds": 10, "required": true,  "condition": "carry:FirstAid" },
+        { "id": "d3_prep",       "day": 3, "text": "Prepare the shelter: blanket, flashlight, batteries", "hint": "Blanket in the master wardrobe", "phases": "PDA", "seconds": 20, "required": true, "condition": "stash:Blanket&carry:Flashlight&carry:Batteries" },
+        { "id": "d3_tools",      "day": 3, "text": "Fetch toolkit, planks and tape",          "hint": "Basement workbench",                      "phases": "PD",  "seconds": 30, "required": true,  "condition": "carry:Toolkit&carry:PlankSet&carry:RepairTape" },
+        { "id": "d3_board",      "day": 3, "text": "Board up the last six windows",           "hint": "Study, bathroom, landing, stair hall",    "phases": "PD",  "seconds": 72, "required": true,  "condition": "secured:W09,W10,W11,W12,W13,W14" },
+        { "id": "d3_door",       "day": 3, "text": "Re-brace the front door",                 "hint": "Entry hall",                              "phases": "PD",  "seconds": 10, "required": false, "condition": "secured:Door" },
+        { "id": "d3_gobag",      "day": 3, "text": "Pack the go-bag",                         "hint": "Backpack, water, food, first aid",        "phases": "PDA", "seconds": 20, "required": false, "condition": "carry:Backpack&carry:Water&carry:Food&carry:FirstAid" },
+        { "id": "d3_repair",     "day": 3, "text": "Repair the damage",                       "hint": "Toolkit + repair tape",                   "phases": "PDA", "seconds": 108, "required": true, "condition": "noneDamaged", "appearsWhen": "anyDamaged" }
+    ]
+}

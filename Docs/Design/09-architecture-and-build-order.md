@@ -15,8 +15,8 @@
 2. ~~Extend `MapExplorer` with pickup, carry and hold-to-use, using the `PICKUP_*` objects.~~ **Done 2026-10-17**, see "What exists in code" below.
 3. ~~`HouseState` with start-of-day snapshots and the restart menu.~~ **Done 2026-10-17** (see [06](06-health-and-saves.md), Saves).
 4. ~~Windows and door as reusable breakable objects with the states: out of play, unreinforced, reinforced, cracked, broken, repaired.~~ **Done 2026-10-17** (rolls and timing come with step 6).
-5. Task engine with phase windows and durations; phone and handbook UI.
-6. Phase timer, HUD, pulse system.
+5. ~~Task engine with phase windows and durations;~~ phone and handbook UI. **Engine done 2026-10-17**; phone and handbook are placeholder panels for now.
+6. ~~Phase timer, HUD,~~ pulse system. **Timer, HUD and storm rolls done 2026-10-17**; pulse not built.
 7. Day 1 fully playable, then Day 2 (blackout, handbook), then Day 3 and the ending.
 
 **Cut first if time runs out:** surge mechanic on Day 2, Broski texts after the opening, chain effects, repair minigame, wind visuals, "Did you know?" facts on the score screen.
@@ -40,6 +40,11 @@ All files are in `Assets/Scripts/Interactions/`.
 - `Systems/HouseState` + `SaveSystem`: capture and apply snapshots (see 06). Anything new that changes during a day must be added to `HouseSnapshot`, or restarts will lose it.
 - `UI/PauseMenu`: the Esc menu with Resume and Restart cards. While it exists, clicking the game view no longer re-grabs the cursor; Resume does.
 - `GameplaySetup` now hooks `SceneManager.sceneLoaded`, so it also runs after a restart reload. Opening in-play state comes from `GameSession.StartDay`, not from setup.
+- `Systems/DayDirector` (on the GameSession object): phases, the alert, storm and Preparation break scheduling, injuries (`BreakableOpening.HitLanded`), the night and overnight recovery, and Day 1 staging. `PhaseChanged` event. `debugTimeScale` speeds up the clock for tests. Context menu: "Debug: Skip to next phase".
+- `Systems/DayConfig` + `days.json`: phase lengths, break chances, damage, recovery and scripted breaks per day.
+- `Systems/TaskEngine` + `tasks.json`: see [04](04-tasks-and-supplies.md), "Task engine". `TaskCompleted` event; `Current` is what the phone shows.
+- `UI/Hud`: see [07](07-hud-phone-handbook.md). The pause menu sets `Time.timeScale` to 0 while open.
+- `GameSession.DayStarting` fires before a fresh day's autosave (for morning setup); `DayStarted` fires after it, and on restores.
 - **Testing tip:** in Play mode, Unity freezes time while the editor is in the background. Run `Application.runInBackground = true` (for example through MCP `execute_code`) so coroutines and timers advance.
 - The aim ray prefers a pickup up to 0.45 m behind the first thing hit (items in open cabinets and on shelves behind their collision boxes), unless a closed door or drawer is in the way.
 - Tested 2026-10-17 in Play mode: all 37 pickups can be taken by aiming (with cabinets open), carry limits work, drop and stash placement work, hold/resume/x1.5 timing works, and the door/drawer test still passes 31/31.

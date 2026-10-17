@@ -49,13 +49,17 @@ public static class GameplaySetup
         var stack = Object.FindAnyObjectByType<PlankStack>();
         if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);
         if (!explorer.GetComponent<PauseMenu>()) explorer.gameObject.AddComponent<PauseMenu>();
+        if (!explorer.GetComponent<Hud>()) explorer.gameObject.AddComponent<Hud>();
         // Last: the session starts the day (or restores a restart) once everything above exists.
         var session = Object.FindAnyObjectByType<GameSession>();
         if (!session || session.gameObject.scene != scene)
         {
             var host = new GameObject("GameSession");
             SceneManager.MoveGameObjectToScene(host, scene);
-            host.AddComponent<GameSession>().Begin(explorer, config.startDay);
+            var newSession = host.AddComponent<GameSession>();
+            host.AddComponent<DayDirector>().Bind(explorer);
+            host.AddComponent<TaskEngine>().Bind(explorer);
+            newSession.Begin(explorer, config.startDay);
         }
     }
 

@@ -58,20 +58,26 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
         if (previous != next) StateChanged?.Invoke(this, previous, next);
     }
 
+    /// <summary>Raised when a storm hit lands (not for restores or tests calling SetState). Health and pulse react to this.</summary>
+    public static event Action<BreakableOpening, OpeningState> HitLanded;
+
     /// <summary>A storm hit lands now (no warning). Reinforced only cracks; everything else breaks.</summary>
-    public OpeningState Hit()
+    public OpeningState Hit() => Hit(null);
+    /// <summary>A hit with a forced result, e.g. the Day 1 scripted crack.</summary>
+    public OpeningState Hit(OpeningState? forced)
     {
         if (!InPlay) return state;
-        SetState(state == OpeningState.Reinforced ? OpeningState.Cracked : OpeningState.Broken);
+        SetState(forced ?? (state == OpeningState.Reinforced ? OpeningState.Cracked : OpeningState.Broken));
+        HitLanded?.Invoke(this, state);
         return state;
     }
 
     /// <summary>Creak, shake and dust for the warning time, then Hit(). Used by the storm scheduler.</summary>
-    public void Strike()
+    public void Strike(OpeningState? forced = null)
     {
-        if (InPlay && !Striking) StartCoroutine(StrikeRoutine());
+        if (InPlay && !Striking) StartCoroutine(StrikeRoutine(forced));
     }
-    IEnumerator StrikeRoutine()
+    IEnumerator StrikeRoutine(OpeningState? forced)
     {
         Striking = true;
         float warning = config != null ? config.warningSeconds : 3;
@@ -83,7 +89,7 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
         }
         visuals.Shake(0);
         Striking = false;
-        Hit();
+        Hit(forced);
     }
     [ContextMenu("Debug: Strike now")] void DebugStrike() => Strike();
 
