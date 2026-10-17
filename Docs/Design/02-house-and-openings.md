@@ -1,6 +1,6 @@
 # 02 · House and openings
 
-> **Status:** Draft (facts read from the scene) · **Owner:** unassigned · **Depends on:** nothing
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** nothing
 > **Code / scene:** `Assets/Scenes/HouseMap.unity`, `OpeningDefinition` (not built yet)
 
 ## The house (read from `HouseMap.unity`, coordinates are (x, height, z))
@@ -30,9 +30,11 @@
 
 New windows per day: 3, then 5, then 6. Windows not yet "in play" are never rolled for breakage. In-play windows rattle and show on the handbook map. Reinforced windows stay reinforced until they break.
 
+## Decisions (proposed 2026-10-17, change freely)
+- **How "in play" reads without the handbook:** in-play windows have rain streaks on the glass and rattle when the wind gusts. Only in-play windows show an interaction prompt. Out-of-play windows look dry and calm. On Day 1 the phone task names the room ("Board up the living room windows").
+
 ## Still to design
 - [ ] Confirm the window groupings with art (open question 3).
-- [ ] How the player can tell a window is "in play" before the handbook exists (Day 1): rattle only, or also an outline/hint?
 
 ## Open questions
 - **Q3.** Do the day groupings of windows match what art wants (Day 1 living room and one entry window, Day 2 kitchen, back hall, master bedroom, Day 3 the rest)?

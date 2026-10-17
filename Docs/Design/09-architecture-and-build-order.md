@@ -1,6 +1,6 @@
 # 09 · Architecture and build order
 
-> **Status:** Draft · **Owner:** unassigned · **Depends on:** all modules
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** all modules
 > Numbers everywhere are starting values for playtesting. Keep them in data (ScriptableObjects/JSON), not hard-coded.
 
 ## Data model (suggested)
@@ -21,6 +21,21 @@
 
 **Cut first if time runs out:** surge mechanic on Day 2, Broski texts after the opening, chain effects, repair minigame, wind visuals, "Did you know?" facts on the score screen.
 
-## Still to design
-- [ ] Folder layout for new scripts and data assets (e.g. `Assets/Scripts/Systems`, `Assets/Data/Days`).
-- [ ] "Surge mechanic on Day 2" and "chain effects" are listed as cuttable but never described. Define or drop them.
+## Decisions (proposed 2026-10-17, change freely)
+### Folder layout
+```
+Assets/Scripts/Interactions/   existing: MapExplorer, CabinetOpenable, tests
+Assets/Scripts/Systems/        PhaseTimer, HouseState, TaskEngine, PulseSystem, HealthSystem, SaveSystem
+Assets/Scripts/Openings/       BreakableOpening (windows + door), BreakScheduler
+Assets/Scripts/UI/             Hud, PhoneUI, HandbookUI, InteractionPrompt, Menus
+Assets/Data/Days/              Day1.asset, Day2.asset, Day3.asset   (DayConfig)
+Assets/Data/Tasks/             one TaskDefinition asset per task ID from module 04
+Assets/Data/Openings/          W01-W14 + Door (OpeningDefinition)
+```
+- One scene (`HouseMap.unity`) plus a small `MainMenu.unity`.
+- Task IDs in [04](04-tasks-and-supplies.md) (`d1_radio` and so on) are the asset names. Keep them stable, because saves reference them.
+
+### Cut-list items that were never described
+- **Surge mechanic (Day 2):** dropped. "Unplug appliances" stays as a plain task.
+- **Chain effects:** reduced to one rule, loose items near windows (+10% break chance, [03](03-breakage-reinforce-repair.md)). Everything else is dropped.
+- **Repair minigame:** dropped. Repair is a hold.

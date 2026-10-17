@@ -1,6 +1,6 @@
 # 01 · Core loop and days
 
-> **Status:** Draft · **Owner:** unassigned · **Depends on:** 02, 04, 05, 06
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** 02, 04, 05, 06
 > **Code:** `PhaseTimer`, `DayConfig` (not built yet)
 
 ## Pitch (short)
@@ -40,11 +40,27 @@ Draft alert text: "EMERGENCY ALERT: Hurricane warning in effect for your area. L
 - Day 2: power is out from the start. The emergency handbook replaces the phone as the task source.
 - Day 3: flooding comes down the basement stairs and threatens the safe room.
 
-## Still to design
-- [ ] Calming animation and sleep transition: length, skippable or not.
-- [ ] When exactly is the opening cutscene skippable (replays after restart?).
-- [ ] Full list of tasks that lock after Preparation (only "filling water containers" is named, and it is not in any task list yet).
-- [ ] Day 3 flooding: how fast it rises, what happens if it reaches the safe room. See open question 5 below.
+## Decisions (proposed 2026-10-17, change freely)
+### End of day and sleep
+- When After-Disaster Time ends, control is taken away. The screen fades to black over 2 s. A **night card** shows for about 6 s: "Day N survived", the overnight recovery result ("Water and food: +50 health"), and a one-line Broski text if any are left.
+- Sirens fade in over the black screen, then Cane wakes in the master bedroom (first-person, lying down to standing, about 3 s). Control returns and the day's autosave is taken.
+- Any key skips the night card after 2 s. The wake-up cannot be skipped (it is short and places the player).
 
-## Open questions
-- **Q5.** Is Day 3 flooding only via the basement stairs (no basement windows)?
+### Opening cutscene
+- About 40 s. The first time, it can be skipped by holding Space for 1 s. Restarting from a snapshot never replays it. Restarting from Day 1 replays it, skippable at once.
+
+### Tasks that lock after Preparation
+Rule: a task is **Preparation-only** when doing it during the storm makes no sense in the story. Current list:
+- Day 2: "Shut the utility valve and the fuse panel", "Unplug appliances".
+- Day 3: "Shut utilities and unplug devices".
+- The old example "filling water containers" is dropped: no such task exists, and the bathtub was removed.
+
+Locked tasks show as greyed out and struck through on the handbook ("Too late"). They count as not done for scoring.
+
+### Day 3 flooding (stairs only, decided)
+- Water only enters the basement down the stairs from the stair hall. There are no basement windows and no ground-floor flood mesh beyond puddles.
+- **Start:** 40 s into Day 3 Disaster Time. Each unrepaired ground-floor breach (W01-W06, W13 or the front door) makes it start 10 s earlier, down to the moment Disaster Time begins.
+- **Rise:** the basement water level rises from 0 to 40 cm over 90 s, then stops.
+- **Blocking:** towels and blankets at the top of the stairs (Prep task, 20 s) mean the flood never starts. Blocking during the flood (Disaster task, 38 s) stops the rise at the current level. Water already in the basement stays.
+- **Effects at 20 cm or more:** the safe room no longer lowers pulse; standing in the water costs 0.5 health per second; walking speed in the water is 70%.
+- Supplies on the low basement shelves are not destroyed (keeps scoring simple).

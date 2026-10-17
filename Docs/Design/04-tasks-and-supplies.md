@@ -1,6 +1,6 @@
 # 04 · Tasks and supplies
 
-> **Status:** Draft · **Owner:** unassigned · **Depends on:** 01, 02, 03
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** 01, 02, 03
 > **Code:** `TaskDefinition`, task engine (not built yet); pickups extend `MapExplorer`.
 > This is the main difficulty knob: re-check the workload numbers after every playtest.
 
@@ -9,43 +9,96 @@
 |---|---|---|---|
 | Water | 4 + 8 | Kitchen cabinet; basement shelves and bulk water | Supplies, score, overnight recovery |
 | Food | 4 + 6 | Kitchen cabinet; basement shelves | Same |
-| First aid | 1 + 2 | Bathroom medicine cabinet and vanity; basement | Health +30 |
+| First aid | 1 + 2 | Bathroom medicine cabinet and vanity; basement | Health +30 per use, 2 uses per kit |
 | Flashlight | 1 | Kitchen drawer | Blackout, lowers pulse in the dark |
 | Batteries | 1 + 4 | Study bedside drawer; basement | Flashlight, radio |
 | Radio | 1 | Ground floor | News and information tasks |
 | Backpack | 1 | Master wardrobe | Go-bag task |
-| Blanket | 1 | Master wardrobe | Shelter prep |
+| Blanket | 1 | Master wardrobe | Shelter prep, stair blocking |
 | Toolkit | 2 | Basement workbench drawer | Reinforce and repair |
-| Repair tape | 2 | Basement workbench drawer | Repair |
+| Repair tape | 2 | Basement workbench drawer | Repair (4 uses per roll) |
+| **Towels (new)** | 6 | Bathroom vanity stack (4), basement shelf (2) | Door gap, stair blocking, wiping puddles. **Prop needed.** |
+| **Plank sets (new)** | 18 | Basement workbench stack | Reinforce and brace. **Prop needed.** |
 
 Task hints: Day 1 phone shows a location hint, Day 2 less, Day 3 only the handbook checklist.
 
-## Tasks (seconds = Preparation cost)
-**Day 1 (3 windows in play; total 138 s of 150 s available)**
-- Tap the government alert (start). Turn on the radio (5). Take the flashlight, kitchen drawer (8). Take 3 water bottles (8). Take the first aid kit, bathroom upstairs (14). Fetch toolkit and planks (20). Reinforce W01-W03 (36). Brace the front door (20). Repair the scripted cracked living room window, Disaster only (27). After: mop up (10).
-- Recommended tuning: move the first aid task to Day 2 and shorten the planks trip, giving about 114 s (76%).
+## Decisions (proposed 2026-10-17, change freely)
 
-**Day 2 (8 windows in play; total 235 s of 255 s)**
-- Pick up the handbook (5). Fetch toolkit and planks (20). Reinforce W04-W08 (60). Block the front door gap with sandbags (12). Bring water and food down to the basement (30). Find batteries in the study drawer and use the radio (12). Unplug appliances (12). Shut the utility valve and the fuse panel (15). Move loose items away from windows (15). Repair breaks, expected about 2 with one scripted (54). After: fix leftovers and mop (15).
+### Carrying
+- **Pockets** (unlimited, no slowdown): flashlight, batteries, first aid, toolkit, tape, phone, handbook.
+- **Armful** (one kind at a time, no sprinting): up to 6 water/food items, or up to 8 plank sets, or up to 4 towels, or the blanket. Picking up a different armful kind asks you to drop the current one.
+- Fainting drops the armful only. Pockets are kept.
 
-**Day 3 (14 windows in play; total 442 s of 330 s available, cannot all be done)**
-- Core: water and food to the basement shelter (30); first aid and medication (10); prepare the shelter with blanket, flashlight, batteries (20).
-- Large: fetch toolkit, planks, tape (30); reinforce W09-W14 (72); upgrade repaired windows, about 2 (24).
-- Optional: re-brace or repair the front door (10); sandbag the basement stairs (20); go-bag with backpack (20); shut utilities and unplug devices (22); move loose items (20).
-- Carried: unrepaired Day 2 breaks, about 1 (18).
-- Reactive in Disaster Time: block the flood at the basement stairs (38); repair new breaks, about 4 when partly prepared (108).
-- After: last check and cleanup (10).
+### The shelter stash
+A marked corner of the basement (`MARKER_ShelterStash`, to be added). "Bring supplies to the shelter" tasks count only the items placed there. Overnight, Cane eats 1 food and drinks 1 water from the stash (see [06](06-health-and-saves.md)).
 
-Workload targets (task seconds as a share of Preparation plus Disaster time): Day 1 about 92% (aim for 76-80%), Day 2 about 92% (about 105% with spill-over), Day 3 about 134% (about 148% with spill-over).
+### Wiping puddles (replaces mopping)
+There is no mop. With a towel in the armful, hold E on a puddle for 4 s to remove it. One towel wipes any number of puddles.
 
-Removed on purpose: all "bucket under a leak" tasks, attic, bathtub.
+### Day 1 tuning (applied)
+- First aid becomes an **optional bonus** on Day 1. The phone shows it last and it does not count against task completion.
+- On Day 1 only, the toolkit and 4 plank sets are staged at the top of the basement stairs, so the trip takes about 10 s.
+- Required workload: 114 s of 150 s (76%).
+
+## Tasks
+Phases: **P** Preparation, **D** Disaster, **A** After-Disaster. Seconds = Preparation cost (x1.5 in D and A). "Req" tasks count for completion score; "Opt" tasks count only if done.
+
+### Day 1 · 3 windows · phone gives one task at a time, in this order
+| ID | Task | Phases | s | Req | Effect on HouseState |
+|---|---|---|---|---|---|
+| d1_alert | Tap the government alert | P | 0 | Req | Starts the day |
+| d1_radio | Turn on the radio | P D A | 5 | Req | Radio on (news lines play) |
+| d1_flashlight | Take the flashlight (kitchen drawer) | P D A | 8 | Req | Flashlight in pockets |
+| d1_water | Take 3 water bottles | P D A | 8 | Req | +3 water carried |
+| d1_tools | Grab toolkit and planks (stair hall) | P D | 10 | Req | Toolkit + 4 plank sets |
+| d1_board | Board up W01-W03 | P D | 36 | Req | W01-W03 reinforced |
+| d1_door | Brace the front door | P D | 20 | Req | Door reinforced |
+| d1_repair | Repair the cracked living room window | D A | 27 | Req | W01 repaired (appears after scripted crack) |
+| d1_firstaid | Bonus: take the first aid kit (bathroom) | P D A | 14 | Opt | First aid kit in pockets |
+| d1_wipe | Wipe up the water | A | 10 | Req | Puddles removed |
+
+### Day 2 · 8 windows · handbook
+| ID | Task | Phases | s | Req | Effect |
+|---|---|---|---|---|---|
+| d2_handbook | Pick up the handbook (living room table) | P D A | 5 | Req | Handbook unlocked |
+| d2_tools | Fetch toolkit and planks (basement) | P D | 20 | Req | Plank sets carried |
+| d2_board | Board up W04-W08 | P D | 60 | Req | W04-W08 reinforced |
+| d2_doorgap | Block the front door gap with towels | P D | 12 | Req | Door break chance -10 points this storm; no puddle if the door breaks |
+| d2_shelter | Bring kitchen water and food to the shelter (4 + 4) | P D A | 30 | Req | Stash +4 water, +4 food |
+| d2_radio | Find batteries (study drawer) and use the radio | P D A | 12 | Req | Radio on, flashlight has spare batteries |
+| d2_unplug | Unplug appliances (TV, fridge, kitchen) | P only | 12 | Req | Appliances safe |
+| d2_utilities | Shut the utility valve and the fuse panel | P only | 15 | Req | Utilities off |
+| d2_loose | Move 3 loose items away from windows | P D | 15 | Req | Removes +10% break chance per item |
+| d2_firstaid | Take the first aid kit (if not taken on Day 1) | P D A | 14 | Opt | First aid in pockets |
+| d2_repair | Repair breaks (about 2, one scripted) | D A | 54 | Req | Broken/cracked become repaired |
+| d2_after | Fix leftovers and wipe puddles | A | 15 | Req | Puddles removed |
+
+### Day 3 · 14 windows · handbook only (cannot all be done)
+| ID | Task | Phases | s | Req | Effect |
+|---|---|---|---|---|---|
+| d3_shelter | Stock the shelter: at least 6 water and 6 food | P D A | 30 | Req | Stash topped up from basement shelves |
+| d3_medical | First aid and medication to the shelter | P D A | 10 | Req | First aid in stash or pockets |
+| d3_prep | Prepare the shelter: blanket, flashlight, batteries | P D A | 20 | Req | Safe room calms pulse 2x faster |
+| d3_tools | Fetch toolkit, planks and tape | P D | 30 | Req | Carried |
+| d3_board | Board up W09-W14 | P D | 72 | Req | W09-W14 reinforced |
+| d3_upgrade | Upgrade repaired windows (about 2) | P D | 24 | Opt | Repaired become reinforced |
+| d3_door | Re-brace or repair the front door | P D | 10 | Opt | Door reinforced |
+| d3_stairs | Block the basement stairs with towels and the blanket | P | 20 | Opt | Flood never starts |
+| d3_gobag | Pack the go-bag (backpack, water, food, first aid) | P D A | 20 | Opt | Score: counts as 2 tasks |
+| d3_utilities | Shut utilities and unplug devices | P only | 22 | Opt | Utilities off |
+| d3_loose | Move 4 loose items away from windows | P D | 20 | Opt | Removes +10% per item |
+| d3_carried | Repair unrepaired Day 2 breaks (about 1) | P D A | 18 | Req if any | Repaired |
+| d3_flood | Block the flood at the basement stairs | D (appears when the flood starts) | 38 | Req if flooding | Stops the rise |
+| d3_repair | Repair new breaks (about 4) | D A | 108 | Req | Repaired |
+| d3_after | Last check and cleanup | A | 10 | Req | Puddles removed |
+
+Workload targets (task seconds as a share of Preparation plus Disaster time): Day 1 76% after tuning, Day 2 about 92% (about 105% with spill-over), Day 3 about 134% (about 148% with spill-over).
+
+Removed on purpose: all "bucket under a leak" tasks, attic, bathtub, sandbags (replaced by towels), mop (replaced by towel wipe).
 
 ## Still to design
-- [ ] Decide on the Day 1 tuning recommendation (move first aid to Day 2?).
-- [ ] For every task: allowed phases, effect on `HouseState`, and whether it locks after Preparation.
-- [ ] Carry rules: how many items Cane can hold, and whether carrying slows him.
-- [ ] Mop-up / cleanup tasks: what the player physically does.
-- [ ] Day 2 "move loose items": which objects, and are they interactable yet?
+- [ ] Pick the actual loose items in the scene (3 near W04-W08, 4 near W09-W14) and tag them `LOOSE_*`.
+- [ ] Radio news lines (one per day, about 3 lines each).
 
 ## Open questions
-- **Q2.** Sandbags: add a prop, or replace with towels or furniture blocking the basement stairs?
+- **Q2. Decided:** towels and blankets instead of sandbags.

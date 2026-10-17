@@ -1,6 +1,6 @@
 # 06 · Health, fainting and saves
 
-> **Status:** Draft · **Owner:** unassigned · **Depends on:** 01, 03
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** 01, 03
 > **Code:** `HouseState` snapshots, restart menu (not built yet).
 
 ## Health
@@ -14,8 +14,11 @@
 ## Saves
 - **Autosave** at the start of each day. Restart menu shows each snapshot as a card (day, health, reinforced windows, supplies). Restarting from an earlier day deletes later snapshots.
 
-## Still to design
-- [ ] What counts as "enough" and "some" water and food for overnight recovery (count in the basement? carried?).
-- [ ] Other health damage sources: flood water, Day 1 (no damage numbers given for Day 1).
-- [ ] "First aid kit: two uses": per kit, or two uses total?
-- [ ] Is there a main menu / continue option, or only the restart menu after death?
+## Decisions (proposed 2026-10-17, change freely)
+- **Overnight recovery:** at night Cane uses 1 water and 1 food, taken from the shelter stash first and then from what he is carrying. Both available = "enough" (+50). Only one of them = "some" (+30). Neither = +10. What he uses is gone (it lowers "Supplies left" in the score).
+- **Day 1 has no health damage at all.** It is the tutorial.
+- **Flood water (Day 3):** 0.5 health per second while standing in basement water that is 20 cm deep or more ([01](01-core-loop-and-days.md)).
+- **First aid:** each of the 3 kits has 2 uses (+30 each), so 6 uses in the game. Use it by holding **H** for 1.5 s. It is stored in pockets.
+- **Health bar** sits directly above the pulse readout, bottom left ([07](07-hud-phone-handbook.md)).
+- **Menus:** the main menu has New Game, Continue (latest snapshot) and Quit. The pause menu (Esc) has Resume, Restart from a day (the snapshot cards) and Quit to menu. The game-over screen shows the snapshot cards only.
+- **Save format:** one JSON file per snapshot in `Application.persistentDataPath/saves/day{N}.json`.

@@ -1,6 +1,6 @@
 # 05 · Pulse
 
-> **Status:** Draft · **Owner:** unassigned · **Depends on:** 01, 03
+> **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** 01, 03
 > **Code:** pulse system (not built yet). Replaces the old excitement bar.
 
 | Zone | BPM | Color | Effect |
@@ -24,8 +24,12 @@
 
 Pulse drifts back to the current resting level at about 3 BPM per second. No tier ever blocks a task.
 
-## Still to design
-- [ ] Amounts for "storm level", "darkness", "last 10 s" and "many unfinished tasks" (no numbers yet).
-- [ ] Breathing key: which key, cooldown length.
-- [ ] Is "nearby" for a window break the same 2 m radius used for health damage in [06](06-health-and-saves.md)?
-- [ ] Keep or cut the sprint penalty.
+## Decisions (proposed 2026-10-17, change freely)
+- **Storm level** is already built into the resting level per phase (the table above). No separate modifier.
+- **Darkness** (Day 2-3, in a room with no light and the flashlight off): resting level +10.
+- **Last 10 s of a timer:** +2 BPM per second.
+- **Unfinished tasks at a phase flip:** +2 BPM per unfinished required task, at most +12, applied once.
+- **Breathing:** hold **Q**. The first 4 s does nothing except a breathing sound and a slight screen dim. After that it is -8 BPM per second while held, for up to 4 s. Cooldown is 20 s. Cane cannot move while breathing.
+- **"Nearby" for pulse** is 4 m (you hear and see it). Health damage still uses 2 m ([06](06-health-and-saves.md)).
+- **Sprint penalty:** kept, but only on Day 3 (+6 BPM per second of sprinting). It is a data toggle per day.
+- **Pulse floor and cap:** never below 60, never above the day's practical ceiling.
