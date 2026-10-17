@@ -26,7 +26,8 @@ public sealed class TaskState
 /// Today's task list from Resources/HurrycaneData/tasks.json (Docs/Design/04). Each task has a condition checked against
 /// the live house every frame; once true the task is done for good. A task past its last allowed phase is locked ("Too late").
 /// Condition words: alert, radio, carry:Kind[:n], stash:Kind[:n], supplies:Kind[:n], secured:IDs, fixed:ID, damaged:ID,
-/// anyDamaged, noneDamaged, stairsBlocked, flooding, floodStopped, joined with &amp;.
+/// anyDamaged, noneDamaged, stairsBlocked, flooding, floodStopped, anyPuddles, noPuddles, doorGapBlocked, unplugged,
+/// utilitiesOff, joined with &amp;.
 /// </summary>
 [RequireComponent(typeof(DayDirector))]
 public sealed class TaskEngine : MonoBehaviour
@@ -43,6 +44,8 @@ public sealed class TaskEngine : MonoBehaviour
     RadioSwitch radio;
     StairBarrier barrier;
     FloodSystem flood;
+    PuddleSystem puddles;
+    DoorGap doorGap;
 
     public IReadOnlyList<TaskState> Today => today;
     /// <summary>The first open task in list order: what the Day 1 phone shows.</summary>
@@ -68,6 +71,8 @@ public sealed class TaskEngine : MonoBehaviour
         radio = FindAnyObjectByType<RadioSwitch>();
         barrier = FindAnyObjectByType<StairBarrier>();
         flood = GetComponent<FloodSystem>();
+        puddles = GetComponent<PuddleSystem>();
+        doorGap = FindAnyObjectByType<DoorGap>();
         Evaluate();
     }
 
@@ -121,6 +126,11 @@ public sealed class TaskEngine : MonoBehaviour
             case "damaged": return Ids(parts).Any(Damaged);
             case "stairsBlocked": case "floodStopped": return barrier && barrier.Blocked;
             case "flooding": return flood && flood.Flooding;
+            case "anyPuddles": return puddles && puddles.Any;
+            case "noPuddles": return !puddles || !puddles.Any;
+            case "doorGapBlocked": return doorGap && doorGap.Blocked;
+            case "unplugged": return Switchable.AllOff(Switchable.Appliances);
+            case "utilitiesOff": return Switchable.AllOff(Switchable.Utilities);
             case "anyDamaged": return openings.Values.Any(o => o.InPlay && Damaged(o));
             case "noneDamaged": return !openings.Values.Any(o => o.InPlay && Damaged(o));
             default: Debug.LogWarning("Unknown task condition: " + atom); return false;

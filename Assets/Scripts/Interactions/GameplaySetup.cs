@@ -18,6 +18,32 @@ public static class GameplaySetup
 
     static int FirstAidUses => DaysConfig.Load().health.firstAidUsesPerKit;
 
+    // Things to switch off (Docs/Design/04): object, group, verb, done text, hold seconds, collision proxies that forward to it.
+    // An object with no proxy gets a fitted box; the fridge uses its shell panels so its door still opens.
+    static readonly (string obj, string group, string verb, string done, float hold, string[] proxies)[] Switches =
+    {
+        ("Living_TV_Animimo", Switchable.Appliances, "Unplug the TV", "TV unplugged", 1.5f, new string[0]),
+        ("Kitchen_Fridge", Switchable.Appliances, "Unplug the fridge", "Fridge unplugged", 1.5f, new[] { "COL_FridgeShell_Left", "COL_FridgeShell_Right", "COL_FridgeShell_Top" }),
+        ("Kitchen_Kettle", Switchable.Appliances, "Unplug the kettle", "Kettle unplugged", 1f, new string[0]),
+        ("Basement_FusePanel", Switchable.Utilities, "Switch off the main breaker", "Main breaker off", 2f, new string[0]),
+        ("Basement_UtilityTank", Switchable.Utilities, "Shut the utility valve", "Utility valve shut", 3f, new[] { "COL_Basement_UtilityTank" }),
+    };
+
+    static void AddSwitches(System.Collections.Generic.Dictionary<string, Transform> byName)
+    {
+        foreach (var s in Switches)
+        {
+            if (!byName.TryGetValue(s.obj, out var target)) { Debug.LogWarning("GameplaySetup: switch target missing " + s.obj); continue; }
+            if (target.GetComponent<Switchable>()) continue;
+            var switchable = target.gameObject.AddComponent<Switchable>();
+            switchable.Configure(s.group, s.verb, s.done, s.hold);
+            if (s.proxies.Length == 0) FitCollider(target);
+            foreach (var proxyName in s.proxies)
+                if (byName.TryGetValue(proxyName, out var proxy) && !proxy.GetComponent<InteractionProxy>())
+                    proxy.gameObject.AddComponent<InteractionProxy>().Configure(switchable);
+        }
+    }
+
     public static void Setup(Scene scene)
     {
         MapExplorer explorer = null;
@@ -28,9 +54,11 @@ public static class GameplaySetup
         var openings = new System.Collections.Generic.Dictionary<string, OpeningDefinition>();
         foreach (var definition in config.openings) openings[definition.collider] = definition;
         ShelterStash stash = null; Transform stashProxy = null, workbench = null;
+        var byName = new System.Collections.Generic.Dictionary<string, Transform>();
         foreach (var root in scene.GetRootGameObjects())
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
             {
+                if (!byName.ContainsKey(t.name)) byName[t.name] = t;
                 if (t.name == "COL_Basement_ShelterStash") stashProxy = t;
                 if (t.name == "Basement_Workbench_Visual") workbench = t;
                 if (openings.TryGetValue(t.name, out var opening) && !t.GetComponent<BreakableOpening>())
@@ -49,6 +77,7 @@ public static class GameplaySetup
             }
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
         if (stash && stashProxy && !stashProxy.GetComponent<InteractionProxy>()) stashProxy.gameObject.AddComponent<InteractionProxy>().Configure(stash);
+        AddSwitches(byName);
         var stack = Object.FindAnyObjectByType<PlankStack>();
         if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);
         if (!explorer.GetComponent<PauseMenu>()) explorer.gameObject.AddComponent<PauseMenu>();
@@ -74,6 +103,7 @@ public static class GameplaySetup
             host.AddComponent<PowerSystem>().Bind(explorer);
             var director = host.GetComponent<DayDirector>();
             host.AddComponent<FloodSystem>().Bind(explorer, StairBarrier.Create(explorer, director.Config.flood));
+            host.AddComponent<PuddleSystem>().Bind(explorer, DoorGap.Create(explorer, director.Config.doorGap));
             newSession.Begin(explorer, config.startDay);
         }
     }

@@ -11,6 +11,9 @@ public sealed class HouseSnapshot
     public string savedAt;
     public float health, pulse, phoneBattery, flashlightCharge = 100;
     public bool stairsBlocked;
+    public PuddleRecord[] puddles = new PuddleRecord[0];
+    /// <summary>Names of Switchables that are off (unplugged / shut).</summary>
+    public string[] switchedOff = new string[0];
     public Vector3 playerPosition;
     public float playerYaw;
     public int plankStackRemaining;
@@ -75,6 +78,8 @@ public static class HouseState
             savedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
             health = session.health, pulse = session.pulse, phoneBattery = session.phoneBattery, flashlightCharge = session.flashlightCharge,
             stairsBlocked = UnityEngine.Object.FindAnyObjectByType<StairBarrier>() is StairBarrier barrier && barrier.Blocked,
+            puddles = session.GetComponent<PuddleSystem>() is PuddleSystem puddleSystem ? puddleSystem.Records() : new PuddleRecord[0],
+            switchedOff = Switchable.All.Where(s => s.Off).Select(s => s.Key).ToArray(),
             tasksDone = session.tasksDone, tasksRequired = session.tasksRequired, hits = session.hits,
             reinforcedIds = session.reinforcedIds.ToArray(),
             playerPosition = player.transform.position, playerYaw = player.transform.eulerAngles.y,
@@ -145,6 +150,10 @@ public static class HouseState
         session.health = snapshot.health; session.pulse = snapshot.pulse; session.phoneBattery = snapshot.phoneBattery; session.flashlightCharge = snapshot.flashlightCharge;
         var barrierNow = UnityEngine.Object.FindAnyObjectByType<StairBarrier>();
         if (barrierNow) barrierNow.SetBlocked(snapshot.stairsBlocked);
+        var puddleSystem = session.GetComponent<PuddleSystem>();
+        if (puddleSystem) puddleSystem.Restore(snapshot.puddles);
+        var off = new HashSet<string>(snapshot.switchedOff ?? new string[0]);
+        foreach (var s in Switchable.All) s.SetOff(off.Contains(s.Key));
         session.tasksDone = snapshot.tasksDone; session.tasksRequired = snapshot.tasksRequired; session.hits = snapshot.hits;
         session.reinforcedIds = new HashSet<string>(snapshot.reinforcedIds ?? new string[0]);
         var controller = player.GetComponent<CharacterController>();

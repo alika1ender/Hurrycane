@@ -46,6 +46,16 @@
         "towelsToBlock": 2,
         "blockHoldSeconds": 4
     },
+    "puddles": {
+        "radius": 1.5,
+        "speedFactor": 0.6,
+        "wipeHoldSeconds": 4
+    },
+    "doorGap": {
+        "towels": 1,
+        "holdSeconds": 3,
+        "chanceReduction": 0.10
+    },
     "health": {
         "faintSeconds": 5,
         "faintWakeHealth": 35,

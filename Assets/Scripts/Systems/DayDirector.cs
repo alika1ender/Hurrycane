@@ -116,6 +116,7 @@ public sealed class DayDirector : MonoBehaviour
     void PlanStorm()
     {
         var today = Today;
+        var doorGap = FindAnyObjectByType<DoorGap>();
         var openings = FindObjectsByType<BreakableOpening>(FindObjectsInactive.Exclude);
         var scripted = new HashSet<string>(today.scripted.Select(s => s.opening));
         var hits = new List<KeyValuePair<float, PlannedHit>>();
@@ -124,7 +125,9 @@ public sealed class DayDirector : MonoBehaviour
         {
             // Skip ones mid-warning from a Preparation break, or they would be hit twice.
             if (!opening.InPlay || opening.Striking || scripted.Contains(opening.Id)) continue;
-            if (UnityEngine.Random.value < today.ChanceFor(opening))
+            float chance = today.ChanceFor(opening);
+            if (opening.IsDoor && doorGap) chance = Mathf.Max(0, chance - doorGap.ChanceReduction); // towel in the gap (Day 2 task)
+            if (UnityEngine.Random.value < chance)
                 hits.Add(Hit(UnityEngine.Random.Range(config.hitWindowStart * length, config.hitWindowEnd * length), opening, null));
         }
         foreach (var s in today.scripted)

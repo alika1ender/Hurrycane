@@ -12,6 +12,8 @@ public sealed class DaysConfig
     public HealthSettings health = new HealthSettings();
     public PowerSettings power = new PowerSettings();
     public FloodSettings flood = new FloodSettings();
+    public PuddleSettings puddles = new PuddleSettings();
+    public DoorGapSettings doorGap = new DoorGapSettings();
     public DayConfig[] days = new DayConfig[0];
 
     public DayConfig For(int day) => Array.Find(days, d => d.day == day) ?? (days.Length > 0 ? days[days.Length - 1] : new DayConfig());
@@ -80,6 +82,12 @@ public sealed class FloodSettings
     public float damagePerSecond = .5f, speedFactor = .7f, blockHoldSeconds = 4;
     public int towelsToBlock = 2;
 }
+
+[Serializable]
+public sealed class PuddleSettings { public float radius = 1.5f, speedFactor = .6f, wipeHoldSeconds = 4; }
+
+[Serializable]
+public sealed class DoorGapSettings { public int towels = 1; public float holdSeconds = 3, chanceReduction = .1f; }
 
 [Serializable]
 public sealed class HealthSettings

@@ -14,6 +14,12 @@ Template:
 
 ---
 
+## 2026-10-17 19:40 · Claude (for Ali)
+**Worked on:** the remaining disabled tasks. Code: `Systems/PuddleSystem.cs`, `Openings/Puddle.cs`, `Openings/DoorGap.cs`, `Interactions/Switchable.cs`, plus wiring in `GameplaySetup`, `DayDirector`, `TaskEngine`, `HouseState` and `MapExplorer`. Data: `puddles` and `doorGap` blocks in `days.json`; in `tasks.json`, `d1_wipe`, `d2_doorgap`, `d2_unplug` and `d2_utilities` are now on, and `d2_wipe`, `d3_wipe` and `d3_utilities` are new. Updated 03, 04 and 09.
+**Done:** puddles from broken windows/door (they slow you, re-leak each morning while unrepaired, and are wiped with a towel). The Day 2 door-gap towel lowers the door's break chance and prevents door puddles. Unplugging the TV, fridge and kettle, and switching off the breaker and valve. Everything is in snapshots. Tested in Play mode: spawn, slowdown, the gap vs no gap, wiping, switches, and a Day 2 save/restart keeping puddles and switches. The door/drawer test passes 31/31. Only `d2_handbook` and `d2_loose` remain disabled.
+**Next:** hands-on playtest. Then: loose items (pick 3 + 4 scene props and tag them), the handbook and phone as props (enables `d2_handbook`), the opening and ending cutscenes, a main menu.
+**Blocked / questions:** unchanged (water and planks in the arms; Day 1 door chance; cracked-boarded repair rule; Q3). The puddle look is a placeholder dark disc; art should supply a wet decal.
+
 ## 2026-10-17 19:10 · Claude (for Ali)
 **Worked on:** the Day 2 blackout and Day 3 basement flooding. Code: `Systems/PowerSystem.cs`, `Systems/FloodSystem.cs`, `Openings/StairBarrier.cs`, `Interactions/GeneratedProps.cs`, plus changes to `DayConfig`, `DayDirector`, `TaskEngine`, `PulseSystem`, `HouseState`, `GameUI` and `MapExplorer`. Data: `power` and `flood` blocks and `powerOut`/`floods` per day in `days.json`; `d3_stairs` and `d3_flood` added to `tasks.json`. Updated 01, 04, 05, 06, 07, 09 and 10.
 **Done:**
