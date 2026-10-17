@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// The plank stack on the basement workbench (Docs/Design/03): tap E to fill your arms with plank sets (up to 8).
+/// The plank stack on the basement workbench (Docs/Design/03): each tap of E takes one plank set (arms hold up to 8).
 /// One set boards one window or braces the door. Placeholder cube until the plank prop exists.
 /// </summary>
 [DisallowMultipleComponent]
@@ -12,7 +12,7 @@ public sealed class PlankStack : MonoBehaviour, IInteractable
     Vector3 fullScale;
 
     public int Remaining => remaining;
-    public string Prompt => "Take planks (" + remaining + " left)";
+    public string Prompt => "Take a plank (" + remaining + " left)";
     public float HoldSeconds => 0;
 
     public void Configure(int sets)
@@ -35,7 +35,8 @@ public sealed class PlankStack : MonoBehaviour, IInteractable
 
     public void Use(MapExplorer user)
     {
-        int take = Mathf.Min(remaining, PlayerInventory.Capacity(CarryGroup.Planks) - user.Inventory.Armful.Count);
+        // One per press, so every plank is collected separately.
+        int take = Mathf.Min(1, Mathf.Min(remaining, PlayerInventory.Capacity(CarryGroup.Planks) - user.Inventory.Armful.Count));
         for (int i = 0; i < take; i++) user.Inventory.Take(CreatePlankSet());
         remaining -= take;
         Refresh();

@@ -58,10 +58,12 @@ public sealed class DayDirector : MonoBehaviour
     {
         if (day == 1) StageDay1();
         else PlaceAtBedside();
+        GeneratedProps.StageLivingRoomItems(); // before the autosave, so the save has them
     }
 
     void OnDayStarted(int day)
     {
+        GeneratedProps.StageLivingRoomItems(); // restored saves skip DayStarting; older saves lack the book and phone
         AlertRead = false; ShowingControls = false;
         if (Today.alertFirst)
         {

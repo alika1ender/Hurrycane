@@ -57,8 +57,16 @@ public sealed class PowerSystem : MonoBehaviour
         // Room fixtures go out; the "Window"/daylight fills stay (they stand in for daylight through the glass).
         roomLights.AddRange(FindObjectsByType<Light>(FindObjectsInactive.Include)
             .Where(l => l != flashlight && (l.name.StartsWith("Light_") || l.name.StartsWith("BF_Light") || l.name.StartsWith("BasementLight"))));
+        foreach (var light in FindObjectsByType<Light>(FindObjectsInactive.Include))
+            if (light != flashlight && light.name.Contains("Window")) { windowLights.Add(light); windowColors.Add(light.color); }
         ambientSky = RenderSettings.ambientSkyColor; ambientEquator = RenderSettings.ambientEquatorColor; ambientGround = RenderSettings.ambientGroundColor;
     }
+
+    // The window fill lamps are cool blue. With the room lights out they were the only light left, so the whole house
+    // turned blue on Day 2. In a blackout they become a neutral storm grey instead.
+    static readonly Color StormGrey = new Color(.92f, .9f, .86f);
+    readonly List<Light> windowLights = new List<Light>();
+    readonly List<Color> windowColors = new List<Color>();
 
     void OnDayStarted(int day) => SetPower(!director.Config.For(day).powerOut);
 
@@ -67,6 +75,7 @@ public sealed class PowerSystem : MonoBehaviour
         ReadLights();
         PowerOut = !on;
         foreach (var light in roomLights) if (light) light.enabled = on;
+        for (int i = 0; i < windowLights.Count; i++) if (windowLights[i]) windowLights[i].color = on ? windowColors[i] : StormGrey;
         float f = on ? 1 : settings.ambientFactor;
         RenderSettings.ambientSkyColor = ambientSky * f;
         RenderSettings.ambientEquatorColor = ambientEquator * f;
@@ -88,6 +97,7 @@ public sealed class PowerSystem : MonoBehaviour
     {
         // Put the scene's ambient back so leaving Play mode never leaves the editor dark.
         if (lightsRead) { RenderSettings.ambientSkyColor = ambientSky; RenderSettings.ambientEquatorColor = ambientEquator; RenderSettings.ambientGroundColor = ambientGround; }
+        for (int i = 0; i < windowLights.Count; i++) if (windowLights[i]) windowLights[i].color = windowColors[i];
     }
 
     void Update()

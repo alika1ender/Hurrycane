@@ -48,7 +48,7 @@ public sealed class CutsceneSystem : MonoBehaviour
     public float Fade { get; private set; }
     /// <summary>0 eyes open .. 1 closed.</summary>
     public float Eyelids { get; private set; }
-    /// <summary>0..1 red/blue siren wash.</summary>
+    /// <summary>0..1 red siren wash.</summary>
     public float Siren { get; private set; }
     public float SkipProgress => QuickSkip ? 0 : Mathf.Clamp01(skipHeld / SkipHold);
     public bool QuickSkip => Kind == "opening" && PlayerPrefs.GetInt(SeenKey, 0) == 1;
@@ -224,11 +224,122 @@ public sealed class CutsceneSystem : MonoBehaviour
             Block(PrimitiveType.Cube, wall, new Vector3(x, 2, 24), new Vector3(6, 4, 6), Vector3.zero);
             Block(PrimitiveType.Cube, roof, new Vector3(x + (i % 2 == 0 ? 1.5f : -1), 4.3f, 23), new Vector3(4, .25f, 6.2f), new Vector3(i % 2 == 0 ? 0 : 6, 0, i % 2 == 0 ? 24 : -32));
         }
+        BuildDevastation(bark, leaves, wall, roof, wood, mud);
         // Morning sun from the south-east, so the street is lit (no shadows: cheap, and no light through walls).
         sun = new GameObject("MorningSun").AddComponent<Light>();
         sun.transform.SetParent(street.transform, false);
         sun.type = LightType.Directional; sun.color = new Color(1f, .93f, .82f); sun.intensity = 1.1f; sun.shadows = LightShadows.None;
         sun.transform.rotation = Quaternion.Euler(32, 25, 0); // shining south, onto the faces seen from the house
+    }
+
+    /// <summary>
+    /// Fills the view from the living room window (camera near x -2.3, looking south) with storm damage: snapped, leaning
+    /// and uprooted trees, a closer row of half-collapsed houses, debris piles, an overturned car and a leaning pole.
+    /// </summary>
+    void BuildDevastation(Material bark, Material leaves, Material wall, Material roof, Material wood, Material mud)
+    {
+        var dark = Mat(new Color(.07f, .07f, .08f), .1f);
+        var deadLeaves = Mat(new Color(.25f, .26f, .12f), .05f);
+        var rubble = Mat(new Color(.45f, .42f, .38f), .1f);
+        var paint = Mat(new Color(.55f, .18f, .14f), .5f);
+        var random = new System.Random(1803);
+        float R(float min, float max) => min + (float)random.NextDouble() * (max - min);
+
+        // Trees: (x, z, kind) 0 snapped, 1 leaning, 2 uprooted. Spread across the window's view, near to far.
+        var trees = new (float x, float z, int kind)[]
+        {
+            (-6.5f, 7.5f, 0), (2.8f, 7f, 1), (-9.5f, 10f, 1), (5.5f, 10.5f, 2), (-4f, 12.5f, 2), (0.5f, 13f, 0),
+            (7.5f, 13.5f, 1), (-11f, 14f, 0), (-1.5f, 19f, 1), (4f, 19.5f, 0), (-7.5f, 20f, 1), (9.5f, 21f, 0),
+        };
+        foreach (var (x, z, kind) in trees)
+        {
+            var tree = Group("BrokenTree", new Vector3(x, 0, z), R(0, 360));
+            float girth = R(.32f, .5f);
+            if (kind == 0) // snapped: a jagged stump, the crown lying beside it
+            {
+                float stump = R(1.2f, 2.4f);
+                Part(tree, PrimitiveType.Cylinder, bark, new Vector3(0, stump * .5f, 0), new Vector3(girth, stump * .5f, girth), Vector3.zero);
+                Part(tree, PrimitiveType.Cube, bark, new Vector3(.05f, stump + .12f, 0), new Vector3(girth * .5f, .45f, girth * .4f), new Vector3(0, 0, 18));
+                float length = R(3.5f, 5f);
+                Part(tree, PrimitiveType.Cylinder, bark, new Vector3(length * .5f + .3f, girth * .4f, .2f), new Vector3(girth * .8f, length * .5f, girth * .8f), new Vector3(0, 0, 86));
+                Part(tree, PrimitiveType.Sphere, R(0, 1) > .5f ? leaves : deadLeaves, new Vector3(length + .4f, .8f, .3f), new Vector3(2.4f, 1.4f, 2f), Vector3.zero);
+                Part(tree, PrimitiveType.Cylinder, bark, new Vector3(length * .6f, .7f, -.5f), new Vector3(.09f, .9f, .09f), new Vector3(40, 0, 60));
+            }
+            else if (kind == 1) // leaning hard, stripped bare, a few branches left
+            {
+                float height = R(4.5f, 6.5f), lean = R(22, 38);
+                var trunk = Part(tree, PrimitiveType.Cylinder, bark, Vector3.zero, new Vector3(girth, height * .5f, girth), new Vector3(0, 0, lean));
+                trunk.transform.localPosition = trunk.transform.localRotation * new Vector3(0, height * .5f, 0);
+                var top = trunk.transform.localRotation * new Vector3(0, height, 0);
+                for (int b = 0; b < 4; b++)
+                    Part(tree, PrimitiveType.Cylinder, bark, top * R(.55f, .95f), new Vector3(.08f, R(.5f, 1f), .08f), new Vector3(R(-60, 60), R(0, 360), R(-70, 70)));
+                if (R(0, 1) > .4f) Part(tree, PrimitiveType.Sphere, deadLeaves, top + new Vector3(0, .2f, 0), new Vector3(1.6f, 1f, 1.4f), Vector3.zero);
+            }
+            else // uprooted: trunk on the ground, the root plate torn up with it
+            {
+                float length = R(4.5f, 6f);
+                Part(tree, PrimitiveType.Cylinder, bark, new Vector3(length * .5f, girth * .5f, 0), new Vector3(girth, length * .5f, girth), new Vector3(0, 0, 88));
+                Part(tree, PrimitiveType.Sphere, mud, new Vector3(-.2f, 1f, 0), new Vector3(.6f, 2.2f, 2.4f), Vector3.zero);
+                Part(tree, PrimitiveType.Sphere, leaves, new Vector3(length + .6f, 1f, 0), new Vector3(2.8f, 1.8f, 2.6f), Vector3.zero);
+                Part(tree, PrimitiveType.Cylinder, bark, new Vector3(length * .7f, 1f, .6f), new Vector3(.1f, 1f, .1f), new Vector3(-35, 0, 30));
+            }
+        }
+
+        // A closer row of houses: walls half down, roofs caved in, rubble in front.
+        for (int i = 0; i < 4; i++)
+        {
+            var house = Group("RuinedHouse", new Vector3(-11 + i * 7f, 0, 16.5f), R(-6, 6));
+            float w = 5.6f, h = 3.4f, d = 5f;
+            Part(house, PrimitiveType.Cube, wall, new Vector3(0, h * .5f, d * .5f), new Vector3(w, h, .25f), Vector3.zero);                               // back wall
+            Part(house, PrimitiveType.Cube, wall, new Vector3(-w * .5f, h * .35f, 0), new Vector3(.25f, h * .7f, d), Vector3.zero);                       // left wall, lower
+            Part(house, PrimitiveType.Cube, wall, new Vector3(w * .5f + .2f, h * .3f, .3f), new Vector3(.25f, h * .6f, d * .8f), new Vector3(0, 0, -14));  // right wall, buckled
+            Part(house, PrimitiveType.Cube, wall, new Vector3(-w * .3f, h * .45f, -d * .5f), new Vector3(w * .4f, h * .9f, .25f), Vector3.zero);           // front, left piece
+            Part(house, PrimitiveType.Cube, wall, new Vector3(w * .32f, h * .22f, -d * .5f), new Vector3(w * .3f, h * .44f, .25f), new Vector3(0, 0, 6));  // front, broken stub
+            Part(house, PrimitiveType.Cube, dark, new Vector3(-w * .3f, h * .55f, -d * .5f - .14f), new Vector3(.9f, .8f, .04f), Vector3.zero);              // empty window
+            Part(house, PrimitiveType.Cube, roof, new Vector3(0, h * .55f, d * .1f), new Vector3(w * .95f, .22f, d * 1.05f), new Vector3(i % 2 == 0 ? 28 : 34, 0, i % 2 == 0 ? 8 : -10)); // caved-in roof
+            if (i % 2 == 1) Part(house, PrimitiveType.Cube, roof, new Vector3(w * .35f, h + .2f, d * .3f), new Vector3(w * .4f, .2f, d * .5f), new Vector3(0, 0, -22)); // a hanging piece
+            for (int r = 0; r < 9; r++)
+                Part(house, PrimitiveType.Cube, r % 3 == 0 ? wood : rubble, new Vector3(R(-w * .5f, w * .5f), R(.1f, .5f), -d * .5f - R(.4f, 2f)),
+                    new Vector3(R(.3f, 1.2f), R(.15f, .5f), R(.3f, .9f)), new Vector3(R(-25, 25), R(0, 180), R(-25, 25)));
+        }
+
+        // An overturned car in the street.
+        var car = Group("OverturnedCar", new Vector3(-3.2f, 0, 10.8f), 74);
+        Part(car, PrimitiveType.Cube, paint, new Vector3(0, .55f, 0), new Vector3(4.2f, .8f, 1.8f), new Vector3(0, 0, 180));
+        Part(car, PrimitiveType.Cube, dark, new Vector3(.2f, .12f, 0), new Vector3(2.2f, .3f, 1.6f), Vector3.zero);
+        foreach (var wx in new[] { -1.3f, 1.3f }) foreach (var wz in new[] { -.8f, .8f })
+            Part(car, PrimitiveType.Cylinder, dark, new Vector3(wx, 1.05f, wz), new Vector3(.6f, .1f, .6f), new Vector3(90, 0, 0));
+
+        // A leaning power pole with a drooping line.
+        var pole = Group("LeaningPole", new Vector3(6.5f, 0, 9f), 0);
+        Part(pole, PrimitiveType.Cylinder, bark, new Vector3(-1.2f, 3.2f, 0), new Vector3(.22f, 3.4f, .22f), new Vector3(0, 0, 24));
+        Part(pole, PrimitiveType.Cube, bark, new Vector3(-2.6f, 6.2f, 0), new Vector3(1.6f, .12f, .12f), new Vector3(0, 0, 24));
+        Part(pole, PrimitiveType.Cube, dark, new Vector3(-6f, 3.4f, 0), new Vector3(7f, .03f, .03f), new Vector3(0, 0, -28));
+
+        // More boards, branches and roof sheets strewn across the yard and street.
+        for (int i = 0; i < 26; i++)
+            Block(PrimitiveType.Cube, i % 4 == 0 ? roof : i % 4 == 1 ? bark : wood, new Vector3(R(-12, 10), R(.03f, .2f), R(5, 15)),
+                new Vector3(R(.6f, 2f), R(.04f, .12f), R(.12f, .5f)), new Vector3(R(-15, 15), R(0, 360), R(-15, 15)));
+    }
+
+    Transform Group(string name, Vector3 position, float yaw)
+    {
+        var group = new GameObject(name).transform;
+        group.SetParent(street.transform, false);
+        group.SetPositionAndRotation(position, Quaternion.Euler(0, yaw, 0));
+        return group;
+    }
+
+    GameObject Part(Transform parent, PrimitiveType type, Material material, Vector3 localPosition, Vector3 scale, Vector3 euler)
+    {
+        var go = GameObject.CreatePrimitive(type);
+        Destroy(go.GetComponent<Collider>());
+        go.transform.SetParent(parent, false);
+        go.transform.localPosition = localPosition;
+        go.transform.localRotation = Quaternion.Euler(euler);
+        go.transform.localScale = scale;
+        go.GetComponent<Renderer>().sharedMaterial = material;
+        return go;
     }
 
     void SetMorning(bool on)
@@ -237,6 +348,25 @@ public sealed class CutsceneSystem : MonoBehaviour
         {
             player.viewCamera.clearFlags = CameraClearFlags.SolidColor;
             player.viewCamera.backgroundColor = new Color(.72f, .76f, .80f); // pale overcast sky
+            // Morning haze: the wrecked trees and houses outside stay readable, the far street fades out.
+            if (savedFog == null) savedFog = (RenderSettings.fog, RenderSettings.fogMode, RenderSettings.fogColor, RenderSettings.fogStartDistance, RenderSettings.fogEndDistance);
+            RenderSettings.fog = true;
+            RenderSettings.fogMode = FogMode.Linear;
+            RenderSettings.fogColor = player.viewCamera.backgroundColor;
+            RenderSettings.fogStartDistance = 4f;    // the rooms stay clear
+            RenderSettings.fogEndDistance = 34f;     // nearby damage clear, the far row hazy
+        }
+    }
+
+    (bool on, FogMode mode, Color color, float start, float end)? savedFog;
+
+    void OnDestroy()
+    {
+        // Leaving Play mode must not leave the scene foggy in the editor.
+        if (savedFog is { } fog)
+        {
+            RenderSettings.fog = fog.on; RenderSettings.fogMode = fog.mode; RenderSettings.fogColor = fog.color;
+            RenderSettings.fogStartDistance = fog.start; RenderSettings.fogEndDistance = fog.end;
         }
     }
 

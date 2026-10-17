@@ -84,7 +84,7 @@ public sealed class MapExplorer : MonoBehaviour
         axis = movementLocked ? Vector2.zero : Vector2.ClampMagnitude(axis, 1);
         if (controller.isGrounded && verticalSpeed < 0) verticalSpeed = -2;
         verticalSpeed += Physics.gravity.y * Time.deltaTime;
-        Sprinting = keyboard.leftShiftKey.isPressed && !Inventory.Encumbered && axis.sqrMagnitude > .01f;
+        Sprinting = keyboard.leftShiftKey.isPressed && axis.sqrMagnitude > .01f; // carrying no longer stops running
         float speed = (Sprinting ? 4.2f : 2.6f) * Mathf.Min(speedFactor, puddleSpeedFactor);
         controller.Move(((transform.right * axis.x + transform.forward * axis.y) * speed + Vector3.up * verticalSpeed) * Time.deltaTime);
         if (transform.position.y < -8) Respawn();

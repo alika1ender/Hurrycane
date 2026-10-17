@@ -79,7 +79,8 @@ public sealed class Pickup : MonoBehaviour, IInteractable
             case ItemKind.FirstAid: return "First aid kit";
             case ItemKind.RepairTape: return "Repair tape";
             case ItemKind.PlankSet: return "Planks";
-            case ItemKind.Handbook: return "Handbook";
+            case ItemKind.Handbook: return "Survival guide";
+            case ItemKind.Phone: return "Phone";
             default: return kind.ToString();
         }
     }

@@ -12,6 +12,8 @@ using UnityEngine;
 public sealed class FloodSystem : MonoBehaviour
 {
     public static event Action FloodStarted;
+    /// <summary>Raised when the live (breaker still on) flood water shocks Cane.</summary>
+    public static event Action Shocked;
 
     static readonly string[] GroundFloor = { "W01", "W02", "W03", "W04", "W05", "W06", "W13", "Door" };
 
@@ -21,7 +23,21 @@ public sealed class FloodSystem : MonoBehaviour
     FloodSettings settings;
     StairBarrier barrier;
     Transform water;
-    float floorY = -3.2f, clock, startAt = -1;
+    Material waterMaterial;
+    Switchable breaker;
+    float floorY = -3.2f, clock, startAt = -1, shockReadyAt;
+
+    /// <summary>The main breaker was never switched off, so any flood water is electrified.</summary>
+    public bool Live
+    {
+        get
+        {
+            if (!breaker) foreach (var s in Switchable.All) if (s.Key == "Basement_FusePanel") breaker = s;
+            return breaker && !breaker.Off;
+        }
+    }
+    /// <summary>Feet in the water at any depth (shocks don't wait for the 20 cm "harmful" depth).</summary>
+    public bool PlayerTouchingWater => player && Depth > .02f && player.transform.position.y < floorY + Depth - .01f;
 
     public float Depth { get; private set; }
     public bool Flooding => Depth > 0;
@@ -53,7 +69,8 @@ public sealed class FloodSystem : MonoBehaviour
         plane.transform.SetParent(transform, false);
         plane.transform.position = new Vector3(area.center.x, floorY, area.center.z);
         plane.transform.localScale = new Vector3(area.size.x - .05f, .02f, area.size.z - .05f);
-        plane.GetComponent<Renderer>().sharedMaterial = WaterMaterial();
+        waterMaterial = WaterMaterial();
+        plane.GetComponent<Renderer>().sharedMaterial = waterMaterial;
         water = plane.transform;
         SetDepth(0);
     }
@@ -86,6 +103,14 @@ public sealed class FloodSystem : MonoBehaviour
         bool wading = storm && PlayerInWater;
         player.speedFactor = wading ? settings.speedFactor : 1;
         if (wading) session.health = Mathf.Max(0, session.health - settings.damagePerSecond * Time.deltaTime);
+        // Power left on before the flood (Day 3): the water is live and shocks on contact.
+        if (storm && Live && PlayerTouchingWater && Time.time >= shockReadyAt)
+        {
+            shockReadyAt = Time.time + settings.shockIntervalSeconds;
+            session.health = Mathf.Max(0, session.health - settings.shockDamage);
+            Shocked?.Invoke();
+        }
+        AnimateWater();
     }
 
     void SetDepth(float depth)
@@ -95,6 +120,19 @@ public sealed class FloodSystem : MonoBehaviour
         water.gameObject.SetActive(depth > .001f);
         var p = water.position; p.y = floorY + depth; water.position = p;
     }
+
+    /// <summary>A gentle swell so the surface reads as moving water, and a crackling flicker while it's electrified.</summary>
+    void AnimateWater()
+    {
+        if (!water || !water.gameObject.activeSelf) return;
+        float t = Time.time;
+        var p = water.position; p.y = floorY + Depth + Mathf.Sin(t * 1.3f) * .008f; water.position = p;
+        var glow = BaseGlow;
+        if (Live && UnityEngine.Random.value < .25f) glow += new Color(.35f, .38f, .3f) * UnityEngine.Random.Range(.3f, 1f);
+        waterMaterial.SetColor("_EmissionColor", glow);
+    }
+
+    static readonly Color BaseGlow = new Color(.035f, .05f, .04f);
 
     static Material WaterMaterial()
     {
@@ -106,9 +144,14 @@ public sealed class FloodSystem : MonoBehaviour
         m.SetInt("_ZWrite", 0);
         m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
         m.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-        m.SetColor("_BaseColor", new Color(.10f, .19f, .19f, .86f)); // murky storm water, dark enough to read in a dim basement
-        m.SetFloat("_Smoothness", .96f);
-        m.SetFloat("_Metallic", .2f);
+        // Muddy brown-green storm water, opaque enough to stand out on the basement floor, with a faint glow so it still
+        // reads in the blackout.
+        m.SetColor("_BaseColor", new Color(.36f, .32f, .2f, .92f));
+        m.SetFloat("_Smoothness", .9f);
+        m.SetFloat("_Metallic", .1f);
+        m.EnableKeyword("_EMISSION");
+        m.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        m.SetColor("_EmissionColor", BaseGlow);
         return m;
     }
 }

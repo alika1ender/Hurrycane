@@ -277,7 +277,7 @@ public sealed class AudioDirector : MonoBehaviour
     void OnPhase(DayPhase phase)
     {
         if (phase == DayPhase.Alert) { if (!vibratePlayed) Shot("phone_vibrate", .7f); Invoke(nameof(Chime), .5f); } // the opening already buzzed the phone
-        if (phase == DayPhase.Disaster) { Shot("thunder_02", 1, 1); thunderTimer = Random.Range(5f, 9f); }
+        if (phase == DayPhase.Disaster) { Shot("thunder_02", 1, 1); WindowWeather.Flash(); thunderTimer = Random.Range(5f, 9f); }
         if (phase == DayPhase.Preparation) thunderTimer = Random.Range(12f, 22f);
     }
 
@@ -390,9 +390,9 @@ public sealed class AudioDirector : MonoBehaviour
         if (thunderTimer <= 0)
         {
             float gapScale = day >= 3 ? .75f : 1f; // more thunder on the last day
-            if (phase == DayPhase.Disaster) { Shot(Pick("thunder_01", "thunder_03", "thunder_04", "thunder_05", "thunder_06"), Random.Range(.7f, 1f) * outside, Random.Range(.92f, 1.05f), null, Random.Range(-.5f, .5f)); thunderTimer = Random.Range(7f, 16f) * gapScale; }
-            else if (phase == DayPhase.Preparation && day >= 2 && progress > .4f) { Shot(Pick("thunder_01", "thunder_03"), .35f * outside, .9f, null, Random.Range(-.5f, .5f)); thunderTimer = Random.Range(20f, 35f); }
-            else if (phase == DayPhase.AfterDisaster && progress < .5f) { Shot(Pick("thunder_04", "thunder_06"), .4f * outside, .88f); thunderTimer = Random.Range(25f, 40f); }
+            if (phase == DayPhase.Disaster) { WindowWeather.Flash(); Shot(Pick("thunder_01", "thunder_03", "thunder_04", "thunder_05", "thunder_06"), Random.Range(.7f, 1f) * outside, Random.Range(.92f, 1.05f), null, Random.Range(-.5f, .5f)); thunderTimer = Random.Range(7f, 16f) * gapScale; }
+            else if (phase == DayPhase.Preparation && day >= 2 && progress > .4f) { WindowWeather.Flash(.35f); Shot(Pick("thunder_01", "thunder_03"), .35f * outside, .9f, null, Random.Range(-.5f, .5f)); thunderTimer = Random.Range(20f, 35f); }
+            else if (phase == DayPhase.AfterDisaster && progress < .5f) { WindowWeather.Flash(.6f); Shot(Pick("thunder_04", "thunder_06"), .4f * outside, .88f); thunderTimer = Random.Range(25f, 40f); }
             else thunderTimer = 5;
         }
 

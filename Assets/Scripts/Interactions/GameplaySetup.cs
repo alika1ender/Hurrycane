@@ -94,6 +94,7 @@ public static class GameplaySetup
             }
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
         if (stash && stashProxy && !stashProxy.GetComponent<InteractionProxy>()) stashProxy.gameObject.AddComponent<InteractionProxy>().Configure(stash);
+        MoveShelterToMasterBedroom(byName);
         AddSwitches(byName);
         if (byName.TryGetValue("Living_TV_Animimo", out var television) && !television.GetComponent<TVBroadcast>())
             television.gameObject.AddComponent<TVBroadcast>();
@@ -127,8 +128,56 @@ public static class GameplaySetup
             host.AddComponent<HandheldSystem>().Bind(explorer);
             host.AddComponent<CutsceneSystem>().Bind(explorer);
             host.AddComponent<WindowWeather>();
+            host.AddComponent<PickupHighlight>().Bind(explorer);
             newSession.Begin(explorer, config.startDay);
         }
+    }
+
+    /// <summary>
+    /// The shelter is the master bedroom: the supply box (Basement_ShelterStash, its visual, its E proxy and marker) is
+    /// moved from the basement onto free floor beside the master bed. The basement spot is kept for the two towels.
+    /// </summary>
+    static void MoveShelterToMasterBedroom(System.Collections.Generic.Dictionary<string, Transform> byName)
+    {
+        byName.TryGetValue("Basement_ShelterStash_Visual", out var visual);
+        byName.TryGetValue("COL_Master_DoubleBed", out var bedProxy);
+        byName.TryGetValue("20_Master_Bedroom_Visual", out var roomVisual);
+        if (!visual || !bedProxy || !visual.GetComponent<Renderer>()) { Debug.LogWarning("Shelter move: stash or master bed not found"); return; }
+        var box = visual.GetComponent<Renderer>().bounds;
+        GeneratedProps.BasementTowelSpot = new Vector3(box.max.x + .35f, box.min.y, box.center.z);
+        var bed = bedProxy.GetComponent<Collider>().bounds;
+        var room = roomVisual && roomVisual.GetComponent<Renderer>() ? roomVisual.GetComponent<Renderer>().bounds : new Bounds(bed.center, bed.size * 3);
+
+        Vector3? target = null;
+        foreach (var side in new[] { Vector3.back, Vector3.forward, Vector3.right, Vector3.left })
+            foreach (float along in new[] { 0f, .6f, -.6f })
+            {
+                if (target != null) break;
+                var across = new Vector3(Mathf.Abs(side.z), 0, Mathf.Abs(side.x));
+                var gap = Vector3.Scale(side, bed.extents + box.extents + Vector3.one * .2f);
+                var spot = new Vector3(bed.center.x, bed.max.y + 1, bed.center.z) + new Vector3(gap.x, 0, gap.z) + Vector3.Scale(across, bed.extents) * along;
+                if (!Physics.Raycast(spot, Vector3.down, out var floor, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) continue;
+                if (floor.normal.y < .9f || Mathf.Abs(floor.point.y - bed.min.y) > .3f) continue;
+                if (floor.point.x - box.extents.x < room.min.x + .1f || floor.point.x + box.extents.x > room.max.x - .1f
+                    || floor.point.z - box.extents.z < room.min.z + .1f || floor.point.z + box.extents.z > room.max.z - .1f) continue;
+                var centre = floor.point + Vector3.up * (box.extents.y + .07f);
+                // Room for the box plus a little walking space, free of walls and furniture.
+                if (Physics.CheckBox(centre, new Vector3(box.extents.x + .1f, box.extents.y, box.extents.z + .1f), Quaternion.identity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) continue;
+                target = floor.point;
+            }
+        if (target == null) { Debug.LogWarning("Shelter move: no free floor beside the master bed; the supply box stays in the basement"); return; }
+
+        var delta = target.Value - new Vector3(box.center.x, box.min.y, box.center.z);
+        var parts = new System.Collections.Generic.List<Transform>();
+        foreach (var name in new[] { "Basement_ShelterStash", "Basement_ShelterStash_Visual", "COL_Basement_ShelterStash", "MARKER_ShelterStash" })
+            if (byName.TryGetValue(name, out var part)) parts.Add(part);
+        foreach (var part in parts)
+        {
+            bool parentMoves = false;
+            for (var p = part.parent; p; p = p.parent) if (parts.Contains(p)) parentMoves = true;
+            if (!parentMoves) part.position += delta;
+        }
+        Physics.SyncTransforms();
     }
 
     /// <summary>Placeholder plank stack on the left end of the basement workbench top.</summary>

@@ -14,6 +14,22 @@ Template:
 
 ---
 
+## 2026-10-18 00:40 · Claude (for krx40)
+**Worked on:** a 17-item playtest list. Code: `Openings/OpeningVisuals.cs`, `Openings/PlankStack.cs`, `Interactions/PickupHighlight.cs` (new) + `Resources/PickupOutline.shader` (new), `Interactions/GameplaySetup.cs`, `GeneratedProps.cs`, `MapExplorer.cs`, `Pickup.cs`, `PlayerInventory.cs` (new `ItemKind.Phone`, appended), `Systems/FloodSystem.cs`, `PowerSystem.cs`, `PulseSystem.cs`, `PuddleSystem.cs`, `WindowWeather.cs`, `CutsceneSystem.cs`, `DayDirector.cs`, `HandheldSystem.cs`, `DayConfig.cs`, `UI/GameUI.cs`, `Audio/AudioDirector.cs` (one call per thunder clap); data in `openings.json`, `tasks.json`, `days.json`.
+**Done:**
+- Broken windows: hole, jagged glass, crack web, floor shards. They were invisible before because WindowWeather's opaque sky pane sits 3.5 cm inside the glass; all state FX now sit in front of it. Broken door: hole, splinters, split. Cracked: crack web.
+- Pickup outline (near/focused), red-pulse screen border, lightning through windows (flashes with AudioDirector's thunder), menu tornado, red-only siren.
+- Day 2 "blue screen": in the blackout only the blue window fill lamps were lit; they turn neutral grey while the power is out.
+- One plank per press; Shift while carrying; windows 50% faster, door = window speed.
+- Survival guide is Day 1's first task; guide + new phone pickup staged on the coffee table whenever missing (old saves too); Tab needs one of them. (`StageHandbook` had been dropped in 1b6d5a5.)
+- Puddles/shards measure the real floor; puddles never on stairs, door makes one puddle.
+- Flood water more visible; live water (main breaker on) shocks 10 HP / 2 s.
+- Shelter supply box moved at runtime to free floor beside the master bed; the master bedroom is the safe room.
+- Ending: linear fog (4–34 m) and a much denser ruined street.
+- Compiled in Unity 6000.6; menu checked in Play mode. Not yet playtested through the days.
+**Next:** playtest Days 1–3 for the new visuals, the shelter placement and the shock timing.
+**Blocked / questions:** shocks repeat every 2 s while in live water (one-off instead?). The "Hall_ShelterDirection" sign may still point to the basement.
+
 ## 2026-10-17 23:58 · Claude (for Ali)
 **Worked on:** teaching the controls. Code: `UI/GameUI.cs` (controls card, tips, menu and pause buttons), `Systems/DayDirector.cs` (two-step alert, `SkipIntro`) and `Systems/GameSession.cs` (`NewGameStarted`). Updated 07 and 09.
 **Done:** a How to play card after the Day 1 alert (every key, grouped, with the goal), which can be reopened from the menu and pause screens. One-time key tips when each control first matters. Tested in Play mode (captures `WalkthroughPreviews/ui/23_how_to_play`, `24_tip`); the door/drawer test passes 31/31.

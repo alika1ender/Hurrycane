@@ -47,6 +47,13 @@ public sealed class WindowWeather : MonoBehaviour
             renderer.receiveShadows = false;
             panes.Add(pane); materials.Add(material);
             pane.SetActive(false);
+            // Lightning light: shines in through this window, down onto the floor.
+            var bolt = new GameObject("Lightning_" + opening.Id).AddComponent<Light>();
+            bolt.transform.SetParent(transform, true);
+            bolt.transform.SetPositionAndRotation(b.center + inward * .15f, Quaternion.LookRotation(inward + Vector3.down * .45f));
+            bolt.type = LightType.Spot; bolt.range = 8; bolt.spotAngle = 110; bolt.innerSpotAngle = 60;
+            bolt.color = new Color(.88f, .9f, 1f); bolt.shadows = LightShadows.None; bolt.intensity = 0; bolt.enabled = false;
+            lightning.Add(bolt);
         }
         foreach (var light in FindObjectsByType<Light>(FindObjectsInactive.Include))
             if (light.name.Contains("Window")) { daylight.Add(light); intensities.Add(light.intensity); }
@@ -62,9 +69,16 @@ public sealed class WindowWeather : MonoBehaviour
         strength = Mathf.MoveTowards(strength, target, Time.deltaTime * .18f);
         bool finale = phase == DayPhase.Disaster && session && session.CurrentDay == finalDay;
         finalStorm = Mathf.MoveTowards(finalStorm, finale ? 1 : 0, Time.deltaTime * .25f);
+        float flash = Lightning(phase);
+        for (int i = 0; i < lightning.Count; i++)
+        {
+            lightning[i].enabled = flash > .01f;
+            lightning[i].intensity = flash * 7;
+        }
         for (int i = 0; i < panes.Count; i++)
         {
             panes[i].SetActive(visible);
+            materials[i].SetFloat("_Flash", flash);
             materials[i].SetFloat("_Storm", strength);
             materials[i].SetFloat("_FinalStorm", finalStorm);
             // Alert screens and menus can pause gameplay; the sky keeps moving.
@@ -74,6 +88,47 @@ public sealed class WindowWeather : MonoBehaviour
         for (int i = 0; i < daylight.Count; i++)
             if (daylight[i]) daylight[i].intensity = intensities[i] * Mathf.Lerp(1, .12f, strength) * Mathf.Lerp(1, .35f, finalStorm);
     }
+
+    /// <summary>
+    /// Lightning during the hurricane: every 5-12 s in Disaster Time (3-7 s in the final storm), now and then after it.
+    /// Each strike is a quick double flicker lighting all the windows at once. Returns the flash brightness 0..1.
+    /// </summary>
+    float Lightning(DayPhase phase)
+    {
+        float now = Time.time;
+        // With sound, AudioDirector calls Flash() with each thunder clap so the two line up; this timer is the fallback.
+        if (!AudioDirector.Instance)
+        {
+            bool storm = phase == DayPhase.Disaster || phase == DayPhase.AfterDisaster;
+            if (!storm) nextStrike = -1;
+            else
+            {
+                if (nextStrike < 0) nextStrike = now + Random.Range(2f, 5f);
+                if (now >= nextStrike)
+                {
+                    strikeStarted = now; strikePower = 1;
+                    nextStrike = now + (phase == DayPhase.AfterDisaster ? Random.Range(12f, 25f) : finalStorm > .5f ? Random.Range(3f, 7f) : Random.Range(5f, 12f));
+                }
+            }
+        }
+        float t = now - strikeStarted;
+        if (t < 0 || t > .7f) return 0;
+        float first = Mathf.Exp(-t * 14), second = t > .16f ? Mathf.Exp(-(t - .16f) * 9) * .8f : 0;
+        return Mathf.Clamp01(Mathf.Max(first, second)) * strikePower;
+    }
+
+    /// <summary>A lightning strike now (0..1 brightness; distant thunder flashes dimmer). Called by AudioDirector.</summary>
+    public static void Flash(float power = 1)
+    {
+        if (!current) return;
+        current.strikeStarted = Time.time;
+        current.strikePower = Mathf.Clamp01(power);
+    }
+
+    static WindowWeather current;
+    void Awake() => current = this;
+    readonly List<Light> lightning = new List<Light>();
+    float nextStrike = -1, strikeStarted = -10, strikePower = 1;
 
     void OnDestroy()
     {

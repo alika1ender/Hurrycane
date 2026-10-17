@@ -45,8 +45,9 @@ public sealed class HandheldSystem : MonoBehaviour
     public int Unread { get; private set; }
     public bool PhoneDead => session.phoneBattery <= 0;
     public bool HasHandbook => player && player.Inventory.Has(ItemKind.Handbook);
-    /// <summary>What Tab opens: the handbook once carried, otherwise the phone.</summary>
-    public View Preferred => HasHandbook ? View.Handbook : View.Phone;
+    public bool HasPhone => player && player.Inventory.Has(ItemKind.Phone);
+    /// <summary>What Tab raises: the survival guide if carried, else the phone once picked up from the coffee table.</summary>
+    public View Preferred => HasHandbook ? View.Handbook : HasPhone ? View.Phone : View.None;
 
     void Awake() { session = GetComponent<GameSession>(); director = GetComponent<DayDirector>(); config = PhoneConfig.Load(); }
     void OnEnable()
@@ -132,7 +133,7 @@ public sealed class HandheldSystem : MonoBehaviour
     public void Toggle()
     {
         if (Open != View.None) { Close(); return; }
-        Open = Preferred;
+        Open = Preferred; // None until the phone or the survival guide has been picked up
         if (Open == View.Phone) Unread = 0;
     }
     public void Close() { Open = View.None; }

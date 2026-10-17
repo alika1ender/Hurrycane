@@ -7,6 +7,7 @@ Shader "Hurrycane/StormWindow"
         _Seed ("Window variation", Float) = 0
         _FinalStorm ("Final day disaster", Range(0,1)) = 0
         _WeatherTime ("Continuous weather clock", Float) = 0
+        _Flash ("Lightning flash", Range(0,1)) = 0
     }
     SubShader
     {
@@ -21,7 +22,7 @@ Shader "Hurrycane/StormWindow"
             struct Attributes { float4 positionOS : POSITION; float2 uv : TEXCOORD0; };
             struct Varyings { float4 positionCS : SV_POSITION; float2 uv : TEXCOORD0; };
             CBUFFER_START(UnityPerMaterial)
-                float _Storm, _Aspect, _Seed, _FinalStorm, _WeatherTime;
+                float _Storm, _Aspect, _Seed, _FinalStorm, _WeatherTime, _Flash;
             CBUFFER_END
             Varyings Vert(Attributes v)
             {
@@ -73,6 +74,8 @@ Shader "Hurrycane/StormWindow"
                 sky*=1-silhouette*storm*.85;
                 // Broad gust shadows passing over the outside of the pane.
                 sky*=1-storm*lerp(.22,.6,finale)*smoothstep(.42,.82,Noise(float2(p.x*2-t*(.8+finale*1.4),p.y*1.3+_Seed)));
+                // Lightning: the whole sky lights up white-violet, clouds showing as darker shapes.
+                sky=lerp(sky,float3(.86,.88,.95)*(.55+cloud*.6),saturate(_Flash));
                 return half4(sky,1);
             }
             ENDHLSL

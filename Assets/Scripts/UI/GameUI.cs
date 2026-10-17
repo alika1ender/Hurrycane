@@ -61,6 +61,7 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.WarningStarted += OnWarning;
         BreakableOpening.HitLanded += OnHit;
         FloodSystem.FloodStarted += OnFlood;
+        FloodSystem.Shocked += OnShock;
         HandheldSystem.MessageReceived += OnText;
         GameSession.NewGameStarted += OnNewGame;
     }
@@ -71,11 +72,13 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.WarningStarted -= OnWarning;
         BreakableOpening.HitLanded -= OnHit;
         FloodSystem.FloodStarted -= OnFlood;
+        FloodSystem.Shocked -= OnShock;
         HandheldSystem.MessageReceived -= OnText;
         GameSession.NewGameStarted -= OnNewGame;
     }
     void OnText(PhoneMessage message) => Toast("Broski:  " + message.text, UiKit.Amber);
     void OnFlood() => Toast("Water is pouring down the basement stairs!", UiKit.Red);
+    void OnShock() => Toast("ELECTRIC SHOCK!  The power was never switched off.", UiKit.Red);
     void OnDestroy() => MapExplorer.DrawDebugHud = true;
 
     // ------------------------------------------------------------------ build
@@ -97,6 +100,7 @@ public sealed class GameUI : MonoBehaviour
         }
 
         hud = UiKit.Node("HUD", transform).Stretch();
+        BuildStressFrame();
         BuildTimer();
         BuildHealth();
         BuildCrosshair();
@@ -429,7 +433,7 @@ public sealed class GameUI : MonoBehaviour
     GameObject menuOverlay, cutsceneOverlay;
     RectTransform menuButtons, letterTop, letterBottom, lidTop, lidBottom;
     Text captionText, skipHint;
-    Image sirenRed, sirenBlue, cutFade;
+    Image sirenRed, cutFade;
 
     void BuildMenu()
     {
@@ -442,6 +446,7 @@ public sealed class GameUI : MonoBehaviour
         var title = UiKit.Label(side.transform, "Title", UiKit.Bold, 150, UiKit.TextColor);
         title.rectTransform.Place(new Vector2(0, 1), new Vector2(90, -150), new Vector2(620, 170));
         title.text = "HURRY<color=#F2A93B>CANE</color>";
+        BuildTornado(side.transform);
         var tagline = UiKit.Label(side.transform, "Tagline", UiKit.Medium, 34, UiKit.Dim, TextAnchor.UpperLeft, true);
         tagline.rectTransform.Place(new Vector2(0, 1), new Vector2(96, -320), new Vector2(560, 90));
         tagline.text = "One house. Three days. One hurricane.\nGet ready before it hits.";
@@ -453,6 +458,42 @@ public sealed class GameUI : MonoBehaviour
         foot.rectTransform.Place(new Vector2(0, 0), new Vector2(96, 50), new Vector2(560, 60));
         foot.text = "Game Jam build · WASD move · E use · Tab phone/handbook · Esc pause";
         menuOverlay.SetActive(false);
+    }
+
+    readonly List<RectTransform> tornadoBars = new List<RectTransform>();
+    readonly List<float> tornadoHome = new List<float>();
+
+    /// <summary>A small swaying tornado touching down on the "CANE" half of the title: stacked rounded bars, grey to amber.</summary>
+    void BuildTornado(Transform side)
+    {
+        var root = UiKit.Node("Tornado", side).Place(new Vector2(0, 1), new Vector2(440, -64), new Vector2(130, 118));
+        const int count = 8;
+        for (int i = 0; i < count; i++)
+        {
+            float k = i / (count - 1f);
+            var color = Color.Lerp(new Color(.72f, .75f, .8f, .9f), UiKit.Amber, k * k);
+            var band = UiKit.Panel(root, "Band" + i, color);
+            band.pixelsPerUnitMultiplier = 2.6f; // smaller rounded corners so the thin bands stay pill-shaped
+            var bar = band.rectTransform;
+            float width = Mathf.Lerp(124, 12, Mathf.Pow(k, .8f));
+            bar.anchorMin = bar.anchorMax = new Vector2(.5f, 1); bar.pivot = new Vector2(.5f, 1);
+            bar.sizeDelta = new Vector2(width, 11);
+            float home = Mathf.Lerp(-8, 10, k) * Mathf.Sin(k * 2.6f); // a slight S-curve
+            bar.anchoredPosition = new Vector2(home, -i * 14.5f);
+            tornadoBars.Add(bar); tornadoHome.Add(home);
+        }
+    }
+
+    void AnimateTornado()
+    {
+        float t = Time.unscaledTime;
+        for (int i = 0; i < tornadoBars.Count; i++)
+        {
+            float k = i / Mathf.Max(1f, tornadoBars.Count - 1);
+            var p = tornadoBars[i].anchoredPosition;
+            p.x = tornadoHome[i] + Mathf.Sin(t * 2.4f - k * 3.2f) * (3 + 7 * k);
+            tornadoBars[i].anchoredPosition = p;
+        }
     }
 
     void FillMenu()
@@ -485,7 +526,6 @@ public sealed class GameUI : MonoBehaviour
         var root = UiKit.Node("Cutscene", transform).Stretch();
         cutsceneOverlay = root.gameObject;
         sirenRed = UiKit.Panel(root, "SirenRed", new Color(.9f, .1f, .1f, 0), false); sirenRed.rectTransform.Stretch();
-        sirenBlue = UiKit.Panel(root, "SirenBlue", new Color(.1f, .25f, .95f, 0), false); sirenBlue.rectTransform.Stretch();
         // Eyelids: two black bars that close from top and bottom.
         lidTop = Bar(root, "LidTop", new Vector2(.5f, 1)); lidBottom = Bar(root, "LidBottom", new Vector2(.5f, 0));
         cutFade = UiKit.Panel(root, "Fade", new Color(0, 0, 0, 0), false); cutFade.rectTransform.Stretch();
@@ -518,9 +558,9 @@ public sealed class GameUI : MonoBehaviour
         lidTop.sizeDelta = new Vector2(0, half * cutscene.Eyelids);
         lidBottom.sizeDelta = new Vector2(0, half * cutscene.Eyelids);
         cutFade.color = new Color(0, 0, 0, cutscene.Fade);
-        bool red = Mathf.Repeat(Time.unscaledTime * 2.2f, 1) < .5f;
-        sirenRed.color = new Color(.9f, .1f, .1f, red ? cutscene.Siren * .35f : 0);
-        sirenBlue.color = new Color(.1f, .25f, .95f, red ? 0 : cutscene.Siren * .35f);
+        // Red only: the wash pulses on and off.
+        float pulse = .5f + .5f * Mathf.Sin(Time.unscaledTime * 2.2f * Mathf.PI * 2);
+        sirenRed.color = new Color(.9f, .1f, .1f, cutscene.Siren * .35f * pulse);
         string speaker = cutscene.Speaker;
         captionText.text = string.IsNullOrEmpty(cutscene.Caption) ? "" :
             (string.IsNullOrEmpty(speaker) ? "<i>" + cutscene.Caption + "</i>" : "<color=#F2A93B>" + speaker.ToUpperInvariant() + "</color>   " + cutscene.Caption);
@@ -707,6 +747,7 @@ public sealed class GameUI : MonoBehaviour
         alertOverlay.SetActive(alert);
         hud.gameObject.SetActive(playing);
         menuOverlay.SetActive(phase == DayPhase.Menu);
+        if (phase == DayPhase.Menu) AnimateTornado();
         UpdateCutscene(session.GetComponent<CutsceneSystem>(), phase == DayPhase.Opening || phase == DayPhase.Ending);
         UpdateNight(night, director);
         if (phase != shownPhase)
@@ -894,6 +935,42 @@ public sealed class GameUI : MonoBehaviour
         ringCaption.text = caption;
     }
 
+    // ------------------------------------------------------------------ stress frame
+
+    CanvasGroup stressFrame;
+
+    /// <summary>A thin soft black border around the screen edge, shown while the stress (pulse) level is red.</summary>
+    void BuildStressFrame()
+    {
+        var root = UiKit.Node("StressFrame", hud).Stretch();
+        stressFrame = root.gameObject.AddComponent<CanvasGroup>(); stressFrame.alpha = 0; stressFrame.blocksRaycasts = false; stressFrame.interactable = false;
+        // Soft ramps: dark at the screen edge, clear towards the middle. Flipped with uvRect for the opposite sides.
+        var vertical = new Texture2D(1, 32, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+        var horizontal = new Texture2D(32, 1, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+        for (int i = 0; i < 32; i++)
+        {
+            float a = Mathf.Pow(i / 31f, 1.8f);
+            vertical.SetPixel(0, i, new Color(0, 0, 0, a));        // dark at the top row
+            horizontal.SetPixel(31 - i, 0, new Color(0, 0, 0, a)); // dark at the left column
+        }
+        vertical.Apply(); horizontal.Apply();
+        const float thickness = 54;
+        Edge(root, vertical, new Rect(0, 0, 1, 1), new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, thickness), new Vector2(.5f, 1));    // top
+        Edge(root, vertical, new Rect(0, 1, 1, -1), new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, thickness), new Vector2(.5f, 0));   // bottom
+        Edge(root, horizontal, new Rect(0, 0, 1, 1), new Vector2(0, 0), new Vector2(0, 1), new Vector2(thickness, 0), new Vector2(0, .5f));  // left
+        Edge(root, horizontal, new Rect(1, 0, -1, 1), new Vector2(1, 0), new Vector2(1, 1), new Vector2(thickness, 0), new Vector2(1, .5f)); // right
+    }
+
+    static void Edge(RectTransform parent, Texture2D ramp, Rect uv, Vector2 anchorMin, Vector2 anchorMax, Vector2 size, Vector2 pivot)
+    {
+        var rt = UiKit.Node("Edge", parent);
+        rt.anchorMin = anchorMin; rt.anchorMax = anchorMax; rt.pivot = pivot;
+        rt.sizeDelta = size; rt.anchoredPosition = Vector2.zero;
+        var image = rt.gameObject.AddComponent<RawImage>();
+        image.texture = ramp; image.uvRect = uv; image.raycastTarget = false;
+        image.color = new Color(1, 1, 1, .6f);
+    }
+
     void UpdatePulse(GameSession session)
     {
         var pulse = session.GetComponent<PulseSystem>();
@@ -902,6 +979,8 @@ public sealed class GameUI : MonoBehaviour
         float bpm = pulse.Bpm;
         var zone = pulse.Zone;
         var color = zone == PulseZone.Calm ? UiKit.Green : zone == PulseZone.Tense ? UiKit.Amber : UiKit.Red;
+        bool stressRed = zone == PulseZone.Panic || zone == PulseZone.Peak;
+        stressFrame.alpha = Mathf.MoveTowards(stressFrame.alpha, stressRed ? 1 : 0, Time.unscaledDeltaTime * 1.5f);
         // Beat at the real BPM: a quick swell then a slow settle.
         heartPhase = (heartPhase + Time.deltaTime * bpm / 60f) % 1f;
         float beat = Mathf.Exp(-heartPhase * 9f);
@@ -918,7 +997,8 @@ public sealed class GameUI : MonoBehaviour
         var power = session.GetComponent<PowerSystem>();
         if (power && power.PowerOut && power.HasFlashlight && !power.FlashlightOn) hints.Add("F  flashlight");
         var flood = session.GetComponent<FloodSystem>();
-        if (flood && flood.PlayerInWater) hints.Add("<color=#E5484D>You're wading in flood water</color>");
+        if (flood && flood.PlayerTouchingWater && flood.Live) hints.Add("<color=#E5484D>The water is live! Get out!</color>");
+        else if (flood && flood.PlayerInWater) hints.Add("<color=#E5484D>You're wading in flood water</color>");
         if (health && health.CanUseFirstAid && session.health < 70)
             hints.Add("H  hold for first aid  <color=#9AA0AA>(" + explorer.Inventory.Uses(ItemKind.FirstAid) + ")</color>");
         vitalHints.text = string.Join("      ", hints);

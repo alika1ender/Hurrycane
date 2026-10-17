@@ -101,7 +101,7 @@ public sealed class PulseSystem : MonoBehaviour
         pulse = Mathf.MoveTowards(pulse, resting, settings.driftPerSecond * dt);
         if (director.TimeLeft <= 10) pulse += settings.lastSecondsRisePerSecond * dt;
         if (today.sprintRaisesPulse && player.Sprinting) pulse += settings.sprintRisePerSecond * dt;
-        bool safeRoom = player.transform.position.y < settings.safeRoomBelowY && !(flood && flood.SafeRoomFlooded);
+        bool safeRoom = InShelter(player.transform.position, flood);
         if (safeRoom) pulse -= settings.safeRoomDropPerSecond * dt;
         pulse -= Breathe(dt);
         session.pulse = Mathf.Clamp(pulse, 60, today.pulseCeiling);
@@ -109,6 +109,23 @@ public sealed class PulseSystem : MonoBehaviour
         var zone = Zone;
         player.pulseHoldFactor = !today.pulsePenalties ? 1 : zone == PulseZone.Peak ? 1 + settings.peakTaskPenalty : zone == PulseZone.Panic ? 1 + settings.panicTaskPenalty : 1;
         ApplyEffects(zone, today.pulseVisuals);
+    }
+
+    Bounds? shelter;
+    bool shelterRead;
+
+    /// <summary>The safe room is now the master bedroom (where the supply box is). Falls back to the basement rule.</summary>
+    bool InShelter(Vector3 feet, FloodSystem flood)
+    {
+        if (!shelterRead)
+        {
+            shelterRead = true;
+            var room = FindObjectsByType<Renderer>(FindObjectsInactive.Exclude).FirstOrDefault(r => r.name == "20_Master_Bedroom_Visual");
+            if (room) shelter = room.bounds;
+        }
+        if (shelter is Bounds b)
+            return feet.x > b.min.x && feet.x < b.max.x && feet.z > b.min.z && feet.z < b.max.z && feet.y > b.min.y - .5f && feet.y < b.max.y;
+        return feet.y < settings.safeRoomBelowY && !(flood && flood.SafeRoomFlooded);
     }
 
     /// <summary>Hold Q (standing still): nothing for the wind-up, then the pulse drops for a few seconds; then a cooldown.</summary>

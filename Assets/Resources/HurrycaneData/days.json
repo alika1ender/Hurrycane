@@ -45,7 +45,9 @@
         "damagePerSecond": 0.5,
         "speedFactor": 0.7,
         "towelsToBlock": 2,
-        "blockHoldSeconds": 4
+        "blockHoldSeconds": 4,
+        "shockDamage": 10,
+        "shockIntervalSeconds": 2
     },
     "puddles": {
         "radius": 1.5,

@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 // Append new kinds at the end: saved snapshots store these as numbers.
-public enum ItemKind { Water, Food, FirstAid, Flashlight, Batteries, Radio, Backpack, Blanket, Toolkit, RepairTape, Towel, PlankSet, Handbook }
+public enum ItemKind { Water, Food, FirstAid, Flashlight, Batteries, Radio, Backpack, Blanket, Toolkit, RepairTape, Towel, PlankSet, Handbook, Phone }
 
 /// <summary>How an item is carried (Docs/Design/04): pockets are unlimited; the armful holds one group at a time.</summary>
 public enum CarryGroup { Pocket, Supplies, Planks, Towels, Blanket }
@@ -21,7 +21,7 @@ public sealed class PlayerInventory : MonoBehaviour
     public IReadOnlyList<Pickup> Pockets => pockets;
     public IReadOnlyList<Pickup> Armful => armful;
     public CarryGroup? ArmfulGroup => armful.Count > 0 ? GroupOf(armful[0].Kind) : (CarryGroup?)null;
-    /// <summary>Carrying anything in the arms stops sprinting.</summary>
+    /// <summary>Something is in the arms. (No longer stops sprinting.)</summary>
     public bool Encumbered => armful.Count > 0;
 
     public static CarryGroup GroupOf(ItemKind kind)

@@ -83,6 +83,8 @@ public sealed class FloodSettings
     public float startSeconds = 40, earlierPerBreachSeconds = 10, riseSeconds = 90, maxDepth = .4f, harmfulDepth = .2f;
     public float damagePerSecond = .5f, speedFactor = .7f, blockHoldSeconds = 4;
     public int towelsToBlock = 2;
+    /// <summary>Main breaker still on: touching the flood water shocks for this much health, at most once per interval.</summary>
+    public float shockDamage = 10, shockIntervalSeconds = 2;
 }
 
 [Serializable]
