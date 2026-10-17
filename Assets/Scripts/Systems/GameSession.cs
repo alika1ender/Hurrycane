@@ -17,9 +17,27 @@ public sealed class GameSession : MonoBehaviour
     static HouseSnapshot pendingRestore;
 
     public float health = 100, pulse = 72, phoneBattery = 40;
+    // Running totals for the final score (Docs/Design/08); saved in snapshots.
+    public int tasksDone, tasksRequired, hits;
+    [NonSerialized] public System.Collections.Generic.HashSet<string> reinforcedIds = new System.Collections.Generic.HashSet<string>();
     MapExplorer player;
 
     public int CurrentDay { get; private set; }
+
+    void OnEnable() => BreakableOpening.StateChanged += OnOpeningChanged;
+    void OnDisable() => BreakableOpening.StateChanged -= OnOpeningChanged;
+    void OnOpeningChanged(BreakableOpening opening, OpeningState before, OpeningState after)
+    {
+        if (after == OpeningState.Reinforced) reinforcedIds.Add(opening.Id);
+    }
+
+    /// <summary>Throws away all saves and starts again from Day 1 (end screen "Play again").</summary>
+    public static void NewGame()
+    {
+        SaveSystem.DeleteAll();
+        pendingRestore = null;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
+    }
 
     /// <summary>Called by GameplaySetup once the scene is wired: restores a pending restart, or starts a new game.</summary>
     public void Begin(MapExplorer explorer, int firstDay)

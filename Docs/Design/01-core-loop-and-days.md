@@ -41,7 +41,7 @@ Draft alert text: "EMERGENCY ALERT: Hurricane warning in effect for your area. L
 - Day 3: flooding comes down the basement stairs and threatens the safe room.
 
 ## Implemented (2026-10-17)
-`Assets/Scripts/Systems/DayDirector.cs`, tuning in `Resources/HurrycaneData/days.json`. The day runs: Day 1 alert (phone overlay; click or Space starts the clock), Preparation → Disaster → After-Disaster flipping on the clock only, then the night card (6 s) with overnight recovery, then the next day starts and autosaves. Day 3 ends on a placeholder "storm has passed" card (ending and score are not built yet). Esc pauses the clock. Not built yet: the opening TV cutscene, waking in the master bedroom (Cane stays where he was), Day 3 flooding, and the Preparation-only locks for unplug/utilities (those tasks don't exist yet).
+`Assets/Scripts/Systems/DayDirector.cs`, tuning in `Resources/HurrycaneData/days.json`. The day runs: Day 1 alert (phone overlay; click or Space starts the clock), Preparation → Disaster → After-Disaster flipping on the clock only, then the night card (6 s) with overnight recovery, then the next day starts and autosaves. Day 3 ends on a placeholder "storm has passed" card (ending and score are not built yet). Esc pauses the clock. From Day 2 on, Cane wakes standing beside the master bed (before the autosave). Not built yet: the opening TV cutscene, Day 3 flooding, and the Preparation-only locks for unplug/utilities (those tasks don't exist yet).
 
 ## Decisions (proposed 2026-10-17, change freely)
 ### End of day and sleep

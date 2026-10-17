@@ -16,8 +16,14 @@ public sealed class MapExplorer : MonoBehaviour
     public Camera viewCamera;
     public Vector3 spawnPoint;
     public float reach = 2.3f;
-    /// <summary>Scales every hold time: storm phases (x1.5) and pulse penalties set this.</summary>
+    /// <summary>Scales every hold time; the day sets it for storm phases (x1.5).</summary>
     public float holdTimeMultiplier = 1;
+    /// <summary>Extra hold-time factor from a racing pulse (Docs/Design/05: +15% / +30% on Day 3).</summary>
+    public float pulseHoldFactor = 1;
+    /// <summary>Set while breathing or fainted: look around only, no walking or using.</summary>
+    public bool movementLocked;
+    /// <summary>True on frames where the player actually sprints (pulse rises on Day 3).</summary>
+    public bool Sprinting { get; private set; }
     CharacterController controller;
     IInteractable focus, holdTarget;
     float pitch, verticalSpeed, holdProgress, holdReleasedAt = float.NegativeInfinity, clock;
@@ -34,6 +40,10 @@ public sealed class MapExplorer : MonoBehaviour
             return inventory;
         }
     }
+    /// <summary>Off once GameUI exists; the old IMGUI prompt and controls box are a fallback for scenes without it.</summary>
+    public static bool DrawDebugHud = true;
+    /// <summary>What the crosshair was on this frame (for the prompt UI).</summary>
+    public IInteractable Focus => focus;
     /// <summary>What E would use right now (fresh raycast), without using it.</summary>
     public IInteractable Target => FindTarget();
     /// <summary>0..1 progress of the current hold, for the HUD.</summary>
@@ -65,12 +75,14 @@ public sealed class MapExplorer : MonoBehaviour
         }
         Vector2 axis = new Vector2((keyboard.dKey.isPressed ? 1 : 0) - (keyboard.aKey.isPressed ? 1 : 0),
                                   (keyboard.wKey.isPressed ? 1 : 0) - (keyboard.sKey.isPressed ? 1 : 0));
-        axis = Vector2.ClampMagnitude(axis, 1);
+        axis = movementLocked ? Vector2.zero : Vector2.ClampMagnitude(axis, 1);
         if (controller.isGrounded && verticalSpeed < 0) verticalSpeed = -2;
         verticalSpeed += Physics.gravity.y * Time.deltaTime;
-        float speed = keyboard.leftShiftKey.isPressed && !Inventory.Encumbered ? 4.2f : 2.6f;
+        Sprinting = keyboard.leftShiftKey.isPressed && !Inventory.Encumbered && axis.sqrMagnitude > .01f;
+        float speed = Sprinting ? 4.2f : 2.6f;
         controller.Move(((transform.right * axis.x + transform.forward * axis.y) * speed + Vector3.up * verticalSpeed) * Time.deltaTime);
         if (transform.position.y < -8) Respawn();
+        if (movementLocked) { focus = null; ReleaseHold(); return; }
         if (keyboard.gKey.wasPressedThisFrame) Inventory.DropArmful(transform);
         StepUse(keyboard.eKey.isPressed, keyboard.eKey.wasPressedThisFrame, Time.deltaTime);
     }
@@ -96,7 +108,7 @@ public sealed class MapExplorer : MonoBehaviour
             if (focus != holdTarget || clock - holdReleasedAt > HoldMemory) holdProgress = 0;
             holdTarget = focus; holding = true;
         }
-        holdProgress += deltaTime / Mathf.Max(.01f, focus.HoldSeconds * holdTimeMultiplier);
+        holdProgress += deltaTime / Mathf.Max(.01f, focus.HoldSeconds * holdTimeMultiplier * pulseHoldFactor);
         if (holdProgress >= 1) { Use(focus); holding = false; holdTarget = null; holdProgress = 0; }
     }
     void ReleaseHold()
@@ -141,6 +153,7 @@ public sealed class MapExplorer : MonoBehaviour
     { controller.enabled = false; transform.position = spawnPoint; controller.enabled = true; verticalSpeed = 0; }
     void OnGUI()
     {
+        if (!DrawDebugHud) return;
         GUI.Box(new Rect(16, 16, 560, 82), "HOUSE MAP — WALKTHROUGH");
         GUI.Label(new Rect(28, 41, 540, 26), "WASD move   Shift run   Mouse look   E use (hold for some)   G drop armful   Esc cursor");
         GUI.Label(new Rect(28, 64, 540, 26), Inventory.Summary());

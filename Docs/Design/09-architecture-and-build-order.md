@@ -16,8 +16,8 @@
 3. ~~`HouseState` with start-of-day snapshots and the restart menu.~~ **Done 2026-10-17** (see [06](06-health-and-saves.md), Saves).
 4. ~~Windows and door as reusable breakable objects with the states: out of play, unreinforced, reinforced, cracked, broken, repaired.~~ **Done 2026-10-17** (rolls and timing come with step 6).
 5. ~~Task engine with phase windows and durations;~~ phone and handbook UI. **Engine done 2026-10-17**; phone and handbook are placeholder panels for now.
-6. ~~Phase timer, HUD,~~ pulse system. **Timer, HUD and storm rolls done 2026-10-17**; pulse not built.
-7. Day 1 fully playable, then Day 2 (blackout, handbook), then Day 3 and the ending.
+6. ~~Phase timer, HUD, pulse system.~~ **Done 2026-10-17** (pulse included).
+7. Day 1 fully playable, then Day 2 (blackout, handbook), then Day 3 and the ending. **Mostly done 2026-10-17:** all three days run, including fainting, game over and the score screen. Missing: the Day 2 blackout (lights still work), Day 3 flooding, the ending cutscene, and 6 disabled tasks.
 
 **Cut first if time runs out:** surge mechanic on Day 2, Broski texts after the opening, chain effects, repair minigame, wind visuals, "Did you know?" facts on the score screen.
 
@@ -38,12 +38,16 @@ All files are in `Assets/Scripts/Interactions/`.
 - `PlayerInventory.Uses/ConsumeUses/ConsumeArmful` and `Pickup.UsesLeft` (tape rolls). `MapExplorer.Target` shows what E would hit without using it.
 - `Systems/GameSession`: created by `GameplaySetup` on every scene load. It owns `CurrentDay` and placeholder `health`/`pulse`/`phoneBattery`. `StartDay(n)` brings that day's openings into play, autosaves and raises `DayStarted`; the phase timer should call it each morning. `RestartFromDay(n)` deletes later saves, reloads the scene and applies the snapshot. Inspector context menu: "Debug: Start next day".
 - `Systems/HouseState` + `SaveSystem`: capture and apply snapshots (see 06). Anything new that changes during a day must be added to `HouseSnapshot`, or restarts will lose it.
-- `UI/PauseMenu`: the Esc menu with Resume and Restart cards. While it exists, clicking the game view no longer re-grabs the cursor; Resume does.
+- `UI/PauseMenu`: pause state (Esc releases the cursor, and the game pauses). While it exists, clicking the game view no longer re-grabs the cursor; the Resume button does. GameUI draws the menu.
 - `GameplaySetup` now hooks `SceneManager.sceneLoaded`, so it also runs after a restart reload. Opening in-play state comes from `GameSession.StartDay`, not from setup.
 - `Systems/DayDirector` (on the GameSession object): phases, the alert, storm and Preparation break scheduling, injuries (`BreakableOpening.HitLanded`), the night and overnight recovery, and Day 1 staging. `PhaseChanged` event. `debugTimeScale` speeds up the clock for tests. Context menu: "Debug: Skip to next phase".
 - `Systems/DayConfig` + `days.json`: phase lengths, break chances, damage, recovery and scripted breaks per day.
 - `Systems/TaskEngine` + `tasks.json`: see [04](04-tasks-and-supplies.md), "Task engine". `TaskCompleted` event; `Current` is what the phone shows.
-- `UI/Hud`: see [07](07-hud-phone-handbook.md). The pause menu sets `Time.timeScale` to 0 while open.
+- `UI/GameUI` + `UI/UiKit`: the uGUI screen UI, built in code and created by `GameplaySetup` before the session starts (see [07](07-hud-phone-handbook.md)). It also creates an `EventSystem` with `InputSystemUIInputModule`. While it exists, `MapExplorer.DrawDebugHud` is off; the old IMGUI box is only a fallback. `UI/PauseMenu` holds the pause state and sets `Time.timeScale` to 0 while open.
+- `Systems/PulseSystem`: see [05](05-pulse.md). It adds its own global post-processing Volume (priority 20) for the vignette and saturation, and sets `MapExplorer.pulseHoldFactor` and `movementLocked` (breathing).
+- `Systems/HealthSystem`: first aid (H), fainting and game over, see [06](06-health-and-saves.md). `DayDirector.GameOver()` and `PlaceAtBedside()` are public.
+- `Systems/Score`: `Score.Compute` → `ScoreReport`, see [08](08-ending-and-score.md). `GameSession` keeps `tasksDone/tasksRequired/hits/reinforcedIds`, which are saved in snapshots. `GameSession.NewGame()` deletes the saves and reloads.
+- `BreakableOpening.CancelStrike()`: in-flight strikes are cancelled at night and on game over. Already-broken openings ignore further hits, so there's no repeated injury.
 - `GameSession.DayStarting` fires before a fresh day's autosave (for morning setup); `DayStarted` fires after it, and on restores.
 - **Testing tip:** in Play mode, Unity freezes time while the editor is in the background. Run `Application.runInBackground = true` (for example through MCP `execute_code`) so coroutines and timers advance.
 - The aim ray prefers a pickup up to 0.45 m behind the first thing hit (items in open cabinets and on shelves behind their collision boxes), unless a closed door or drawer is in the way.

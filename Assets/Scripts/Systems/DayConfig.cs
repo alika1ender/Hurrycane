@@ -8,6 +8,8 @@ public sealed class DaysConfig
     public float stormHoldMultiplier = 1.5f, warningLeadSeconds = 3, hitWindowStart = .15f, hitWindowEnd = .85f, minSecondsBetweenHits = 6;
     public float prepBreakWindowSeconds = 30, prepBreakFactor = .25f, injuryRadius = 2, nightSeconds = 6;
     public float recoveryEnough = 50, recoverySome = 30, recoveryNone = 10;
+    public PulseSettings pulse = new PulseSettings();
+    public HealthSettings health = new HealthSettings();
     public DayConfig[] days = new DayConfig[0];
 
     public DayConfig For(int day) => Array.Find(days, d => d.day == day) ?? (days.Length > 0 ? days[days.Length - 1] : new DayConfig());
@@ -30,6 +32,11 @@ public sealed class DayConfig
     public BreakChances window = new BreakChances(), door = new BreakChances();
     public float glassDamage, doorDamage;
     public ScriptedBreak[] scripted = new ScriptedBreak[0];
+    // Pulse (Docs/Design/05) and health (06).
+    public float restingPrep = 72, restingDisaster = 80, restingAfter = 72, pulseCeiling = 95, windowBreakSpike = 5, doorBreakSpike = 8;
+    public bool pulseVisuals, pulsePenalties, sprintRaisesPulse, faintIsGameOver;
+
+    public float Resting(DayPhase phase) => phase == DayPhase.Disaster ? restingDisaster : phase == DayPhase.AfterDisaster ? restingAfter : restingPrep;
 
     public float Length(DayPhase phase) => phase == DayPhase.Preparation ? prepSeconds : phase == DayPhase.Disaster ? disasterSeconds : phase == DayPhase.AfterDisaster ? afterSeconds : 0;
 
@@ -45,6 +52,22 @@ public sealed class DayConfig
             default: return 0; // out of play, or already broken
         }
     }
+}
+
+[Serializable]
+public sealed class PulseSettings
+{
+    public float driftPerSecond = 3, nearbyRadius = 4, taskDoneDrop = 6, safeRoomDropPerSecond = 5, safeRoomBelowY = -1.5f;
+    public float breathWindupSeconds = 4, breathMaxSeconds = 4, breathDropPerSecond = 8, breathCooldownSeconds = 20;
+    public float lastSecondsRisePerSecond = 2, unfinishedTaskRise = 2, unfinishedTaskRiseMax = 12, sprintRisePerSecond = 6;
+    public float panicTaskPenalty = .15f, peakTaskPenalty = .30f;
+}
+
+[Serializable]
+public sealed class HealthSettings
+{
+    public float faintSeconds = 5, faintWakeHealth = 35, firstAidHeal = 30, firstAidHoldSeconds = 1.5f;
+    public int firstAidUsesPerKit = 2;
 }
 
 [Serializable] public sealed class BreakChances { public float unreinforced, repaired, reinforced; }

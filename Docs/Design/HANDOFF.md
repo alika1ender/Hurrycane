@@ -14,6 +14,16 @@ Template:
 
 ---
 
+## 2026-10-17 18:35 · Claude (for Ali)
+**Worked on:** (1) the real game UI, (2) pulse, health outcomes, mornings and the score. Code: `UI/GameUI.cs`, `UI/UiKit.cs`, `Systems/PulseSystem.cs`, `Systems/HealthSystem.cs`, `Systems/Score.cs`; the old IMGUI `Hud.cs` is deleted. Font: Barlow Condensed (OFL) in `Resources/HurrycaneUI/Fonts`. Updated 01, 05, 06, 07, 08, 09 and 10.
+**Done:**
+- UI in the emergency broadcast style (Ali's pick), built with uGUI in code. It covers the timer, vitals (health and pulse), prompt and hold rings, item chips, phone/handbook panel, toasts, phase banner, damage flash, alert phone, night card, pause, "passed out", game over and score screens. Checked in Game view captures (`WalkthroughPreviews/ui/`, not committed).
+- Pulse per 05 (Q breathing, vignette and shake, Day 3 hold penalties); first aid on H; fainting on Days 1-2 (wake by the master bed); Day 3 game over; wake by the bed each morning; the 1000-point score with rank and fact.
+- Fixed a real bug: strikes still in their warning could land after the day changed, and broken windows took repeat hits, so health drained. In-flight strikes are now cancelled at night, and broken openings ignore hits.
+- Tested in Play mode (clock sped up): faint and wake, the Day 2/3 mornings, Panic penalties, game over, restart from Day 3, the score. The door/drawer test passes 31/31.
+**Next:** a hands-on playtest with a real keyboard (Q, H, the feel of the timings). Then: the Day 2 blackout (lights off, flashlight), Day 3 flooding (01), puddles and towels (unlocks 4 tasks), the ending cutscene (08), a main menu, and the phone and handbook as props.
+**Blocked / questions:** the same three open points as before (water and planks both in the arms; the Day 1 door chance; the cracked-boarded repair rule), plus Q3 for art.
+
 ## 2026-10-17 08:20 · Claude (for Ali)
 **Worked on:** build steps 5-6: `Systems/DayDirector`, `TaskEngine`, `DayConfig`, `UI/Hud`, and `days.json` / `tasks.json`. Updated 01, 03, 04, 07 and 09.
 **Done:** Day 1 can be played start to finish. Alert, then the timed phases, with the task list on the phone panel and Day 1 tools staged by the stairs. The W01 crack, the repair task, the night card with recovery, and Day 2 with its autosave all work. Days 2-3 run with the handbook list, storm rolls, Preparation breaks and injuries. Tested in Play mode with the clock sped up. The door/drawer test (31/31) and the window flow test still pass.

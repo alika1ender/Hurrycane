@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum DayPhase { Alert, Preparation, Disaster, AfterDisaster, Night, Ended }
+public enum DayPhase { Alert, Preparation, Disaster, AfterDisaster, Night, Ended, GameOver }
 
 /// <summary>
 /// Runs a day (Docs/Design/01, 03): optional alert, then Preparation → Disaster → After-Disaster on the clock only,
@@ -31,6 +31,8 @@ public sealed class DayDirector : MonoBehaviour
     /// <summary>Text for the night card / ending card.</summary>
     public string NightText { get; private set; } = "";
     public DayConfig Today => config.For(session.CurrentDay);
+    /// <summary>The final score, set when Day 3 ends (Docs/Design/08).</summary>
+    public ScoreReport Score { get; private set; }
     public DaysConfig Config => config;
     public int PlannedHits => schedule.Count;
 
@@ -50,7 +52,12 @@ public sealed class DayDirector : MonoBehaviour
     public void Bind(MapExplorer explorer) => player = explorer;
 
     // A fresh Day 1 (not a restore) stages the toolkit and 4 plank sets at the top of the basement stairs (Docs/Design/04).
-    void OnDayStarting(int day) { if (day == 1) StageDay1(); }
+    // Later mornings: Cane wakes by the master bed (Docs/Design/01), before the autosave.
+    void OnDayStarting(int day)
+    {
+        if (day == 1) StageDay1();
+        else PlaceAtBedside();
+    }
 
     void OnDayStarted(int day)
     {
@@ -77,7 +84,7 @@ public sealed class DayDirector : MonoBehaviour
                 DismissAlert();
             return;
         }
-        if (Phase == DayPhase.Ended) return;
+        if (Phase == DayPhase.Ended || Phase == DayPhase.GameOver) return;
         float dt = Time.deltaTime * debugTimeScale;
         TimeLeft -= dt;
         if (Phase == DayPhase.Night) { if (TimeLeft <= 0) session.StartDay(session.CurrentDay + 1); return; }
@@ -155,6 +162,7 @@ public sealed class DayDirector : MonoBehaviour
     /// <summary>A break near Cane hurts (Docs/Design/06). Cracks behind boards don't.</summary>
     void OnHitLanded(BreakableOpening opening, OpeningState result)
     {
+        if (result == OpeningState.Cracked || result == OpeningState.Broken) session.hits++;
         if (result != OpeningState.Broken || !player) return;
         var closest = opening.GetComponent<Collider>().ClosestPoint(player.viewCamera.transform.position);
         if (Vector3.Distance(closest, player.viewCamera.transform.position) > config.injuryRadius) return;
@@ -163,11 +171,20 @@ public sealed class DayDirector : MonoBehaviour
 
     void StartNight()
     {
+        CancelStrikes();
+        if (Today.faintIsGameOver && session.health <= 0) { GameOver(); return; }
         SetControl(false);
+        var tasks = GetComponent<TaskEngine>();
+        if (tasks)
+        {
+            session.tasksRequired += tasks.Today.Count(t => t.definition.required);
+            session.tasksDone += tasks.Today.Count(t => t.definition.required && t.status == TaskStatus.Done);
+        }
         if (session.CurrentDay >= 3)
         {
+            Score = global::Score.Compute(session, player);
             Phase = DayPhase.Ended;
-            NightText = "The storm has passed.\n\nEnding cutscene and score: not built yet (Docs/Design/08).";
+            NightText = "The storm has passed\n\nThe city outside is in ruins. Your house is still standing.";
             PhaseChanged?.Invoke(Phase);
             return;
         }
@@ -187,6 +204,47 @@ public sealed class DayDirector : MonoBehaviour
         session.health = Mathf.Min(100, session.health + gain);
         string what = water && food ? "Water and food" : water ? "Only water" : food ? "Only food" : "Nothing to eat or drink";
         return what + ": +" + Mathf.RoundToInt(gain) + " health";
+    }
+
+    void CancelStrikes()
+    {
+        foreach (var opening in FindObjectsByType<BreakableOpening>(FindObjectsInactive.Exclude)) opening.CancelStrike();
+    }
+
+    /// <summary>Day 3 at zero health: the restart menu, no score (Docs/Design/06).</summary>
+    public void GameOver()
+    {
+        if (Phase == DayPhase.GameOver) return;
+        schedule.Clear();
+        CancelStrikes();
+        SetControl(false);
+        Phase = DayPhase.GameOver;
+        PhaseChanged?.Invoke(Phase);
+    }
+
+    /// <summary>Stands Cane on the floor beside the master bed, facing it (morning wake-up and after fainting).</summary>
+    public void PlaceAtBedside()
+    {
+        var bed = FindObjectsByType<Collider>(FindObjectsInactive.Exclude).FirstOrDefault(c => c.name == "COL_Master_DoubleBed");
+        if (!bed || !player) return;
+        var b = bed.bounds;
+        var controller = player.GetComponent<CharacterController>();
+        foreach (var side in new[] { Vector3.right, Vector3.left, Vector3.forward, Vector3.back })
+        {
+            var spot = new Vector3(b.center.x, b.max.y, b.center.z) + Vector3.Scale(side, b.extents + Vector3.one * .55f);
+            if (!Physics.Raycast(spot + Vector3.up * .5f, Vector3.down, out var floor, 3, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) continue;
+            if (Mathf.Abs(floor.point.y - b.min.y) > .3f) continue; // landed on furniture, not the floor
+            var bottom = floor.point + Vector3.up * (controller.radius + .05f);
+            var top = floor.point + Vector3.up * (controller.height - controller.radius);
+            if (Physics.CheckCapsule(bottom, top, controller.radius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) continue;
+            controller.enabled = false;
+            var facing = b.center - floor.point; facing.y = 0;
+            player.transform.SetPositionAndRotation(floor.point + Vector3.up * .05f, Quaternion.LookRotation(facing.normalized));
+            controller.enabled = true;
+            Physics.SyncTransforms();
+            return;
+        }
+        Debug.LogWarning("No free spot beside the master bed");
     }
 
     void SetControl(bool on)

@@ -67,6 +67,7 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
     public OpeningState Hit(OpeningState? forced)
     {
         if (!InPlay) return state;
+        if (state == OpeningState.Broken && forced == null) return state; // already open to the storm: no second injury
         SetState(forced ?? (state == OpeningState.Reinforced ? OpeningState.Cracked : OpeningState.Broken));
         HitLanded?.Invoke(this, state);
         return state;
@@ -90,6 +91,14 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
         visuals.Shake(0);
         Striking = false;
         Hit(forced);
+    }
+    /// <summary>Stops a strike that is still in its warning (the day ended or the game is over).</summary>
+    public void CancelStrike()
+    {
+        if (!Striking) return;
+        StopAllCoroutines();
+        visuals.Shake(0);
+        Striking = false;
     }
     [ContextMenu("Debug: Strike now")] void DebugStrike() => Strike();
 

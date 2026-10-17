@@ -16,6 +16,8 @@ public static class GameplaySetup
     }
     static void OnSceneLoaded(Scene scene, LoadSceneMode mode) => Setup(scene);
 
+    static int FirstAidUses => DaysConfig.Load().health.firstAidUsesPerKit;
+
     public static void Setup(Scene scene)
     {
         MapExplorer explorer = null;
@@ -41,7 +43,8 @@ public static class GameplaySetup
                 var kind = Pickup.KindFromName(t.name);
                 if (kind == null) { Debug.LogWarning("GameplaySetup: unknown pickup type for " + t.name); continue; }
                 if (kind == ItemKind.Radio) { if (!t.GetComponent<RadioSwitch>()) t.gameObject.AddComponent<RadioSwitch>(); }
-                else if (!t.GetComponent<Pickup>()) t.gameObject.AddComponent<Pickup>().Configure(kind.Value, kind == ItemKind.RepairTape ? config.tapeUsesPerRoll : 0);
+                else if (!t.GetComponent<Pickup>())
+                    t.gameObject.AddComponent<Pickup>().Configure(kind.Value, kind == ItemKind.RepairTape ? config.tapeUsesPerRoll : kind == ItemKind.FirstAid ? FirstAidUses : 0);
                 FitCollider(t);
             }
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
@@ -49,7 +52,14 @@ public static class GameplaySetup
         var stack = Object.FindAnyObjectByType<PlankStack>();
         if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);
         if (!explorer.GetComponent<PauseMenu>()) explorer.gameObject.AddComponent<PauseMenu>();
-        if (!explorer.GetComponent<Hud>()) explorer.gameObject.AddComponent<Hud>();
+        // Screen UI before the session starts, so it hears the first PhaseChanged.
+        var existingUi = Object.FindAnyObjectByType<GameUI>();
+        if (!existingUi || existingUi.gameObject.scene != scene)
+        {
+            var uiHost = new GameObject("GameUI");
+            SceneManager.MoveGameObjectToScene(uiHost, scene);
+            uiHost.AddComponent<GameUI>().Bind(explorer);
+        }
         // Last: the session starts the day (or restores a restart) once everything above exists.
         var session = Object.FindAnyObjectByType<GameSession>();
         if (!session || session.gameObject.scene != scene)
@@ -59,6 +69,8 @@ public static class GameplaySetup
             var newSession = host.AddComponent<GameSession>();
             host.AddComponent<DayDirector>().Bind(explorer);
             host.AddComponent<TaskEngine>().Bind(explorer);
+            host.AddComponent<PulseSystem>().Bind(explorer);
+            host.AddComponent<HealthSystem>().Bind(explorer);
             newSession.Begin(explorer, config.startDay);
         }
     }

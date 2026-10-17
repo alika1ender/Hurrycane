@@ -15,11 +15,11 @@ Player character: **Cane**. A contact named **Broski** sends texts. There are no
 | 02 | [House and openings](Docs/Design/02-house-and-openings.md) | Rooms, front door, the 14 windows and their days | Ali | Review |
 | 03 | [Breakage, reinforce, repair](Docs/Design/03-breakage-reinforce-repair.md) | Break chances, warnings, action durations | Ali | Building (states, repair, storm rolls done) |
 | 04 | [Tasks and supplies](Docs/Design/04-tasks-and-supplies.md) | 38 pickups, task lists per day, workload targets | Ali | Building (task engine done, 6 tasks disabled) |
-| 05 | [Pulse](Docs/Design/05-pulse.md) | BPM zones, per-day levels, raise/lower rules | Ali | Review |
-| 06 | [Health and saves](Docs/Design/06-health-and-saves.md) | Damage, fainting, game over, autosave | Ali | Building (saves + restart done) |
-| 07 | [HUD, phone, handbook](Docs/Design/07-hud-phone-handbook.md) | Timer, pulse/health display, task sources | Ali | Building (placeholder HUD) |
-| 08 | [Ending and score](Docs/Design/08-ending-and-score.md) | Ending cutscene, 1000-point score | Ali | Review |
-| 09 | [Architecture and build order](Docs/Design/09-architecture-and-build-order.md) | Data model, build order, what exists in code | Ali | Building (steps 1-6 mostly done) |
+| 05 | [Pulse](Docs/Design/05-pulse.md) | BPM zones, per-day levels, raise/lower rules | Ali | Building (done except darkness/thunder) |
+| 06 | [Health and saves](Docs/Design/06-health-and-saves.md) | Damage, fainting, game over, autosave | Ali | Building (saves, first aid, faint, game over done) |
+| 07 | [HUD, phone, handbook](Docs/Design/07-hud-phone-handbook.md) | Timer, pulse/health display, task sources | Ali | Building (full screen UI done; phone/handbook props pending) |
+| 08 | [Ending and score](Docs/Design/08-ending-and-score.md) | Ending cutscene, 1000-point score | Ali | Building (score done, cutscene pending) |
+| 09 | [Architecture and build order](Docs/Design/09-architecture-and-build-order.md) | Data model, build order, what exists in code | Ali | Building (steps 1-6 done, 7 mostly) |
 | 10 | [Assets](Docs/Design/10-assets.md) | Available and missing art | unassigned (art) | Review |
 
 Status values: **Draft** (has gaps) → **Review** (proposals written, team must OK or change them) → **Ready** (no open checkboxes, numbers agreed) → **Building** (someone is coding it) → **Done** (in the game and playtested).
@@ -28,7 +28,7 @@ Status values: **Draft** (has gaps) → **Review** (proposals written, team must
 - Unity **6000.5.3f1**, URP, Input System. Repo: `alika1ender/Hurrycane` (uses Git LFS: run `git lfs pull`).
 - Main scene: `Assets/Scenes/HouseMap.unity`. Rebuild menu: **Hurrycane > Rebuild House Map**.
 - Existing scripts (`Assets/Scripts/Interactions`): `CabinetOpenable` (E toggles doors/drawers), `MapExplorer` (first-person movement: walk 2.6 m/s, sprint 4.2 m/s, reach 2.3 m), `MapPlaytest`, `HouseInteractionTest`. Extend these instead of rewriting them.
-- Built so far: pickup, carry, hold-to-use, shelter stash, breakable windows and door with reinforce/repair, day-start autosave and restart menu, phase timer, storm rolls, task engine, placeholder HUD. Day 1 is playable (see module 09, "What exists in code"). Not built yet: pulse, fainting/game over, phone/handbook props, ending and score.
+- Built so far: all three days are playable end to end. Pickup/carry/hold-to-use, breakable windows and door with reinforce/repair, storm rolls, the task engine, pulse, first aid, faint/game over, day-start autosave + restart, the score screen and the full screen UI (see module 09, "What exists in code"). Not built yet: the Day 2 blackout, Day 3 flooding, puddles/towels, the opening and ending cutscenes, the phone/handbook props and a main menu.
 - Keep `.meta` files with assets. Do not edit `Library/` or `Temp/`.
 - Numbers in the design are starting values for playtesting. Keep them in data (ScriptableObjects/JSON), not hard-coded.
 

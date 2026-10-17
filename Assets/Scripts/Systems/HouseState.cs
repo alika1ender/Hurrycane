@@ -16,6 +16,9 @@ public sealed class HouseSnapshot
     public bool radioOn;
     public OpeningRecord[] openings;
     public PickupRecord[] pickups;
+    // Score totals so far (Docs/Design/08).
+    public int tasksDone, tasksRequired, hits;
+    public string[] reinforcedIds = new string[0];
     // Card summary for the restart menu.
     public int reinforced, water, food;
 }
@@ -68,6 +71,8 @@ public static class HouseState
             day = session.CurrentDay,
             savedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
             health = session.health, pulse = session.pulse, phoneBattery = session.phoneBattery,
+            tasksDone = session.tasksDone, tasksRequired = session.tasksRequired, hits = session.hits,
+            reinforcedIds = session.reinforcedIds.ToArray(),
             playerPosition = player.transform.position, playerYaw = player.transform.eulerAngles.y,
             plankStackRemaining = stack ? stack.Remaining : 0,
             radioOn = radio && radio.IsOn,
@@ -133,6 +138,8 @@ public static class HouseState
         if (radio) radio.IsOn = snapshot.radioOn;
 
         session.health = snapshot.health; session.pulse = snapshot.pulse; session.phoneBattery = snapshot.phoneBattery;
+        session.tasksDone = snapshot.tasksDone; session.tasksRequired = snapshot.tasksRequired; session.hits = snapshot.hits;
+        session.reinforcedIds = new HashSet<string>(snapshot.reinforcedIds ?? new string[0]);
         var controller = player.GetComponent<CharacterController>();
         controller.enabled = false;
         player.transform.SetPositionAndRotation(snapshot.playerPosition, Quaternion.Euler(0, snapshot.playerYaw, 0));

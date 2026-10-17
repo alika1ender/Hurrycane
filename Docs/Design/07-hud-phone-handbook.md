@@ -1,7 +1,7 @@
 # 07 · HUD, phone and handbook
 
 > **Status:** Review · **Owner:** Ali (drafted by Claude) · **Depends on:** 01, 04, 05, 06
-> **Code:** HUD canvas, phone and handbook UI (not built yet).
+> **Code:** `Assets/Scripts/UI/GameUI.cs` (screen UI), `UiKit.cs` (style and builders), `PauseMenu.cs` (pause state).
 
 ## HUD
 - **Top center:** timer in mm:ss with the phase label: "Preparation Time", "Disaster Time", "After-Disaster Time", in that order. Last 10 seconds pulse.
@@ -16,15 +16,23 @@ Day 1 task source. Notifications and one-way Broski texts (no reply task). Batte
 ## Handbook
 Physical object on the living room table, highlighted. After pickup it opens with a quick key. Illustrated pages by category (Water, Windows, Power, First aid). Shows the full current task list and a floor plan with live window and door states (in play, unreinforced, reinforced, cracked, broken, repaired). Needs no power, so a dead phone never blocks progress.
 
-## Placeholder HUD (implemented 2026-10-17)
-`Assets/Scripts/UI/Hud.cs` (IMGUI until the real UI exists):
-- Top center: "Day N · phase" and an mm:ss timer that pulses red in the last 10 s.
-- Bottom left: a health bar.
-- Top right: the PHONE panel on Day 1 (current task and hint) or the HANDBOOK list on Days 2-3 ([x] done, [-] too late).
-- Toasts: task done, phase change, "a window is creaking" within 8 m.
-- Full-screen overlays: the alert, the night card and the end card.
+## Screen UI (implemented 2026-10-17)
+Style: **emergency broadcast**. Dark translucent rounded panels and white **Barlow Condensed** type (OFL license, in `Assets/Resources/HurrycaneUI/Fonts`). Phase colours are amber for Preparation, red for Disaster and blue for After-Disaster; green means done or healthy. It's built in code with uGUI (1920x1080 reference, scales to any screen), so the scene file is untouched. Rounded panels and rings are drawn procedurally, so no image assets are needed. Screenshots: `WalkthroughPreviews/ui/` (not committed).
+- **Timer** (top centre): "DAY N · PHASE" in the phase colour, a large mm:ss, and a draining progress bar. The digits pulse red in the last 10 s.
+- **Health** (bottom left): bar plus number, green, then amber below 50, then red below 25. The screen flashes red when Cane is hurt.
+- **Crosshair and prompt:** a dot that turns amber on something usable, and a key cap "E" with the action ("HOLD" for hold actions). Missing items show in amber underneath ("Need: toolkit, planks"). A radial ring fills around the crosshair while holding.
+- **Carried items** (bottom centre): chips for pocket items (tape shows uses), plus an amber ARMS chip with a count (for example 4/8).
+- **Task panel** (top right): PHONE on Day 1 (battery %, NEXT TASK, hint). EMERGENCY HANDBOOK checklist on Days 2-3: green box = done, red = too late, plus "optional" tags.
+- **Toasts:** task done, creaking warning, glass shattered, boards held. **Phase banner:** a big coloured title with one line underneath.
+- **Alert:** a phone mock-up with the clock, Broski's notification, and a red EMERGENCY ALERT card. "Tap to open" pulses.
+- **Night card:** fades to black, "DAY N SURVIVED", the recovery line, then "Morning is coming...".
+- **Pause (Esc):** RESUME, a restart card per saved day (health, boarded, water, food) and a controls line. Time is frozen while it's open.
 
-The phone and handbook are panels, not in-hand props, and Tab does nothing yet. Pulse isn't shown because it isn't built.
+- **Vitals** (bottom left) now also show the pulse: a beating dot, the BPM and the zone word. Above the panel, contextual hints appear: "Q hold to breathe" (with the cooldown) and "H hold for first aid (uses)".
+- **Rings:** amber for E holds, green for first aid, blue for breathing (with a caption).
+- **Screens:** "YOU PASSED OUT", game over (restart cards + NEW GAME), and the final score (see 08).
+
+Still missing: the phone and handbook as in-hand props with Tab, the handbook floor plan, and more Broski texts.
 
 ## Decisions (proposed 2026-10-17, change freely)
 
