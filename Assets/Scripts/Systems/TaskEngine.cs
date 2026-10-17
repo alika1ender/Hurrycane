@@ -27,7 +27,7 @@ public sealed class TaskState
 /// the live house every frame; once true the task is done for good. A task past its last allowed phase is locked ("Too late").
 /// Condition words: alert, radio, carry:Kind[:n], stash:Kind[:n], supplies:Kind[:n], secured:IDs, fixed:ID, damaged:ID,
 /// anyDamaged, noneDamaged, stairsBlocked, flooding, floodStopped, anyPuddles, noPuddles, doorGapBlocked, unplugged,
-/// utilitiesOff, joined with &amp;.
+/// utilitiesOff, looseMoved:day, joined with &amp;.
 /// </summary>
 [RequireComponent(typeof(DayDirector))]
 public sealed class TaskEngine : MonoBehaviour
@@ -131,6 +131,7 @@ public sealed class TaskEngine : MonoBehaviour
             case "doorGapBlocked": return doorGap && doorGap.Blocked;
             case "unplugged": return Switchable.AllOff(Switchable.Appliances);
             case "utilitiesOff": return Switchable.AllOff(Switchable.Utilities);
+            case "looseMoved": return parts.Length > 1 && int.TryParse(parts[1], out var looseDay) && LooseItem.AllMoved(looseDay);
             case "anyDamaged": return openings.Values.Any(o => o.InPlay && Damaged(o));
             case "noneDamaged": return !openings.Values.Any(o => o.InPlay && Damaged(o));
             default: Debug.LogWarning("Unknown task condition: " + atom); return false;

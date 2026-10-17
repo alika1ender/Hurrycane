@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum ItemKind { Water, Food, FirstAid, Flashlight, Batteries, Radio, Backpack, Blanket, Toolkit, RepairTape, Towel, PlankSet }
+// Append new kinds at the end: saved snapshots store these as numbers.
+public enum ItemKind { Water, Food, FirstAid, Flashlight, Batteries, Radio, Backpack, Blanket, Toolkit, RepairTape, Towel, PlankSet, Handbook }
 
 /// <summary>How an item is carried (Docs/Design/04): pockets are unlimited; the armful holds one group at a time.</summary>
 public enum CarryGroup { Pocket, Supplies, Planks, Towels, Blanket }

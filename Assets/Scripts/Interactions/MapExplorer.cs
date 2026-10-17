@@ -24,6 +24,8 @@ public sealed class MapExplorer : MonoBehaviour
     public float speedFactor = 1;
     /// <summary>Walking speed factor from puddles (0.6 inside one).</summary>
     public float puddleSpeedFactor = 1;
+    /// <summary>Set while the phone or handbook is raised: walking is fine, using things is not (Docs/Design/07).</summary>
+    public bool interactLocked;
     /// <summary>Set while breathing or fainted: look around only, no walking or using.</summary>
     public bool movementLocked;
     /// <summary>True on frames where the player actually sprints (pulse rises on Day 3).</summary>
@@ -86,7 +88,7 @@ public sealed class MapExplorer : MonoBehaviour
         float speed = (Sprinting ? 4.2f : 2.6f) * Mathf.Min(speedFactor, puddleSpeedFactor);
         controller.Move(((transform.right * axis.x + transform.forward * axis.y) * speed + Vector3.up * verticalSpeed) * Time.deltaTime);
         if (transform.position.y < -8) Respawn();
-        if (movementLocked) { focus = null; ReleaseHold(); return; }
+        if (movementLocked || interactLocked) { focus = null; ReleaseHold(); return; }
         if (keyboard.gKey.wasPressedThisFrame) Inventory.DropArmful(transform);
         StepUse(keyboard.eKey.isPressed, keyboard.eKey.wasPressedThisFrame, Time.deltaTime);
     }

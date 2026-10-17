@@ -14,6 +14,8 @@ public sealed class HouseSnapshot
     public PuddleRecord[] puddles = new PuddleRecord[0];
     /// <summary>Names of Switchables that are off (unplugged / shut).</summary>
     public string[] switchedOff = new string[0];
+    /// <summary>Names of loose items already moved away from their windows.</summary>
+    public string[] movedLoose = new string[0];
     public Vector3 playerPosition;
     public float playerYaw;
     public int plankStackRemaining;
@@ -80,6 +82,7 @@ public static class HouseState
             stairsBlocked = UnityEngine.Object.FindAnyObjectByType<StairBarrier>() is StairBarrier barrier && barrier.Blocked,
             puddles = session.GetComponent<PuddleSystem>() is PuddleSystem puddleSystem ? puddleSystem.Records() : new PuddleRecord[0],
             switchedOff = Switchable.All.Where(s => s.Off).Select(s => s.Key).ToArray(),
+            movedLoose = LooseItem.All.Where(i => i.Moved).Select(i => i.Key).ToArray(),
             tasksDone = session.tasksDone, tasksRequired = session.tasksRequired, hits = session.hits,
             reinforcedIds = session.reinforcedIds.ToArray(),
             playerPosition = player.transform.position, playerYaw = player.transform.eulerAngles.y,
@@ -154,6 +157,8 @@ public static class HouseState
         if (puddleSystem) puddleSystem.Restore(snapshot.puddles);
         var off = new HashSet<string>(snapshot.switchedOff ?? new string[0]);
         foreach (var s in Switchable.All) s.SetOff(off.Contains(s.Key));
+        var moved = new HashSet<string>(snapshot.movedLoose ?? new string[0]);
+        foreach (var item in LooseItem.All.ToList()) if (moved.Contains(item.Key)) item.MoveAway(); // fresh scene: items start in place
         session.tasksDone = snapshot.tasksDone; session.tasksRequired = snapshot.tasksRequired; session.hits = snapshot.hits;
         session.reinforcedIds = new HashSet<string>(snapshot.reinforcedIds ?? new string[0]);
         var controller = player.GetComponent<CharacterController>();

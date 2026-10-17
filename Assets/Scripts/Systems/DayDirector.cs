@@ -127,6 +127,7 @@ public sealed class DayDirector : MonoBehaviour
             if (!opening.InPlay || opening.Striking || scripted.Contains(opening.Id)) continue;
             float chance = today.ChanceFor(opening);
             if (opening.IsDoor && doorGap) chance = Mathf.Max(0, chance - doorGap.ChanceReduction); // towel in the gap (Day 2 task)
+            chance += LooseItem.BonusFor(opening.Id); // loose items still by this window become projectiles
             if (UnityEngine.Random.value < chance)
                 hits.Add(Hit(UnityEngine.Random.Range(config.hitWindowStart * length, config.hitWindowEnd * length), opening, null));
         }
@@ -269,6 +270,7 @@ public sealed class DayDirector : MonoBehaviour
         var stack = FindAnyObjectByType<PlankStack>();
         if (stack) stack.SetRemaining(stack.Remaining - 4);
         GeneratedProps.StageTowels();
+        GeneratedProps.StageHandbook();
     }
 
     /// <summary>A spot near the marker where a 1.2 x 0.6 m patch is level with it (not over the stairwell).</summary>

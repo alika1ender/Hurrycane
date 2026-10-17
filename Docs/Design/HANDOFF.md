@@ -14,6 +14,17 @@ Template:
 
 ---
 
+## 2026-10-17 20:00 · Claude (for Ali)
+**Worked on:** the last two disabled tasks, plus the phone and handbook in hand. Code: `Interactions/LooseItem.cs`, `Systems/HandheldSystem.cs`, a handbook prop in `GeneratedProps`, and GameUI phone/handbook screens. Data: `loose.json`, `phone.json`; in `tasks.json`, `d2_handbook` and `d2_loose` are on and `d3_loose` is new. Updated 04, 07 and 09.
+**Done:**
+- 7 loose items picked in the scene (3 for Day 2, 4 for Day 3). Each adds +10% break chance to its window until moved (hold E).
+- The handbook on the coffee table. Tab raises the phone (battery, Broski thread, next task) or the handbook (checklist plus a live floor plan of both floors).
+- Phone battery drain and Broski texts on triggers (toast, -3 BPM).
+- Everything new is in snapshots.
+- Tested in Play mode: phone and handbook screens (screenshots in `WalkthroughPreviews/ui/17_phone`, `18_handbook`), the Broski trigger, the loose-item move and chance bonus, the Day 2 tasks, and a restart keeping moved items. Door/drawer test passes 31/31. **No task in the design is disabled any more.**
+**Next:** hands-on playtest of all three days. Remaining build: the opening TV cutscene and the ending cutscene (01, 08), a main menu (New Game / Continue), and real art for the placeholders (planks, towels, puddles, handbook, phone, flood water).
+**Blocked / questions:** unchanged (water and planks in the arms; Day 1 door chance; cracked-boarded repair rule; Q3).
+
 ## 2026-10-17 19:40 · Claude (for Ali)
 **Worked on:** the remaining disabled tasks. Code: `Systems/PuddleSystem.cs`, `Openings/Puddle.cs`, `Openings/DoorGap.cs`, `Interactions/Switchable.cs`, plus wiring in `GameplaySetup`, `DayDirector`, `TaskEngine`, `HouseState` and `MapExplorer`. Data: `puddles` and `doorGap` blocks in `days.json`; in `tasks.json`, `d1_wipe`, `d2_doorgap`, `d2_unplug` and `d2_utilities` are now on, and `d2_wipe`, `d3_wipe` and `d3_utilities` are new. Updated 03, 04 and 09.
 **Done:** puddles from broken windows/door (they slow you, re-leak each morning while unrepaired, and are wiped with a towel). The Day 2 door-gap towel lowers the door's break chance and prevents door puddles. Unplugging the TV, fridge and kettle, and switching off the breaker and valve. Everything is in snapshots. Tested in Play mode: spawn, slowdown, the gap vs no gap, wiping, switches, and a Day 2 save/restart keeping puddles and switches. The door/drawer test passes 31/31. Only `d2_handbook` and `d2_loose` remain disabled.

@@ -14,6 +14,7 @@ public static class GeneratedProps
         {
             case ItemKind.PlankSet: return PlankStack.CreatePlankSet();
             case ItemKind.Towel: return CreateTowel();
+            case ItemKind.Handbook: return CreateHandbook();
             default: Debug.LogWarning("No generated prop for " + kind); return null;
         }
     }
@@ -43,6 +44,46 @@ public static class GeneratedProps
         pickup.Configure(ItemKind.Towel);
         pickup.Generated = true;
         return pickup;
+    }
+
+    /// <summary>The emergency handbook (Docs/Design/07): a red book with a white band, glowing faintly so it reads as important.</summary>
+    public static Pickup CreateHandbook()
+    {
+        var book = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        book.name = "PICKUP_Handbook";
+        book.transform.localScale = new Vector3(.24f, .035f, .32f);
+        book.GetComponent<Renderer>().sharedMaterial = BookMaterial(new Color(.75f, .14f, .12f), .25f);
+        var band = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        Object.DestroyImmediate(band.GetComponent<Collider>());
+        band.transform.SetParent(book.transform, false);
+        band.transform.localScale = new Vector3(1.01f, 1.05f, .18f);
+        band.GetComponent<Renderer>().sharedMaterial = BookMaterial(new Color(.92f, .9f, .85f), 0);
+        var pickup = book.AddComponent<Pickup>();
+        pickup.Configure(ItemKind.Handbook);
+        pickup.Generated = true;
+        return pickup;
+    }
+
+    static Material BookMaterial(Color color, float glow)
+    {
+        var material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+        material.SetColor("_BaseColor", color);
+        material.SetFloat("_Smoothness", .25f);
+        if (glow > 0) { material.EnableKeyword("_EMISSION"); material.SetColor("_EmissionColor", color * glow); }
+        return material;
+    }
+
+    /// <summary>A new game's handbook, on the living room coffee table (Docs/Design/07).</summary>
+    public static void StageHandbook()
+    {
+        foreach (var t in Object.FindObjectsByType<Transform>(FindObjectsInactive.Exclude))
+        {
+            if (t.name != "Living_CoffeeTable_Visual") continue;
+            var top = t.GetComponent<Renderer>().bounds;
+            CreateHandbook().PlaceAt(new Vector3(top.center.x - top.extents.x * .45f, top.max.y + .05f, top.center.z), null, true);
+            return;
+        }
+        Debug.LogWarning("StageHandbook: Living_CoffeeTable_Visual not found");
     }
 
     /// <summary>A new game's towels (Docs/Design/04): 4 on the bathroom vanity, 2 on the floor by the basement shelter.</summary>

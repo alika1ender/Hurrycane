@@ -47,7 +47,9 @@ The tasks below live in `Assets/Resources/HurrycaneData/tasks.json`, and `TaskEn
 - **Flashlight (built):** F toggles it while carried. It drains about 0.55%/s while on (about 3 minutes per pack); when empty it swaps in a battery pack from the pockets automatically. Its chip shows ON and the %.
 - **Switching off (built, `Switchable`):** "Unplug the TV / fridge / kettle" (1-1.5 s holds; the fridge is aimed at by its side panels so its door still opens) and "Switch off the main breaker" (2 s) / "Shut the utility valve" (3 s) in the basement. They stay off for the rest of the game and are saved in snapshots. Tasks: `d2_unplug`, `d2_utilities` (Preparation only) and `d3_utilities` (optional).
 - **Wiping and door gap (built):** `d1_wipe`, `d2_wipe` and `d3_wipe` appear in After-Disaster Time only if there are puddles; `d2_doorgap` uses `DoorGap`.
-- **Still turned off** (`"disabled": true`): picking up the handbook (no handbook prop yet) and moving loose items (the items haven't been picked in the scene yet).
+- **Loose items (built, `LooseItem` + `Resources/HurrycaneData/loose.json`):** Day 2: the back-hall plant (W06), the master dresser frame (W07) and the bedside lamp (W08). Day 3: the study desk lamp, laptop and small plant (W09) and the landing plant (W12). Each adds +10% to its window's break chance until moved; hold E for 1.5 s to move it 1.3 m into the room. Tasks `d2_loose` and `d3_loose` (new, optional). Moved items are saved in snapshots.
+- **Handbook (built, placeholder):** a red book with a white band on the living room coffee table from the start. It's carried in the pockets; `d2_handbook` = carry it.
+- **No tasks are disabled any more.**
 - **Day 1 staging is built:** on a new game, the spare toolkit and 4 plank sets appear on the floor next to the basement stairs (the stack then holds 14).
 - **Friction found in testing:** water and planks are both carried in the arms, so after "Take 3 water bottles" the player must drop (G) or stash the water before grabbing planks. Consider letting a few bottles fit in the pockets.
 

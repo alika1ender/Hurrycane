@@ -27,6 +27,11 @@ public sealed class GameUI : MonoBehaviour
     RectTransform gameOverCards, scoreRows;
     Text scoreTitle, scoreSub, scoreTotal, scoreRank, scoreLine, scoreFact;
     float heartPhase;
+    GameObject phoneOverlay, phoneDeadScreen, handbookOverlay;
+    RectTransform phoneThread, handbookList, groundMap, upperMap;
+    Text phoneStatus, phoneTask, phoneHint, handbookSubtitle;
+    string overlaySignature;
+    float overlayRefresh;
     DayPhase shownPhase = (DayPhase)(-1);
     Text phaseLabel, timeLabel, healthValue, promptKey, promptText, promptMissing;
     RectTransform prompt, inventoryRow, taskPanel, toastColumn;
@@ -56,6 +61,7 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.WarningStarted += OnWarning;
         BreakableOpening.HitLanded += OnHit;
         FloodSystem.FloodStarted += OnFlood;
+        HandheldSystem.MessageReceived += OnText;
     }
     void OnDisable()
     {
@@ -64,7 +70,9 @@ public sealed class GameUI : MonoBehaviour
         BreakableOpening.WarningStarted -= OnWarning;
         BreakableOpening.HitLanded -= OnHit;
         FloodSystem.FloodStarted -= OnFlood;
+        HandheldSystem.MessageReceived -= OnText;
     }
+    void OnText(PhoneMessage message) => Toast("Broski:  " + message.text, UiKit.Amber);
     void OnFlood() => Toast("Water is pouring down the basement stairs!", UiKit.Red);
     void OnDestroy() => MapExplorer.DrawDebugHud = true;
 
@@ -94,7 +102,7 @@ public sealed class GameUI : MonoBehaviour
         taskPanel = UiKit.Node("Tasks", hud).Place(new Vector2(1, 1), new Vector2(-28, -24), new Vector2(400, 0));
         var hint = UiKit.Label(hud, "Controls", UiKit.Medium, 20, new Color(1, 1, 1, .45f), TextAnchor.LowerRight);
         hint.rectTransform.Place(new Vector2(1, 0), new Vector2(-28, 22), new Vector2(600, 30));
-        hint.text = "E  use / hold      G  drop      F  flashlight      Q  breathe      H  first aid      Esc  pause";
+        hint.text = "E  use / hold      G  drop      Tab  phone / handbook      F  flashlight      Q  breathe      H  first aid      Esc  pause";
 
         toastColumn = UiKit.Node("Toasts", transform).Place(new Vector2(.5f, .5f), new Vector2(0, -175), new Vector2(900, 0));
         toastColumn.pivot = new Vector2(.5f, 1);
@@ -114,8 +122,83 @@ public sealed class GameUI : MonoBehaviour
         faintText.rectTransform.Stretch(); faintText.text = "YOU PASSED OUT\n<size=32><color=#9AA0AA>Waking up by the bed... the clock kept running.</color></size>";
         BuildGameOver();
         BuildScore();
+        BuildPhone();
+        BuildHandbook();
         BuildAlert();
         BuildPause();
+    }
+
+    void BuildPhone()
+    {
+        var frame = UiKit.Panel(transform, "PhoneOverlay", new Color(.02f, .02f, .03f, 1));
+        frame.rectTransform.Place(new Vector2(1, .5f), new Vector2(-120, 0), new Vector2(440, 740));
+        phoneOverlay = frame.gameObject;
+        var screen = UiKit.Panel(frame.transform, "Screen", new Color(.09f, .1f, .13f, 1));
+        screen.rectTransform.Stretch(12);
+        var column = UiKit.Node("Column", screen.transform).Stretch(16);
+        column.Layout<VerticalLayoutGroup>(0, 12, TextAnchor.UpperCenter);
+        phoneStatus = UiKit.Label(column, "Status", UiKit.SemiBold, 22, UiKit.Dim, TextAnchor.MiddleCenter);
+        UiKit.Label(column, "From", UiKit.SemiBold, 22, UiKit.Amber).text = "BROSKI";
+        phoneThread = UiKit.Node("Thread", column);
+        phoneThread.Layout<VerticalLayoutGroup>(0, 8, TextAnchor.UpperLeft);
+        var spacer = UiKit.Node("Spacer", column); spacer.Size(-1, -1).flexibleHeight = 1;
+        var card = UiKit.Panel(column, "TaskCard", UiKit.PanelLight);
+        card.Layout<VerticalLayoutGroup>(14, 4, TextAnchor.UpperLeft);
+        UiKit.Label(card.transform, "Kicker", UiKit.SemiBold, 20, UiKit.Amber).text = "NEXT TASK";
+        phoneTask = UiKit.Label(card.transform, "Task", UiKit.Bold, 28, UiKit.TextColor, TextAnchor.UpperLeft, true);
+        phoneHint = UiKit.Label(card.transform, "Hint", UiKit.Medium, 22, UiKit.Dim, TextAnchor.UpperLeft, true);
+        UiKit.Label(column, "Close", UiKit.Medium, 20, UiKit.Dim, TextAnchor.MiddleCenter).text = "Tab  put the phone away";
+        var dead = UiKit.Panel(screen.transform, "Dead", Color.black);
+        dead.rectTransform.Stretch();
+        phoneDeadScreen = dead.gameObject;
+        var deadText = UiKit.Label(dead.transform, "Text", UiKit.Bold, 36, UiKit.Dim, TextAnchor.MiddleCenter, true);
+        deadText.rectTransform.Stretch(30);
+        deadText.text = "BATTERY DEAD\n<size=24>Use the emergency handbook.\nRed book, living room coffee table.</size>";
+        phoneOverlay.SetActive(false);
+    }
+
+    static readonly Color Paper = new Color(.93f, .89f, .80f), Ink = new Color(.16f, .15f, .14f), InkDim = new Color(.42f, .39f, .35f), BookRed = new Color(.62f, .12f, .10f);
+
+    void BuildHandbook()
+    {
+        var book = UiKit.Panel(transform, "HandbookOverlay", BookRed);
+        book.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, -10), new Vector2(1320, 760));
+        handbookOverlay = book.gameObject;
+        var left = UiKit.Panel(book.transform, "LeftPage", Paper);
+        left.rectTransform.Place(new Vector2(0, .5f), new Vector2(14, 0), new Vector2(640, 732));
+        var right = UiKit.Panel(book.transform, "RightPage", Paper);
+        right.rectTransform.Place(new Vector2(1, .5f), new Vector2(-14, 0), new Vector2(640, 732));
+
+        var lcol = UiKit.Node("Column", left.transform).Stretch(30);
+        lcol.Layout<VerticalLayoutGroup>(0, 8, TextAnchor.UpperLeft);
+        UiKit.Label(lcol, "Title", UiKit.Bold, 44, BookRed).text = "EMERGENCY HANDBOOK";
+        handbookSubtitle = UiKit.Label(lcol, "Sub", UiKit.SemiBold, 24, InkDim);
+        handbookList = UiKit.Node("List", lcol);
+        handbookList.Layout<VerticalLayoutGroup>(0, 6, TextAnchor.UpperLeft);
+
+        var rcol = UiKit.Node("Column", right.transform).Stretch(30);
+        var mapTitle = UiKit.Label(rcol, "Title", UiKit.Bold, 44, BookRed);
+        mapTitle.rectTransform.Place(new Vector2(0, 1), Vector2.zero, new Vector2(580, 50));
+        mapTitle.text = "FLOOR PLAN";
+        groundMap = MapFrame(rcol, "GROUND FLOOR", new Vector2(0, -80));
+        upperMap = MapFrame(rcol, "UPPER FLOOR", new Vector2(300, -80));
+        var legend = UiKit.Label(rcol, "Legend", UiKit.SemiBold, 22, Ink, TextAnchor.UpperLeft, true);
+        legend.rectTransform.Place(new Vector2(0, 1), new Vector2(0, -400), new Vector2(580, 120));
+        legend.text = "<color=#2E8B57>BOARDED</color>    <color=#D48A1E>CRACKED</color>    <color=#C0392B>BROKEN</color>    <color=#2F6DB5>TAPED</color>    <color=#8C8579>NOT SECURED</color>\nWhite dot = you. North is up. D = front door, numbers = windows.";
+        var close = UiKit.Label(rcol, "Close", UiKit.Medium, 22, InkDim, TextAnchor.LowerRight);
+        close.rectTransform.Place(new Vector2(1, 0), Vector2.zero, new Vector2(400, 30));
+        close.text = "Tab  close the handbook";
+        handbookOverlay.SetActive(false);
+    }
+
+    RectTransform MapFrame(Transform parent, string label, Vector2 position)
+    {
+        var caption = UiKit.Label(parent, label, UiKit.SemiBold, 22, InkDim);
+        caption.rectTransform.Place(new Vector2(0, 1), position, new Vector2(280, 28));
+        caption.text = label;
+        var map = UiKit.Panel(parent, label + "Map", new Color(.80f, .75f, .64f));
+        map.rectTransform.Place(new Vector2(0, 1), position + new Vector2(0, -32), new Vector2(280, 233));
+        return map.rectTransform;
     }
 
     void BuildGameOver()
@@ -309,7 +392,7 @@ public sealed class GameUI : MonoBehaviour
         pauseCards = UiKit.Node("Cards", panel.transform);
         pauseCards.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter);
         var help = UiKit.Label(panel.transform, "Help", UiKit.Medium, 22, UiKit.Dim, TextAnchor.MiddleCenter, true);
-        help.text = "WASD move  ·  Shift run  ·  E use (hold for some)  ·  G drop armful  ·  F flashlight  ·  Q breathe  ·  H first aid";
+        help.text = "WASD move  ·  Shift run  ·  E use (hold for some)  ·  G drop armful  ·  Tab phone / handbook  ·  F flashlight  ·  Q breathe  ·  H first aid";
         pauseOverlay.SetActive(false);
     }
 
@@ -352,6 +435,7 @@ public sealed class GameUI : MonoBehaviour
             UpdateInventory();
             UpdateTasks(session, director);
         }
+        UpdateHandheld(session, director, !alert && !night && !ended && !gameOver);
         UpdateToasts();
         bannerGroup.alpha = Mathf.Clamp01((bannerUntil - Time.unscaledTime) / .6f);
         var flash = damageFlash.color; flash.a = Mathf.MoveTowards(flash.a, 0, Time.unscaledDeltaTime * .8f); damageFlash.color = flash;
@@ -393,6 +477,105 @@ public sealed class GameUI : MonoBehaviour
         bool hold = focus.HoldSeconds > 0;
         promptText.text = (hold ? "<color=#9AA0AA>HOLD</color>  " : "") + focus.Prompt;
         promptText.color = string.IsNullOrEmpty(missing) ? UiKit.TextColor : UiKit.Dim;
+    }
+
+    void UpdateHandheld(GameSession session, DayDirector director, bool playing)
+    {
+        var hand = session.GetComponent<HandheldSystem>();
+        var view = playing && hand ? hand.Open : HandheldSystem.View.None;
+        phoneOverlay.SetActive(view == HandheldSystem.View.Phone);
+        handbookOverlay.SetActive(view == HandheldSystem.View.Handbook);
+        if (view == HandheldSystem.View.None) { overlaySignature = null; return; }
+        if (Time.unscaledTime < overlayRefresh && overlaySignature != null) return;
+        overlayRefresh = Time.unscaledTime + .25f;
+        var engine = session.GetComponent<TaskEngine>();
+        if (view == HandheldSystem.View.Phone) FillPhone(session, hand, engine);
+        else FillHandbook(session, engine);
+    }
+
+    void FillPhone(GameSession session, HandheldSystem hand, TaskEngine engine)
+    {
+        phoneDeadScreen.SetActive(hand.PhoneDead);
+        phoneStatus.text = "7:42 AM        " + Mathf.CeilToInt(session.phoneBattery) + "%";
+        var current = engine ? engine.Current : null;
+        phoneTask.text = current == null ? "All set for now." : current.definition.text;
+        phoneHint.text = current == null ? "Stay away from the windows." : current.definition.hint;
+        string signature = "T" + hand.Thread.Count;
+        if (signature == overlaySignature) return;
+        overlaySignature = signature;
+        foreach (Transform child in phoneThread) Destroy(child.gameObject);
+        foreach (var message in hand.Thread.Skip(Mathf.Max(0, hand.Thread.Count - 5)))
+        {
+            var bubble = UiKit.Panel(phoneThread, "Bubble", UiKit.PanelLight);
+            bubble.Layout<VerticalLayoutGroup>(12, 0, TextAnchor.UpperLeft);
+            UiKit.Label(bubble.transform, "Text", UiKit.Medium, 24, UiKit.TextColor, TextAnchor.UpperLeft, true).text = message.text;
+        }
+    }
+
+    void FillHandbook(GameSession session, TaskEngine engine)
+    {
+        handbookSubtitle.text = "DAY " + session.CurrentDay + "  ·  CHECKLIST";
+        string signature = engine ? string.Join(",", engine.Today.Select(t => t.definition.id + (int)t.status)) : "";
+        if (signature != overlaySignature)
+        {
+            overlaySignature = signature;
+            foreach (Transform child in handbookList) Destroy(child.gameObject);
+            if (engine)
+                foreach (var task in engine.Today)
+                {
+                    if (task.status == TaskStatus.Hidden) continue;
+                    var row = UiKit.Node("Row", handbookList);
+                    row.Layout<HorizontalLayoutGroup>(0, 12, TextAnchor.UpperLeft);
+                    var box = UiKit.Panel(row, "Box", task.status == TaskStatus.Done ? new Color(.18f, .55f, .34f) : task.status == TaskStatus.Locked ? new Color(.75f, .22f, .17f) : new Color(.55f, .51f, .44f, .5f));
+                    box.Size(20, 20);
+                    var text = UiKit.Label(row, "Text", UiKit.Medium, 26, task.status == TaskStatus.Open ? Ink : InkDim, TextAnchor.UpperLeft, true);
+                    text.text = task.definition.text + (task.status == TaskStatus.Locked ? "  <color=#C0392B>too late</color>" : !task.definition.required ? "  <color=#8C8579>optional</color>" : "")
+                        + (task.status == TaskStatus.Open ? "\n<size=20><color=#6B655C>" + task.definition.hint + "</color></size>" : "");
+                    text.Size(-1, -1, 1);
+                }
+        }
+        // The floor plan is live: redraw on every refresh.
+        foreach (Transform child in groundMap) Destroy(child.gameObject);
+        foreach (Transform child in upperMap) Destroy(child.gameObject);
+        foreach (var opening in FindObjectsByType<BreakableOpening>(FindObjectsInactive.Exclude))
+        {
+            var c = opening.Center;
+            var map = c.y >= 3 ? upperMap : groundMap;
+            var marker = UiKit.Panel(map, opening.Id, StateColor(opening.State));
+            marker.rectTransform.Place(Vector2.zero, MapPoint(c, map) - new Vector2(13, 13), new Vector2(26, 26));
+            var label = UiKit.Label(marker.transform, "Id", UiKit.Bold, 15, Color.white, TextAnchor.MiddleCenter);
+            label.rectTransform.Stretch();
+            label.text = opening.IsDoor ? "D" : opening.Id.Substring(1);
+        }
+        var feet = explorer.transform.position;
+        if (feet.y > -1) // not in the basement
+        {
+            var map = feet.y >= 2.5f ? upperMap : groundMap;
+            var you = UiKit.Node("You", map).gameObject.AddComponent<Image>();
+            you.sprite = UiKit.Disc; you.color = Color.white; you.raycastTarget = false;
+            you.rectTransform.Place(Vector2.zero, MapPoint(feet, map) - new Vector2(9, 9), new Vector2(18, 18));
+            you.gameObject.AddComponent<Outline>().effectColor = Ink;
+        }
+    }
+
+    /// <summary>House footprint x -12..0, z -10..0 mapped onto a map panel: north (z -10) up, east (x 0) right.</summary>
+    static Vector2 MapPoint(Vector3 world, RectTransform map)
+    {
+        float u = Mathf.Clamp01((world.x + 12) / 12f), v = Mathf.Clamp01(-world.z / 10f);
+        return new Vector2(u * map.sizeDelta.x, v * map.sizeDelta.y);
+    }
+
+    static Color StateColor(OpeningState state)
+    {
+        switch (state)
+        {
+            case OpeningState.Reinforced: return new Color(.18f, .55f, .34f);
+            case OpeningState.Cracked: return new Color(.83f, .54f, .12f);
+            case OpeningState.Broken: return new Color(.75f, .22f, .17f);
+            case OpeningState.Repaired: return new Color(.18f, .43f, .71f);
+            case OpeningState.Unreinforced: return new Color(.55f, .52f, .47f);
+            default: return new Color(.55f, .52f, .47f, .25f); // not in play yet
+        }
     }
 
     /// <summary>One ring around the crosshair for every hold: E actions (amber), first aid (green), breathing (blue).</summary>
@@ -507,12 +690,16 @@ public sealed class GameUI : MonoBehaviour
     void UpdateTasks(GameSession session, DayDirector director)
     {
         var engine = session.GetComponent<TaskEngine>();
+        var hand = session.GetComponent<HandheldSystem>();
         if (!engine) return;
-        bool phone = director.Today.taskSource == "phone";
+        bool hasBook = hand && hand.HasHandbook;
+        // Day 1 (and Days 2-3 until the handbook is found) the phone guides one task at a time.
+        bool phone = director.Today.taskSource == "phone" || !hasBook;
+        bool dead = hand && hand.PhoneDead;
+        int unread = hand ? hand.Unread : 0;
         var current = engine.Current;
-        string signature = phone
-            ? "P" + (current == null ? "-" : current.definition.id) + Mathf.RoundToInt(session.phoneBattery)
-            : "H" + string.Join(",", engine.Today.Select(t => t.definition.id + (int)t.status));
+        string signature = (phone ? "P" + (current == null ? "-" : current.definition.id) + Mathf.RoundToInt(session.phoneBattery) + dead
+            : "H" + string.Join(",", engine.Today.Select(t => t.definition.id + (int)t.status))) + "u" + unread;
         if (signature == taskSignature) return;
         taskSignature = signature;
         foreach (Transform child in taskPanel) Destroy(child.gameObject);
@@ -524,34 +711,36 @@ public sealed class GameUI : MonoBehaviour
         var header = UiKit.Node("Header", rt);
         header.Layout<HorizontalLayoutGroup>(0, 8, TextAnchor.MiddleLeft);
         var title = UiKit.Label(header, "Title", UiKit.SemiBold, 22, UiKit.Dim);
-        title.text = phone ? "PHONE" : "EMERGENCY HANDBOOK";
+        title.text = phone ? (dead ? "PHONE  <color=#E5484D>DEAD</color>" : "PHONE") : "EMERGENCY HANDBOOK";
         title.Size(-1, -1, 1);
+        if (phone && !dead) UiKit.Label(header, "Battery", UiKit.SemiBold, 22, session.phoneBattery < 15 ? UiKit.Red : UiKit.Dim, TextAnchor.MiddleRight).text = Mathf.RoundToInt(session.phoneBattery) + "%";
         if (phone)
         {
-            var battery = UiKit.Label(header, "Battery", UiKit.SemiBold, 22, UiKit.Dim, TextAnchor.MiddleRight);
-            battery.text = Mathf.RoundToInt(session.phoneBattery) + "%";
             if (current == null)
-            {
                 UiKit.Label(rt, "Done", UiKit.Bold, 30, UiKit.Green, TextAnchor.UpperLeft, true).text = "All set for now. Stay safe.";
-                return;
+            else
+            {
+                UiKit.Label(rt, "Kicker", UiKit.SemiBold, 20, UiKit.Amber).text = "NEXT TASK";
+                UiKit.Label(rt, "Task", UiKit.Bold, 32, UiKit.TextColor, TextAnchor.UpperLeft, true).text = current.definition.text;
+                UiKit.Label(rt, "Hint", UiKit.Medium, 24, UiKit.Dim, TextAnchor.UpperLeft, true).text = current.definition.hint;
             }
-            UiKit.Label(rt, "Kicker", UiKit.SemiBold, 20, UiKit.Amber).text = "NEXT TASK";
-            UiKit.Label(rt, "Task", UiKit.Bold, 32, UiKit.TextColor, TextAnchor.UpperLeft, true).text = current.definition.text;
-            UiKit.Label(rt, "Hint", UiKit.Medium, 24, UiKit.Dim, TextAnchor.UpperLeft, true).text = current.definition.hint;
-            return;
         }
-        foreach (var task in engine.Today)
-        {
-            if (task.status == TaskStatus.Hidden) continue;
-            var row = UiKit.Node("Row", rt);
-            row.Layout<HorizontalLayoutGroup>(0, 12, TextAnchor.UpperLeft);
-            var box = UiKit.Panel(row, "Box", task.status == TaskStatus.Done ? UiKit.Green : task.status == TaskStatus.Locked ? new Color(UiKit.Red.r, UiKit.Red.g, UiKit.Red.b, .5f) : new Color(1, 1, 1, .16f));
-            box.Size(20, 20);
-            bool closed = task.status != TaskStatus.Open;
-            var text = UiKit.Label(row, "Text", UiKit.Medium, 24, closed ? UiKit.Dim : UiKit.TextColor, TextAnchor.UpperLeft, true);
-            text.text = task.definition.text + (task.status == TaskStatus.Locked ? "  <color=#E5484D>too late</color>" : !task.definition.required ? "  <color=#9AA0AA>optional</color>" : "");
-            text.Size(-1, -1, 1);
-        }
+        else
+            foreach (var task in engine.Today)
+            {
+                if (task.status == TaskStatus.Hidden) continue;
+                var row = UiKit.Node("Row", rt);
+                row.Layout<HorizontalLayoutGroup>(0, 12, TextAnchor.UpperLeft);
+                var box = UiKit.Panel(row, "Box", task.status == TaskStatus.Done ? UiKit.Green : task.status == TaskStatus.Locked ? new Color(UiKit.Red.r, UiKit.Red.g, UiKit.Red.b, .5f) : new Color(1, 1, 1, .16f));
+                box.Size(20, 20);
+                bool closed = task.status != TaskStatus.Open;
+                var text = UiKit.Label(row, "Text", UiKit.Medium, 24, closed ? UiKit.Dim : UiKit.TextColor, TextAnchor.UpperLeft, true);
+                text.text = task.definition.text + (task.status == TaskStatus.Locked ? "  <color=#E5484D>too late</color>" : !task.definition.required ? "  <color=#9AA0AA>optional</color>" : "");
+                text.Size(-1, -1, 1);
+            }
+        string footer = hasBook ? "Tab  open the handbook (floor plan)" : dead ? "" : "Tab  open the phone";
+        if (unread > 0 && !dead) footer = "<color=#F2A93B>" + unread + " new message" + (unread > 1 ? "s" : "") + "</color>   " + footer;
+        if (footer != "") UiKit.Label(rt, "Footer", UiKit.SemiBold, 20, UiKit.Dim, TextAnchor.UpperLeft, true).text = footer;
     }
 
     void UpdateNight(bool night, DayDirector director)

@@ -1,0 +1,15 @@
+{
+    "_about": "Loose items near windows (Docs/Design/03, 04). Each one still near its window adds chanceBonus to that window's break chance. 'day' groups them for the d2_loose / d3_loose tasks. 'proxy' is an optional COL_* collider that moves with it.",
+    "chanceBonus": 0.10,
+    "moveDistance": 1.3,
+    "holdSeconds": 1.5,
+    "items": [
+        { "object": "Hall_Plant",            "label": "the potted plant",  "window": "W06", "day": 2 },
+        { "object": "KayKit_DresserFrame",   "label": "the picture frame", "window": "W07", "day": 2 },
+        { "object": "Master_BedsideLamp",    "label": "the bedside lamp",  "window": "W08", "day": 2 },
+        { "object": "Study_DeskLamp",        "label": "the desk lamp",     "window": "W09", "day": 3, "proxy": "COL_Study_DeskLamp" },
+        { "object": "Study_Laptop",          "label": "the laptop",        "window": "W09", "day": 3 },
+        { "object": "PROP_Study_Plant",      "label": "the small plant",   "window": "W09", "day": 3 },
+        { "object": "Landing_Plant",         "label": "the landing plant", "window": "W12", "day": 3 }
+    ]
+}

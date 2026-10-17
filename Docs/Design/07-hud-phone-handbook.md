@@ -34,7 +34,14 @@ Style: **emergency broadcast**. Dark translucent rounded panels and white **Barl
 
 - **Blackout and flood:** an "F flashlight" hint when it's dark and the flashlight is off; the flashlight chip shows ON/%; a red "You're wading in flood water" hint; a "Water is pouring down the basement stairs!" toast; and the Preparation banner adds "The power is out." At most 3 toasts at a time, placed above the item chips.
 
-Still missing: the phone and handbook as in-hand props with Tab, the handbook floor plan, and more Broski texts.
+- **Phone and handbook in hand (built, `HandheldSystem`, texts in `Resources/HurrycaneData/phone.json`):** Tab raises the handbook once carried, otherwise the phone. A simple 3D phone or book rises into view, and while raised Cane can walk but not use things.
+  - **Phone screen:** clock and battery, Broski's thread (last 5) and a NEXT TASK card. When dead: "BATTERY DEAD, use the emergency handbook".
+  - **Battery:** drains 0.1%/s, plus 1%/s while raised, from 40%, so it dies on Day 2 as designed.
+  - **Broski texts:** arrive at day start, on the first window boarded each day, at night and when the flood starts. Each one is a toast and -3 BPM. They're lost if the phone is dead.
+  - **Handbook:** a red book with cream pages. The left page is the full checklist with hints; the right page is a **live floor plan** of both floors, with every opening colour-coded by state, numbered, and a white dot for Cane.
+  - **Compact panel:** on Days 2-3 it keeps showing the phone-style next task ("Pick up the handbook") until the handbook is carried, and it shows "Tab open ..." and unread messages.
+
+Still missing: real phone and book models (cubes for now), the illustrated category pages (Water, Windows, Power, First aid).
 
 ## Decisions (proposed 2026-10-17, change freely)
 

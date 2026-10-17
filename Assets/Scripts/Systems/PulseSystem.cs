@@ -10,7 +10,7 @@ public enum PulseZone { Calm, Tense, Panic, Peak }
 /// Cane's pulse (Docs/Design/05). Drifts to the day/phase resting level; spikes on breaks, the last 10 s of a timer,
 /// unfinished tasks at a phase flip and sprinting (Day 3); drops on finished tasks, the basement safe room and
 /// breathing (hold Q). Panic/Peak add vignette, shake and (Day 3) slower hold actions. Never blocks a task.
-/// Not built: darkness, thunder, flashlight and Broski-text effects (those systems don't exist yet).
+/// Darkness comes from PowerSystem, Broski texts from HandheldSystem. Not built: thunder.
 /// </summary>
 [RequireComponent(typeof(DayDirector))]
 public sealed class PulseSystem : MonoBehaviour
@@ -42,12 +42,14 @@ public sealed class PulseSystem : MonoBehaviour
         TaskEngine.TaskCompleted += OnTaskDone;
         BreakableOpening.HitLanded += OnHit;
         DayDirector.PhaseChanged += OnPhase;
+        HandheldSystem.MessageReceived += OnText;
     }
     void OnDisable()
     {
         TaskEngine.TaskCompleted -= OnTaskDone;
         BreakableOpening.HitLanded -= OnHit;
         DayDirector.PhaseChanged -= OnPhase;
+        HandheldSystem.MessageReceived -= OnText;
     }
 
     public void Bind(MapExplorer explorer)
@@ -67,6 +69,7 @@ public sealed class PulseSystem : MonoBehaviour
     void Add(float bpm) { if (Active) session.pulse = Mathf.Clamp(session.pulse + bpm, 60, director.Today.pulseCeiling); }
 
     void OnTaskDone(TaskState task) => Add(-settings.taskDoneDrop);
+    void OnText(PhoneMessage message) { var phone = GetComponent<HandheldSystem>(); Add(-(phone ? phone.PulseDropPerText : 3)); }
 
     void OnHit(BreakableOpening opening, OpeningState result)
     {

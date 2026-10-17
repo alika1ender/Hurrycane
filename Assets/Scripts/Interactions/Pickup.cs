@@ -68,6 +68,7 @@ public sealed class Pickup : MonoBehaviour, IInteractable
         if (name.Contains("Tape")) return ItemKind.RepairTape;
         if (name.Contains("Towel")) return ItemKind.Towel;
         if (name.Contains("Plank")) return ItemKind.PlankSet;
+        if (name.Contains("Handbook")) return ItemKind.Handbook;
         return null;
     }
 
@@ -78,6 +79,7 @@ public sealed class Pickup : MonoBehaviour, IInteractable
             case ItemKind.FirstAid: return "First aid kit";
             case ItemKind.RepairTape: return "Repair tape";
             case ItemKind.PlankSet: return "Planks";
+            case ItemKind.Handbook: return "Handbook";
             default: return kind.ToString();
         }
     }

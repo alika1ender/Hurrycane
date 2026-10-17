@@ -29,6 +29,23 @@ public static class GameplaySetup
         ("Basement_UtilityTank", Switchable.Utilities, "Shut the utility valve", "Utility valve shut", 3f, new[] { "COL_Basement_UtilityTank" }),
     };
 
+    /// <summary>Loose items from Resources/HurrycaneData/loose.json (Docs/Design/03, 04).</summary>
+    static void AddLooseItems(System.Collections.Generic.Dictionary<string, Transform> byName)
+    {
+        var config = LooseConfig.Load();
+        foreach (var definition in config.items)
+        {
+            if (!byName.TryGetValue(definition.@object, out var target)) { Debug.LogWarning("GameplaySetup: loose item missing " + definition.@object); continue; }
+            if (target.GetComponent<LooseItem>()) continue;
+            Transform proxy = null;
+            if (!string.IsNullOrEmpty(definition.proxy)) byName.TryGetValue(definition.proxy, out proxy);
+            var item = target.gameObject.AddComponent<LooseItem>();
+            item.Configure(definition, config, proxy);
+            if (proxy) { if (!proxy.GetComponent<InteractionProxy>()) proxy.gameObject.AddComponent<InteractionProxy>().Configure(item); }
+            else FitCollider(target);
+        }
+    }
+
     static void AddSwitches(System.Collections.Generic.Dictionary<string, Transform> byName)
     {
         foreach (var s in Switches)
@@ -78,6 +95,7 @@ public static class GameplaySetup
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
         if (stash && stashProxy && !stashProxy.GetComponent<InteractionProxy>()) stashProxy.gameObject.AddComponent<InteractionProxy>().Configure(stash);
         AddSwitches(byName);
+        AddLooseItems(byName);
         var stack = Object.FindAnyObjectByType<PlankStack>();
         if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);
         if (!explorer.GetComponent<PauseMenu>()) explorer.gameObject.AddComponent<PauseMenu>();
@@ -104,6 +122,7 @@ public static class GameplaySetup
             var director = host.GetComponent<DayDirector>();
             host.AddComponent<FloodSystem>().Bind(explorer, StairBarrier.Create(explorer, director.Config.flood));
             host.AddComponent<PuddleSystem>().Bind(explorer, DoorGap.Create(explorer, director.Config.doorGap));
+            host.AddComponent<HandheldSystem>().Bind(explorer);
             newSession.Begin(explorer, config.startDay);
         }
     }

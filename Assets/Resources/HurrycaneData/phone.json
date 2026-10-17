@@ -1,0 +1,15 @@
+{
+    "_about": "Phone battery and one-way Broski texts (Docs/Design/07). Triggers: dayStart, boarded (first opening boarded that day), night, flood. Texts are lost if the phone is dead.",
+    "drainPerSecond": 0.1,
+    "openDrainPerSecond": 1.0,
+    "pulseDropPerText": 3,
+    "messages": [
+        { "day": 1, "trigger": "dayStart", "text": "Cane did you see the news, quickly get prepared." },
+        { "day": 1, "trigger": "boarded",  "text": "nice. do the door too, doors go first" },
+        { "day": 1, "trigger": "night",    "text": "u good? that was just the outer bands bro" },
+        { "day": 2, "trigger": "dayStart", "text": "power's out on my street too. use the handbook" },
+        { "day": 2, "trigger": "night",    "text": "landfall was crazy. stay in the basement tmrw" },
+        { "day": 3, "trigger": "dayStart", "text": "back half is the worst part. don't go near windows" },
+        { "day": 3, "trigger": "flood",    "text": "bro is ur basement flooding?? block the stairs" }
+    ]
+}
