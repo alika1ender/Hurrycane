@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// The basement shelter corner (Docs/Design/04). Hold E with water, food or the blanket in your arms to store them here.
+/// The master bedroom shelter supply drop. Hold E with water, food or the blanket in your arms to store them here.
 /// Stored items are laid out on top of the stash and can be taken back.
 /// </summary>
 [DisallowMultipleComponent]

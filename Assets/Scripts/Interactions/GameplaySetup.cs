@@ -124,6 +124,7 @@ public static class GameplaySetup
             host.AddComponent<PuddleSystem>().Bind(explorer, DoorGap.Create(explorer, director.Config.doorGap));
             host.AddComponent<HandheldSystem>().Bind(explorer);
             host.AddComponent<CutsceneSystem>().Bind(explorer);
+            host.AddComponent<WindowWeather>();
             newSession.Begin(explorer, config.startDay);
         }
     }

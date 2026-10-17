@@ -119,6 +119,7 @@ public static class HouseState
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
                 if (!transforms.ContainsKey(t.name)) transforms[t.name] = t;
 
+        int relocatedPlanks = 0;
         foreach (var record in snapshot.pickups)
         {
             Pickup item;
@@ -137,6 +138,22 @@ public static class HouseState
                     item.transform.localPosition = record.localPosition;
                     item.transform.localRotation = record.localRotation;
                     item.gameObject.SetActive(true);
+                    // Older saves staged these supplies upstairs at the basement entrance.
+                    // Move only that old staging area; preserve carried and deliberately stored items.
+                    if ((item.Kind == ItemKind.PlankSet || item.name == "PICKUP_Basement_Toolkit_02")
+                        && transforms.TryGetValue("MARKER_BasementEntry", out var stairEntry)
+                        && item.transform.position.y > -1f
+                        && Vector2.Distance(new Vector2(item.transform.position.x, item.transform.position.z),
+                            new Vector2(stairEntry.position.x, stairEntry.position.z)) < 4f
+                        && transforms.TryGetValue("Basement_Workbench_Visual", out var bench))
+                    {
+                        var top = bench.GetComponent<Renderer>().bounds;
+                        var stackTop = UnityEngine.Object.FindAnyObjectByType<PlankStack>();
+                        float height = stackTop ? stackTop.GetComponent<Renderer>().bounds.max.y : top.max.y;
+                        item.PlaceAt(item.Kind == ItemKind.PlankSet
+                            ? new Vector3(top.min.x + .65f, height + .01f + relocatedPlanks++ * .055f, top.center.z)
+                            : new Vector3(top.max.x - .55f, top.max.y + .002f, top.center.z), null, false);
+                    }
                     break;
             }
         }

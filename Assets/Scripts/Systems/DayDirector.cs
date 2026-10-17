@@ -52,7 +52,7 @@ public sealed class DayDirector : MonoBehaviour
     }
     public void Bind(MapExplorer explorer) => player = explorer;
 
-    // A fresh Day 1 (not a restore) stages the toolkit and 4 plank sets at the top of the basement stairs (Docs/Design/04).
+    // A fresh Day 1 keeps tools and planks in the basement work area.
     // Later mornings: Cane wakes by the master bed (Docs/Design/01), before the autosave.
     void OnDayStarting(int day)
     {
@@ -280,17 +280,7 @@ public sealed class DayDirector : MonoBehaviour
 
     void StageDay1()
     {
-        var all = FindObjectsByType<Transform>(FindObjectsInactive.Include);
-        var marker = all.FirstOrDefault(t => t.name == "MARKER_BasementEntry");
-        if (!marker) { Debug.LogWarning("Day 1 staging: MARKER_BasementEntry not found"); return; }
-        Vector3 spot = FlatFloorNear(marker.position);
-        var toolkit = FindObjectsByType<Pickup>(FindObjectsInactive.Include).FirstOrDefault(p => p.name == "PICKUP_Basement_Toolkit_02");
-        if (toolkit) toolkit.PlaceAt(spot + Vector3.up, null, true);
-        for (int i = 0; i < 4; i++) PlankStack.CreatePlankSet().PlaceAt(spot + new Vector3(.45f, 1 + i * .1f, 0), null, true);
-        var stack = FindAnyObjectByType<PlankStack>();
-        if (stack) stack.SetRemaining(stack.Remaining - 4);
         GeneratedProps.StageTowels();
-        GeneratedProps.StageHandbook();
     }
 
     /// <summary>A spot near the marker where a 1.2 x 0.6 m patch is level with it (not over the stairwell).</summary>
