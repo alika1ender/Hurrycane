@@ -1,0 +1,59 @@
+HURRYCANE - CREDITS
+===================
+
+Sound effects and music
+-----------------------
+Almost all sounds come from Freesound (https://freesound.org). Sounds marked CC0 are public domain
+(https://creativecommons.org/publicdomain/zero/1.0/). Edited for this game (cut, looped, filtered, level-balanced).
+
+STORM AND THUNDER (credit required, CC BY 4.0, https://creativecommons.org/licenses/by/4.0/):
+  "large-storm-merged" by al-wa7sh (CC0), which mixes three recordings licensed CC BY 4.0:
+    "Storm200408" by csengeri       https://freesound.org/s/27247/
+    "rbh rain 03" by RHumphries     https://freesound.org/s/2521/
+    "wind" by WaveAdventurer        https://freesound.org/s/87472/
+  Edited for this game.
+
+CC0 sounds (credit optional, given with thanks):
+  TRP - "200829 Sirens, distant, ambulence, police, urban echoes roof, stops 9am" (freesound.org/people/TRP/sounds/568814)
+  KnowsMoreSounds - "Garland, TX, United States ACA Hurricane 130 in Alert Mode" (525183)
+  PearceWilsonKing - "Phone Notification" (413691)
+  Takimeko - "Radio Static" (684896)
+  Kneeling - "break-window.mp3" (448004)
+  Saladsounds - "Wooden Door breaks" (723974)
+  LiezelDippenaar - "Hammer hitting nail.wav" (707525)
+  SamuelGremaud - "STAIRS (SLOWLY)" (524807)
+  Cloud-10 - "Heartbeat 97 BPM" (688735)
+  egomassive - "Breath.ogg" (536729) and "Wind.ogg" (536776)
+  burning-mir - "Action music loop with dark ambient drones" (155139)
+  Rudmer_Rotteveel - "Wooden_Drawer_open_close_1 (of 2)" (364106)
+  quetum - "flashlightClick" (770346)
+  adharca - "duct tape.ogg" (275522)
+  jedg - "Footsteps indoors wood floor.wav" (505832)
+  SecureSubset - "Footsteps - Stone, Rock, Concrete, Cement" (813622)
+  lartti - "big cabinet doors open and close.wav" (511934)
+  timmyg62 - "College Football Game.wav" (328623)
+  mr101986 - "Wind.wav" (94715)
+  DrNI - "fetap-pickup.wav" (164034)
+  Ultra-Edward - "Opening and Closing a Book" (793604)
+  agaisgsbs - "wooden impact" (803551)
+  husky70 - "Yawning Man.mp3" (157303)
+  dominictreis - "News Jingle.wav" (665251)
+  SignatureSoundsOrg - "Rain_Hitting_Window_9" (869851)
+  Vrymaa - "Water - Shallow, splash" (770033)
+  dynamique - "Indistinct deep male mumble" (536967)
+  (links: https://freesound.org/people/<author>/sounds/<number>/)
+
+Made for this game: phone vibration and faint thump (synthesised). The TV news anchor is an unintelligible
+mumble made from a Windows speech voice.
+
+3D models and textures
+----------------------
+All CC0: Animimo Studios (Modern TV), KayKit by Kay Lousberg (Furniture Bits), Kenney (Food Kit),
+Quaternius (Ultimate House Interior, Survival), ambientCG and Poly Haven (textures).
+Details and licence texts: Assets/Art/HouseInterior/Licenses
+
+Font
+----
+Barlow Condensed (SIL Open Font License 1.1), licence file next to the font in Assets/Resources/HurrycaneUI/Fonts.
+
+Full audio record with links and licences: Docs/Audio/CREDITS.md
