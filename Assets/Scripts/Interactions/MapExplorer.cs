@@ -53,7 +53,7 @@ public sealed class MapExplorer : MonoBehaviour
         if (keyboard == null) return;
         if (keyboard.escapeKey.wasPressedThisFrame)
         { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; }
-        if (mouse != null && mouse.leftButton.wasPressedThisFrame && Cursor.lockState != CursorLockMode.Locked)
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame && Cursor.lockState != CursorLockMode.Locked && !PauseMenu.Active)
         { Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false; }
         if (Cursor.lockState != CursorLockMode.Locked) { focus = null; ReleaseHold(); return; }
         if (mouse != null)

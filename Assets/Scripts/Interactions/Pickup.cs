@@ -10,6 +10,8 @@ public sealed class Pickup : MonoBehaviour, IInteractable
     /// <summary>Uses left on a multi-use item (repair tape roll). 0 for ordinary items.</summary>
     public int UsesLeft { get => usesLeft; set => usesLeft = Mathf.Max(0, value); }
     [SerializeField] int usesLeft;
+    /// <summary>Created at runtime (plank sets from the stack), not part of the scene. Snapshots recreate these.</summary>
+    public bool Generated { get; set; }
     /// <summary>Set while the item sits in the basement shelter stash.</summary>
     public ShelterStash Stash { get; set; }
 

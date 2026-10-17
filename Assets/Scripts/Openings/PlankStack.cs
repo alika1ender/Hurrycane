@@ -36,20 +36,24 @@ public sealed class PlankStack : MonoBehaviour, IInteractable
     public void Use(MapExplorer user)
     {
         int take = Mathf.Min(remaining, PlayerInventory.Capacity(CarryGroup.Planks) - user.Inventory.Armful.Count);
-        for (int i = 0; i < take; i++) user.Inventory.Take(MakePlankSet());
+        for (int i = 0; i < take; i++) user.Inventory.Take(CreatePlankSet());
         remaining -= take;
         Refresh();
     }
 
+    /// <summary>Sets how many sets are left (snapshot restore).</summary>
+    public void SetRemaining(int sets) { remaining = Mathf.Max(0, sets); Refresh(); }
+
     /// <summary>A single plank set as a normal pickup, so it can be dropped and picked up again like any item.</summary>
-    Pickup MakePlankSet()
+    public static Pickup CreatePlankSet()
     {
         var plank = GameObject.CreatePrimitive(PrimitiveType.Cube);
         plank.name = "PICKUP_PlankSet";
-        plank.transform.localScale = new Vector3(.9f, .05f, .22f);
+        plank.transform.localScale = new Vector3(.9f, .05f, .3f);
         plank.GetComponent<Renderer>().sharedMaterial = Material();
         var pickup = plank.AddComponent<Pickup>();
         pickup.Configure(ItemKind.PlankSet);
+        pickup.Generated = true;
         return pickup;
     }
 

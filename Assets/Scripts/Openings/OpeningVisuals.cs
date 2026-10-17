@@ -36,12 +36,12 @@ public sealed class OpeningVisuals
         if (isDoor)
         {
             float angle = Mathf.Atan2(height, width) * Mathf.Rad2Deg, length = Mathf.Sqrt(width * width + height * height) * .95f;
-            Bar(boards, boardMat, new Vector3(0, 0, .14f), new Vector3(length, .16f, .04f), angle);
-            Bar(boards, boardMat, new Vector3(0, 0, .16f), new Vector3(length, .16f, .04f), -angle);
+            Bar(boards, boardMat, new Vector3(0, 0, .14f), new Vector3(length, .24f, .04f), angle);
+            Bar(boards, boardMat, new Vector3(0, 0, .16f), new Vector3(length, .24f, .04f), -angle);
         }
         else
             foreach (float y in new[] { -.33f, 0, .33f })
-                Bar(boards, boardMat, new Vector3(0, y * height, .34f), new Vector3(width + .24f, .15f, .03f), 0);
+                Bar(boards, boardMat, new Vector3(0, y * height, .34f), new Vector3(width + .24f, .23f, .03f), 0);
 
         float diagonal = Mathf.Atan2(height, width) * Mathf.Rad2Deg, span = Mathf.Sqrt(width * width + height * height) * .8f;
         cracks = new GameObject("Cracks"); cracks.transform.SetParent(root, false);

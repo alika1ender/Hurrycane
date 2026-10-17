@@ -94,6 +94,13 @@ public sealed class PlayerInventory : MonoBehaviour
         Changed?.Invoke();
     }
 
+    /// <summary>Empties pockets and arms without putting anything back in the world (snapshot restore).</summary>
+    public void Clear()
+    {
+        pockets.Clear(); armful.Clear();
+        Changed?.Invoke();
+    }
+
     /// <summary>Hands over everything in the arms (still inactive) and empties them.</summary>
     public List<Pickup> TakeArmful()
     {

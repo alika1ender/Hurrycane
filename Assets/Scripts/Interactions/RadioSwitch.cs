@@ -4,7 +4,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public sealed class RadioSwitch : MonoBehaviour, IInteractable
 {
-    public bool IsOn { get; private set; }
+    public bool IsOn { get; set; }
 
     public string Prompt => IsOn ? "Turn off radio" : "Turn on radio";
     public float HoldSeconds => 0;

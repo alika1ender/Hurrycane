@@ -7,12 +7,19 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class GameplaySetup
 {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void OnSceneLoaded() => Setup(SceneManager.GetActiveScene());
+    // sceneLoaded (not AfterSceneLoad) so it also runs when a restart reloads the house.
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void Register()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    static void OnSceneLoaded(Scene scene, LoadSceneMode mode) => Setup(scene);
 
     public static void Setup(Scene scene)
     {
-        var explorer = Object.FindAnyObjectByType<MapExplorer>();
+        MapExplorer explorer = null;
+        foreach (var root in scene.GetRootGameObjects()) if (!explorer) explorer = root.GetComponentInChildren<MapExplorer>(true);
         if (!explorer) return;
         if (!explorer.GetComponent<PlayerInventory>()) explorer.gameObject.AddComponent<PlayerInventory>();
         var config = OpeningsConfig.Load();
@@ -28,7 +35,6 @@ public static class GameplaySetup
                 {
                     var breakable = t.gameObject.AddComponent<BreakableOpening>();
                     breakable.Configure(opening, config);
-                    breakable.SetInPlay(opening.firstDay <= config.startDay);
                 }
                 if (t.name == "Basement_ShelterStash") stash = t.GetComponent<ShelterStash>() ? t.GetComponent<ShelterStash>() : t.gameObject.AddComponent<ShelterStash>();
                 if (!t.name.StartsWith("PICKUP_") || t.name.EndsWith("_Visual")) continue;
@@ -40,7 +46,17 @@ public static class GameplaySetup
             }
         // The invisible collision proxy sits in front of the stash mesh and is what the E ray hits.
         if (stash && stashProxy && !stashProxy.GetComponent<InteractionProxy>()) stashProxy.gameObject.AddComponent<InteractionProxy>().Configure(stash);
-        if (workbench && !Object.FindAnyObjectByType<PlankStack>()) AddPlankStack(workbench, config.plankSetsInStack);
+        var stack = Object.FindAnyObjectByType<PlankStack>();
+        if (workbench && (!stack || stack.gameObject.scene != scene)) AddPlankStack(workbench, config.plankSetsInStack);
+        if (!explorer.GetComponent<PauseMenu>()) explorer.gameObject.AddComponent<PauseMenu>();
+        // Last: the session starts the day (or restores a restart) once everything above exists.
+        var session = Object.FindAnyObjectByType<GameSession>();
+        if (!session || session.gameObject.scene != scene)
+        {
+            var host = new GameObject("GameSession");
+            SceneManager.MoveGameObjectToScene(host, scene);
+            host.AddComponent<GameSession>().Begin(explorer, config.startDay);
+        }
     }
 
     /// <summary>Placeholder plank stack on the left end of the basement workbench top.</summary>
@@ -48,6 +64,7 @@ public static class GameplaySetup
     {
         var top = workbench.GetComponent<Renderer>().bounds;
         var stack = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        SceneManager.MoveGameObjectToScene(stack, workbench.gameObject.scene);
         stack.name = "PlankStack";
         stack.GetComponent<Renderer>().sharedMaterial = PlankStack.Material();
         // Scale only on y as planks are taken, so pivot at the bottom by placing the centre half a height up.

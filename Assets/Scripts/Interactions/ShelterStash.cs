@@ -25,13 +25,23 @@ public sealed class ShelterStash : MonoBehaviour, IInteractable
 
     public void Use(MapExplorer user)
     {
+        foreach (var item in user.Inventory.TakeArmful()) Store(item);
+    }
+
+    /// <summary>Puts one item on the next free spot of the stash.</summary>
+    public void Store(Pickup item)
+    {
         stored.RemoveAll(p => !p || p.Stash != this);
-        foreach (var item in user.Inventory.TakeArmful())
-        {
-            item.PlaceAt(Slot(stored.Count), transform, false);
-            item.Stash = this;
-            stored.Add(item);
-        }
+        item.PlaceAt(Slot(stored.Count), transform, false);
+        item.Stash = this;
+        stored.Add(item);
+    }
+
+    /// <summary>Forgets what is stored (used before restoring a snapshot, which places items again).</summary>
+    public void ClearStored()
+    {
+        foreach (var item in stored) if (item && item.Stash == this) item.Stash = null;
+        stored.Clear();
     }
 
     /// <summary>Grid positions across the top of the stash, filled row by row.</summary>

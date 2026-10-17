@@ -12,6 +12,8 @@
 - **Day 3, health reaches 0:** game over. Menu offers restart from Day 1, Day 2 or Day 3.
 
 ## Saves
+**Implemented 2026-10-17** (`Assets/Scripts/Systems/`): `HouseState` snapshot, `SaveSystem` (`persistentDataPath/saves/day{N}.json`), `GameSession` (current day, `StartDay`, `RestartFromDay`) and an Esc pause menu with a Restart card per saved day (`Assets/Scripts/UI/PauseMenu.cs`, placeholder IMGUI). A snapshot stores: every opening state, where every pickup is (world spot and parent, pockets, arms, stash; tape uses; generated plank sets), the plank stack count, the radio, health/pulse/battery, and the player position. Entering the scene counts as a new game (it deletes old saves) until the main menu exists. Health, pulse and battery are plain numbers on `GameSession` until their systems are built.
+
 - **Autosave** at the start of each day. Restart menu shows each snapshot as a card (day, health, reinforced windows, supplies). Restarting from an earlier day deletes later snapshots.
 
 ## Decisions (proposed 2026-10-17, change freely)

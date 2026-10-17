@@ -14,6 +14,11 @@ Template:
 
 ---
 
+## 2026-10-17 08:00 · Claude (for Ali)
+**Worked on:** build step 3, saves and restart (`Assets/Scripts/Systems/`, `Assets/Scripts/UI/PauseMenu.cs`), plus wider placeholder planks. Updated 06 and 09.
+**Done:** `GameSession` starts Day 1 and autosaves. Esc opens a pause menu with a Restart card per saved day (day, health, boarded count, water, food). Restarting reloads the scene and restores openings, every item's place (world, pockets, arms, stash), tape uses, the plank stack, the radio, health and the player position. Later days' saves are deleted. Tested in Play mode: Day 1 to Day 2 autosave, a restart from Day 2 restored that exact state, a restart from Day 1 reset everything, and the door/drawer test passes 31/31.**Next:** steps 5-6, the task engine (`TaskDefinition` data from 04, listening to `MapExplorer.Used`, `BreakableOpening.StateChanged` and inventory/stash changes), the phase timer calling `GameSession.StartDay` each morning, the HUD timer, and break rolls with `Strike()` during Disaster Time.
+**Blocked / questions:** still open from 03: should repairing a cracked *boarded* window keep the boards (back to reinforced) instead of becoming "repaired"? The code currently follows the doc as written.
+
 ## 2026-10-17 07:40 · Claude (for Ali)
 **Worked on:** build step 4, breakable windows and door (`Assets/Scripts/Openings/`, `Resources/HurrycaneData/openings.json`), plus 03, 09 and 10.
 **Done:** all 15 openings have the six states. Board up / brace (toolkit plus a plank set from the new workbench stack), repair (toolkit plus tape; 4 uses per roll, the door takes 2), upgrade repaired to boarded, storm `Hit()` following the 03 table, and `Strike()` with a 3 s shake warning. Day 1 openings (W01-W03 and the door) are in play; the others show no prompt. Placeholder visuals were checked in screenshots (`WalkthroughPreviews/step4/`, not committed).
