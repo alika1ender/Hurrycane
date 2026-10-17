@@ -33,6 +33,13 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
     /// <summary>Counts as intact for the score (cracked still keeps the weather out).</summary>
     public bool Intact => state != OpeningState.Broken;
     public bool Striking { get; private set; }
+    /// <summary>World centre of the opening. Use this, not transform.position (COL_* proxies are pivoted elsewhere).</summary>
+    public Vector3 Center => GetComponent<Collider>().bounds.center;
+    /// <summary>
+    /// Distance from a point to the opening's box. (Collider.ClosestPoint can't be used: the proxies are non-convex
+    /// mesh colliders, for which it just returns the input point.)
+    /// </summary>
+    public float DistanceTo(Vector3 point) => Vector3.Distance(GetComponent<Collider>().bounds.ClosestPoint(point), point);
 
     public void Configure(OpeningDefinition definition, OpeningsConfig settings)
     {

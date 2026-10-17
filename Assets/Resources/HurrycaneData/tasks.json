@@ -1,5 +1,5 @@
 {
-    "_conditions": "alert | radio | carry:Kind[:n] | stash:Kind[:n] | supplies:Kind[:n] (carry+stash) | secured:W01,W02 (boarded or cracked behind boards) | fixed:W01 | damaged:W01 | anyDamaged | noneDamaged ; join with & ; phases letters P D A",
+    "_conditions": "alert | radio | carry:Kind[:n] | stash:Kind[:n] | supplies:Kind[:n] (carry+stash) | secured:W01,W02 (boarded or cracked behind boards) | fixed:W01 | damaged:W01 | anyDamaged | noneDamaged | stairsBlocked | flooding | floodStopped ; join with & ; phases letters P D A",
     "tasks": [
         { "id": "d1_alert",      "day": 1, "text": "Read the government alert",               "hint": "Phone",                                   "phases": "PDA", "seconds": 0,  "required": true,  "condition": "alert" },
         { "id": "d1_radio",      "day": 1, "text": "Turn on the radio",                       "hint": "It's on the ground floor",                "phases": "PDA", "seconds": 5,  "required": true,  "condition": "radio" },
@@ -31,6 +31,8 @@
         { "id": "d3_board",      "day": 3, "text": "Board up the last six windows",           "hint": "Study, bathroom, landing, stair hall",    "phases": "PD",  "seconds": 72, "required": true,  "condition": "secured:W09,W10,W11,W12,W13,W14" },
         { "id": "d3_door",       "day": 3, "text": "Re-brace the front door",                 "hint": "Entry hall",                              "phases": "PD",  "seconds": 10, "required": false, "condition": "secured:Door" },
         { "id": "d3_gobag",      "day": 3, "text": "Pack the go-bag",                         "hint": "Backpack, water, food, first aid",        "phases": "PDA", "seconds": 20, "required": false, "condition": "carry:Backpack&carry:Water&carry:Food&carry:FirstAid" },
+        { "id": "d3_stairs",     "day": 3, "text": "Block the basement stairs with towels",  "hint": "2 towels: bathroom vanity or by the shelter", "phases": "P", "seconds": 20, "required": false, "condition": "stairsBlocked" },
+        { "id": "d3_flood",      "day": 3, "text": "Water is coming down! Block the stairs", "hint": "Hold E at the top of the basement stairs with 2 towels", "phases": "DA", "seconds": 38, "required": true, "condition": "floodStopped", "appearsWhen": "flooding" },
         { "id": "d3_repair",     "day": 3, "text": "Repair the damage",                       "hint": "Toolkit + repair tape",                   "phases": "PDA", "seconds": 108, "required": true, "condition": "noneDamaged", "appearsWhen": "anyDamaged" }
     ]
 }

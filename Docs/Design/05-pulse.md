@@ -28,7 +28,8 @@ Pulse drifts back to the current resting level at about 3 BPM per second. No tie
 `Assets/Scripts/Systems/PulseSystem.cs`; numbers are in `days.json` (`pulse` block, plus `resting*`, `pulseCeiling`, `*BreakSpike`, `pulseVisuals`, `pulsePenalties` and `sprintRaisesPulse` per day).
 - **Built:** drift to the resting level, the window-break spike within 4 m (half for a crack), the front-door break spike, the last 10 s rise, the unfinished-task rise at a phase flip, the Day 3 sprint rise, the task-done drop, the basement safe-room drop, and breathing on Q (4 s wind-up, then -8/s for up to 4 s, 20 s cooldown, no walking). Panic/Peak make holds +15%/+30% slower on Day 3. Vignette from Tense up, desaturation at Peak and camera shake at Panic/Peak, from Day 2.
 - **HUD:** a beating dot at the real BPM, the number and the zone word (07).
-- **Not built yet:** darkness, thunder, the flashlight and Broski-text effects (no lighting, thunder or text system exists yet).
+- **Darkness (built):** during the blackout the resting level is +10 with the flashlight off and +6 with it on (so the flashlight is -4).
+- **Not built yet:** thunder and Broski-text effects (no thunder or text system exists yet).
 - **Untested by hand:** Q breathing and H first aid were checked only for logic, not with a real keyboard.
 
 ## Decisions (proposed 2026-10-17, change freely)

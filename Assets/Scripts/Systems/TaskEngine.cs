@@ -26,7 +26,7 @@ public sealed class TaskState
 /// Today's task list from Resources/HurrycaneData/tasks.json (Docs/Design/04). Each task has a condition checked against
 /// the live house every frame; once true the task is done for good. A task past its last allowed phase is locked ("Too late").
 /// Condition words: alert, radio, carry:Kind[:n], stash:Kind[:n], supplies:Kind[:n], secured:IDs, fixed:ID, damaged:ID,
-/// anyDamaged, noneDamaged, joined with &amp;.
+/// anyDamaged, noneDamaged, stairsBlocked, flooding, floodStopped, joined with &amp;.
 /// </summary>
 [RequireComponent(typeof(DayDirector))]
 public sealed class TaskEngine : MonoBehaviour
@@ -41,6 +41,8 @@ public sealed class TaskEngine : MonoBehaviour
     Dictionary<string, BreakableOpening> openings = new Dictionary<string, BreakableOpening>();
     ShelterStash stash;
     RadioSwitch radio;
+    StairBarrier barrier;
+    FloodSystem flood;
 
     public IReadOnlyList<TaskState> Today => today;
     /// <summary>The first open task in list order: what the Day 1 phone shows.</summary>
@@ -64,6 +66,8 @@ public sealed class TaskEngine : MonoBehaviour
         openings = FindObjectsByType<BreakableOpening>(FindObjectsInactive.Include).ToDictionary(o => o.Id);
         stash = FindAnyObjectByType<ShelterStash>();
         radio = FindAnyObjectByType<RadioSwitch>();
+        barrier = FindAnyObjectByType<StairBarrier>();
+        flood = GetComponent<FloodSystem>();
         Evaluate();
     }
 
@@ -115,6 +119,8 @@ public sealed class TaskEngine : MonoBehaviour
             case "secured": return Ids(parts).All(o => o.State == OpeningState.Reinforced || o.State == OpeningState.Cracked);
             case "fixed": return Ids(parts).All(o => !Damaged(o));
             case "damaged": return Ids(parts).Any(Damaged);
+            case "stairsBlocked": case "floodStopped": return barrier && barrier.Blocked;
+            case "flooding": return flood && flood.Flooding;
             case "anyDamaged": return openings.Values.Any(o => o.InPlay && Damaged(o));
             case "noneDamaged": return !openings.Values.Any(o => o.InPlay && Damaged(o));
             default: Debug.LogWarning("Unknown task condition: " + atom); return false;

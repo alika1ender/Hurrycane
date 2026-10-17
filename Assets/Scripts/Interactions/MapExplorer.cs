@@ -20,6 +20,8 @@ public sealed class MapExplorer : MonoBehaviour
     public float holdTimeMultiplier = 1;
     /// <summary>Extra hold-time factor from a racing pulse (Docs/Design/05: +15% / +30% on Day 3).</summary>
     public float pulseHoldFactor = 1;
+    /// <summary>Walking speed factor, e.g. 0.7 while wading through flood water.</summary>
+    public float speedFactor = 1;
     /// <summary>Set while breathing or fainted: look around only, no walking or using.</summary>
     public bool movementLocked;
     /// <summary>True on frames where the player actually sprints (pulse rises on Day 3).</summary>
@@ -79,7 +81,7 @@ public sealed class MapExplorer : MonoBehaviour
         if (controller.isGrounded && verticalSpeed < 0) verticalSpeed = -2;
         verticalSpeed += Physics.gravity.y * Time.deltaTime;
         Sprinting = keyboard.leftShiftKey.isPressed && !Inventory.Encumbered && axis.sqrMagnitude > .01f;
-        float speed = Sprinting ? 4.2f : 2.6f;
+        float speed = (Sprinting ? 4.2f : 2.6f) * speedFactor;
         controller.Move(((transform.right * axis.x + transform.forward * axis.y) * speed + Vector3.up * verticalSpeed) * Time.deltaTime);
         if (transform.position.y < -8) Respawn();
         if (movementLocked) { focus = null; ReleaseHold(); return; }

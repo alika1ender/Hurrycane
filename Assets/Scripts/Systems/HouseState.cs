@@ -9,7 +9,8 @@ public sealed class HouseSnapshot
 {
     public int day;
     public string savedAt;
-    public float health, pulse, phoneBattery;
+    public float health, pulse, phoneBattery, flashlightCharge = 100;
+    public bool stairsBlocked;
     public Vector3 playerPosition;
     public float playerYaw;
     public int plankStackRemaining;
@@ -32,6 +33,8 @@ public sealed class PickupRecord
 {
     public string name;
     public bool generated;
+    /// <summary>For generated items: which prop to recreate.</summary>
+    public ItemKind kind;
     public PickupPlace place;
     /// <summary>Name of the parent transform for World items ("" = scene root), e.g. a drawer.</summary>
     public string parent;
@@ -59,7 +62,7 @@ public static class HouseState
             var t = item.transform;
             pickups.Add(new PickupRecord
             {
-                name = item.name, generated = item.Generated, place = place, usesLeft = item.UsesLeft,
+                name = item.name, generated = item.Generated, kind = item.Kind, place = place, usesLeft = item.UsesLeft,
                 parent = t.parent ? t.parent.name : "", localPosition = t.localPosition, localRotation = t.localRotation,
             });
         }
@@ -70,7 +73,8 @@ public static class HouseState
         {
             day = session.CurrentDay,
             savedAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
-            health = session.health, pulse = session.pulse, phoneBattery = session.phoneBattery,
+            health = session.health, pulse = session.pulse, phoneBattery = session.phoneBattery, flashlightCharge = session.flashlightCharge,
+            stairsBlocked = UnityEngine.Object.FindAnyObjectByType<StairBarrier>() is StairBarrier barrier && barrier.Blocked,
             tasksDone = session.tasksDone, tasksRequired = session.tasksRequired, hits = session.hits,
             reinforcedIds = session.reinforcedIds.ToArray(),
             playerPosition = player.transform.position, playerYaw = player.transform.eulerAngles.y,
@@ -110,7 +114,8 @@ public static class HouseState
         foreach (var record in snapshot.pickups)
         {
             Pickup item;
-            if (record.generated) item = PlankStack.CreatePlankSet();
+            // Saves from before "kind" was recorded read as Water (0); those were always plank sets.
+            if (record.generated) { item = GeneratedProps.Create(record.kind == ItemKind.Water ? ItemKind.PlankSet : record.kind); if (!item) continue; }
             else if (!scenePickups.TryGetValue(record.name, out item)) { Debug.LogWarning("Snapshot pickup not in scene: " + record.name); continue; }
             item.UsesLeft = record.usesLeft;
             item.Stash = null;
@@ -137,7 +142,9 @@ public static class HouseState
         var radio = UnityEngine.Object.FindAnyObjectByType<RadioSwitch>();
         if (radio) radio.IsOn = snapshot.radioOn;
 
-        session.health = snapshot.health; session.pulse = snapshot.pulse; session.phoneBattery = snapshot.phoneBattery;
+        session.health = snapshot.health; session.pulse = snapshot.pulse; session.phoneBattery = snapshot.phoneBattery; session.flashlightCharge = snapshot.flashlightCharge;
+        var barrierNow = UnityEngine.Object.FindAnyObjectByType<StairBarrier>();
+        if (barrierNow) barrierNow.SetBlocked(snapshot.stairsBlocked);
         session.tasksDone = snapshot.tasksDone; session.tasksRequired = snapshot.tasksRequired; session.hits = snapshot.hits;
         session.reinforcedIds = new HashSet<string>(snapshot.reinforcedIds ?? new string[0]);
         var controller = player.GetComponent<CharacterController>();

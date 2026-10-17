@@ -164,8 +164,7 @@ public sealed class DayDirector : MonoBehaviour
     {
         if (result == OpeningState.Cracked || result == OpeningState.Broken) session.hits++;
         if (result != OpeningState.Broken || !player) return;
-        var closest = opening.GetComponent<Collider>().ClosestPoint(player.viewCamera.transform.position);
-        if (Vector3.Distance(closest, player.viewCamera.transform.position) > config.injuryRadius) return;
+        if (opening.DistanceTo(player.viewCamera.transform.position) > config.injuryRadius) return;
         session.health = Mathf.Max(0, session.health - (opening.IsDoor ? Today.doorDamage : Today.glassDamage));
     }
 
@@ -177,7 +176,8 @@ public sealed class DayDirector : MonoBehaviour
         var tasks = GetComponent<TaskEngine>();
         if (tasks)
         {
-            session.tasksRequired += tasks.Today.Count(t => t.definition.required);
+            // Reactive tasks that never appeared (no flood, nothing broke) don't count against the player.
+            session.tasksRequired += tasks.Today.Count(t => t.definition.required && t.appeared);
             session.tasksDone += tasks.Today.Count(t => t.definition.required && t.status == TaskStatus.Done);
         }
         if (session.CurrentDay >= 3)
@@ -265,6 +265,7 @@ public sealed class DayDirector : MonoBehaviour
         for (int i = 0; i < 4; i++) PlankStack.CreatePlankSet().PlaceAt(spot + new Vector3(.45f, 1 + i * .1f, 0), null, true);
         var stack = FindAnyObjectByType<PlankStack>();
         if (stack) stack.SetRemaining(stack.Remaining - 4);
+        GeneratedProps.StageTowels();
     }
 
     /// <summary>A spot near the marker where a 1.2 x 0.6 m patch is level with it (not over the stairwell).</summary>

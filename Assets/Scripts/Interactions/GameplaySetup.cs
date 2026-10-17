@@ -71,6 +71,9 @@ public static class GameplaySetup
             host.AddComponent<TaskEngine>().Bind(explorer);
             host.AddComponent<PulseSystem>().Bind(explorer);
             host.AddComponent<HealthSystem>().Bind(explorer);
+            host.AddComponent<PowerSystem>().Bind(explorer);
+            var director = host.GetComponent<DayDirector>();
+            host.AddComponent<FloodSystem>().Bind(explorer, StairBarrier.Create(explorer, director.Config.flood));
             newSession.Begin(explorer, config.startDay);
         }
     }

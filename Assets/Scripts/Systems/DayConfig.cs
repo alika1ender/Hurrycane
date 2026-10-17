@@ -10,6 +10,8 @@ public sealed class DaysConfig
     public float recoveryEnough = 50, recoverySome = 30, recoveryNone = 10;
     public PulseSettings pulse = new PulseSettings();
     public HealthSettings health = new HealthSettings();
+    public PowerSettings power = new PowerSettings();
+    public FloodSettings flood = new FloodSettings();
     public DayConfig[] days = new DayConfig[0];
 
     public DayConfig For(int day) => Array.Find(days, d => d.day == day) ?? (days.Length > 0 ? days[days.Length - 1] : new DayConfig());
@@ -35,6 +37,8 @@ public sealed class DayConfig
     // Pulse (Docs/Design/05) and health (06).
     public float restingPrep = 72, restingDisaster = 80, restingAfter = 72, pulseCeiling = 95, windowBreakSpike = 5, doorBreakSpike = 8;
     public bool pulseVisuals, pulsePenalties, sprintRaisesPulse, faintIsGameOver;
+    /// <summary>Blackout (Day 2 on) and basement flooding (Day 3), Docs/Design/01.</summary>
+    public bool powerOut, floods;
 
     public float Resting(DayPhase phase) => phase == DayPhase.Disaster ? restingDisaster : phase == DayPhase.AfterDisaster ? restingAfter : restingPrep;
 
@@ -61,6 +65,20 @@ public sealed class PulseSettings
     public float breathWindupSeconds = 4, breathMaxSeconds = 4, breathDropPerSecond = 8, breathCooldownSeconds = 20;
     public float lastSecondsRisePerSecond = 2, unfinishedTaskRise = 2, unfinishedTaskRiseMax = 12, sprintRisePerSecond = 6;
     public float panicTaskPenalty = .15f, peakTaskPenalty = .30f;
+}
+
+[Serializable]
+public sealed class PowerSettings
+{
+    public float ambientFactor = .3f, flashlightDrainPerSecond = .55f, darknessRestingRise = 10, flashlightRestingRise = 6;
+}
+
+[Serializable]
+public sealed class FloodSettings
+{
+    public float startSeconds = 40, earlierPerBreachSeconds = 10, riseSeconds = 90, maxDepth = .4f, harmfulDepth = .2f;
+    public float damagePerSecond = .5f, speedFactor = .7f, blockHoldSeconds = 4;
+    public int towelsToBlock = 2;
 }
 
 [Serializable]

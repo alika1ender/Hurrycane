@@ -32,6 +32,8 @@ Style: **emergency broadcast**. Dark translucent rounded panels and white **Barl
 - **Rings:** amber for E holds, green for first aid, blue for breathing (with a caption).
 - **Screens:** "YOU PASSED OUT", game over (restart cards + NEW GAME), and the final score (see 08).
 
+- **Blackout and flood:** an "F flashlight" hint when it's dark and the flashlight is off; the flashlight chip shows ON/%; a red "You're wading in flood water" hint; a "Water is pouring down the basement stairs!" toast; and the Preparation banner adds "The power is out." At most 3 toasts at a time, placed above the item chips.
+
 Still missing: the phone and handbook as in-hand props with Tab, the handbook floor plan, and more Broski texts.
 
 ## Decisions (proposed 2026-10-17, change freely)

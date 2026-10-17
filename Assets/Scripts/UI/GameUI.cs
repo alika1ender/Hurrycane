@@ -55,6 +55,7 @@ public sealed class GameUI : MonoBehaviour
         DayDirector.PhaseChanged += OnPhase;
         BreakableOpening.WarningStarted += OnWarning;
         BreakableOpening.HitLanded += OnHit;
+        FloodSystem.FloodStarted += OnFlood;
     }
     void OnDisable()
     {
@@ -62,7 +63,9 @@ public sealed class GameUI : MonoBehaviour
         DayDirector.PhaseChanged -= OnPhase;
         BreakableOpening.WarningStarted -= OnWarning;
         BreakableOpening.HitLanded -= OnHit;
+        FloodSystem.FloodStarted -= OnFlood;
     }
+    void OnFlood() => Toast("Water is pouring down the basement stairs!", UiKit.Red);
     void OnDestroy() => MapExplorer.DrawDebugHud = true;
 
     // ------------------------------------------------------------------ build
@@ -91,9 +94,9 @@ public sealed class GameUI : MonoBehaviour
         taskPanel = UiKit.Node("Tasks", hud).Place(new Vector2(1, 1), new Vector2(-28, -24), new Vector2(400, 0));
         var hint = UiKit.Label(hud, "Controls", UiKit.Medium, 20, new Color(1, 1, 1, .45f), TextAnchor.LowerRight);
         hint.rectTransform.Place(new Vector2(1, 0), new Vector2(-28, 22), new Vector2(600, 30));
-        hint.text = "E  use / hold      G  drop      Q  breathe      H  first aid      Esc  pause";
+        hint.text = "E  use / hold      G  drop      F  flashlight      Q  breathe      H  first aid      Esc  pause";
 
-        toastColumn = UiKit.Node("Toasts", transform).Place(new Vector2(.5f, .5f), new Vector2(0, -250), new Vector2(900, 0));
+        toastColumn = UiKit.Node("Toasts", transform).Place(new Vector2(.5f, .5f), new Vector2(0, -175), new Vector2(900, 0));
         toastColumn.pivot = new Vector2(.5f, 1);
         toastColumn.Layout<VerticalLayoutGroup>(0, 8, TextAnchor.UpperCenter).childForceExpandWidth = false;
 
@@ -306,7 +309,7 @@ public sealed class GameUI : MonoBehaviour
         pauseCards = UiKit.Node("Cards", panel.transform);
         pauseCards.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter);
         var help = UiKit.Label(panel.transform, "Help", UiKit.Medium, 22, UiKit.Dim, TextAnchor.MiddleCenter, true);
-        help.text = "WASD move  ·  Shift run  ·  E use (hold for some)  ·  G drop armful  ·  Q breathe  ·  H first aid";
+        help.text = "WASD move  ·  Shift run  ·  E use (hold for some)  ·  G drop armful  ·  F flashlight  ·  Q breathe  ·  H first aid";
         pauseOverlay.SetActive(false);
     }
 
@@ -428,6 +431,10 @@ public sealed class GameUI : MonoBehaviour
         var hints = new List<string>();
         if (zone != PulseZone.Calm && !pulse.Breathing)
             hints.Add(pulse.BreathCooldown > 0 ? "<color=#9AA0AA>Q  breathe in " + Mathf.CeilToInt(pulse.BreathCooldown) + "s</color>" : "Q  hold to breathe");
+        var power = session.GetComponent<PowerSystem>();
+        if (power && power.PowerOut && power.HasFlashlight && !power.FlashlightOn) hints.Add("F  flashlight");
+        var flood = session.GetComponent<FloodSystem>();
+        if (flood && flood.PlayerInWater) hints.Add("<color=#E5484D>You're wading in flood water</color>");
         if (health && health.CanUseFirstAid && session.health < 70)
             hints.Add("H  hold for first aid  <color=#9AA0AA>(" + explorer.Inventory.Uses(ItemKind.FirstAid) + ")</color>");
         vitalHints.text = string.Join("      ", hints);
@@ -467,12 +474,15 @@ public sealed class GameUI : MonoBehaviour
 
     void UpdateInventory()
     {
+        var power = GameSession.Instance ? GameSession.Instance.GetComponent<PowerSystem>() : null;
         var inventory = explorer.Inventory;
         var chips = new List<string>();
         foreach (var group in inventory.Pockets.GroupBy(p => p.Kind))
         {
             int uses = group.Sum(p => p.UsesLeft);
-            chips.Add(Pickup.DisplayName(group.Key) + (group.Count() > 1 ? "  ×" + group.Count() : "") + (uses > 0 ? "  <color=#9AA0AA>" + uses + " uses</color>" : ""));
+            string extra = uses > 0 ? "  <color=#9AA0AA>" + uses + " uses</color>" : "";
+            if (group.Key == ItemKind.Flashlight && power) extra = "  <color=" + (power.FlashlightOn ? "#F2A93B" : "#9AA0AA") + ">" + (power.FlashlightOn ? "ON " : "") + Mathf.CeilToInt(power.Charge) + "%</color>";
+            chips.Add(Pickup.DisplayName(group.Key) + (group.Count() > 1 ? "  ×" + group.Count() : "") + extra);
         }
         string arms = "";
         if (inventory.Armful.Count > 0)
@@ -592,19 +602,23 @@ public sealed class GameUI : MonoBehaviour
         else if (phase == DayPhase.Disaster) { title = "DISASTER TIME"; sub = "The storm hits. Everything takes longer."; }
         else if (phase == DayPhase.AfterDisaster) { title = "AFTER-DISASTER TIME"; sub = "Fix what's left before nightfall."; }
         if (title == null) return;
+        // Read today's data, not PowerSystem: this can run before PowerSystem has handled the new day.
+        var session = GameSession.Instance;
+        var director = session ? session.GetComponent<DayDirector>() : null;
+        if (phase == DayPhase.Preparation && director && director.Today.powerOut) sub += "  The power is out.";
         bannerTitle.text = title; bannerTitle.color = UiKit.PhaseColor(phase); bannerSub.text = sub;
         bannerUntil = Time.unscaledTime + 3.2f;
     }
 
     void OnWarning(BreakableOpening opening, float seconds)
     {
-        if (explorer && Vector3.Distance(opening.transform.position, explorer.transform.position) < 9)
+        if (explorer && opening.DistanceTo(explorer.viewCamera.transform.position) < 9)
             Toast((opening.IsDoor ? "The front door" : "A window") + " is creaking...", UiKit.Amber);
     }
 
     void OnHit(BreakableOpening opening, OpeningState result)
     {
-        if (!explorer || Vector3.Distance(opening.transform.position, explorer.transform.position) > 9) return;
+        if (!explorer || opening.DistanceTo(explorer.viewCamera.transform.position) > 9) return;
         Toast(result == OpeningState.Broken ? (opening.IsDoor ? "The front door gave way!" : "Glass shatters!") : "The boards held, but the glass cracked.", result == OpeningState.Broken ? UiKit.Red : UiKit.Amber);
     }
 
@@ -616,7 +630,7 @@ public sealed class GameUI : MonoBehaviour
         UiKit.Label(panel.transform, "Text", UiKit.SemiBold, 28, UiKit.TextColor).text = text;
         var group = panel.gameObject.AddComponent<CanvasGroup>();
         toasts.Add(new KeyValuePair<CanvasGroup, float>(group, Time.unscaledTime + 3.2f));
-        while (toasts.Count > 4) { Destroy(toasts[0].Key.gameObject); toasts.RemoveAt(0); }
+        while (toasts.Count > 3) { Destroy(toasts[0].Key.gameObject); toasts.RemoveAt(0); }
     }
 
     void UpdateToasts()

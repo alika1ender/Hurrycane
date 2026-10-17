@@ -16,7 +16,7 @@ public sealed class GameSession : MonoBehaviour
     /// <summary>Survives the scene reload that a restart does.</summary>
     static HouseSnapshot pendingRestore;
 
-    public float health = 100, pulse = 72, phoneBattery = 40;
+    public float health = 100, pulse = 72, phoneBattery = 40, flashlightCharge = 100;
     // Running totals for the final score (Docs/Design/08); saved in snapshots.
     public int tasksDone, tasksRequired, hits;
     [NonSerialized] public System.Collections.Generic.HashSet<string> reinforcedIds = new System.Collections.Generic.HashSet<string>();

@@ -41,7 +41,10 @@ Draft alert text: "EMERGENCY ALERT: Hurricane warning in effect for your area. L
 - Day 3: flooding comes down the basement stairs and threatens the safe room.
 
 ## Implemented (2026-10-17)
-`Assets/Scripts/Systems/DayDirector.cs`, tuning in `Resources/HurrycaneData/days.json`. The day runs: Day 1 alert (phone overlay; click or Space starts the clock), Preparation → Disaster → After-Disaster flipping on the clock only, then the night card (6 s) with overnight recovery, then the next day starts and autosaves. Day 3 ends on a placeholder "storm has passed" card (ending and score are not built yet). Esc pauses the clock. From Day 2 on, Cane wakes standing beside the master bed (before the autosave). Not built yet: the opening TV cutscene, Day 3 flooding, and the Preparation-only locks for unplug/utilities (those tasks don't exist yet).
+`Assets/Scripts/Systems/DayDirector.cs`, tuning in `Resources/HurrycaneData/days.json`. The day runs: Day 1 alert (phone overlay; click or Space starts the clock), Preparation → Disaster → After-Disaster flipping on the clock only, then the night card (6 s) with overnight recovery, then the next day starts and autosaves. Day 3 ends on a placeholder "storm has passed" card (ending and score are not built yet). Esc pauses the clock. From Day 2 on, Cane wakes standing beside the master bed (before the autosave).
+- **Blackout (built):** Days 2-3 (`powerOut` in `days.json`) switch off the 12 room lights and cut the ambient light to 30%. Grey daylight through the windows remains, and the windowless basement is dark. See `PowerSystem` and the flashlight in 04/05.
+- **Day 3 flooding (built, as designed below):** `FloodSystem` plus `StairBarrier` at the top of the basement stairs. The water is a murky placeholder plane that rises over the basement floor. Tested: an early start from a breach, the rise to 40 cm, 0.5/s damage and 70% speed while wading, and a stop when blocked.
+Not built yet: the opening TV cutscene, and the Preparation-only locks for unplug/utilities (those tasks don't exist yet).
 
 ## Decisions (proposed 2026-10-17, change freely)
 ### End of day and sleep

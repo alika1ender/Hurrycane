@@ -16,7 +16,9 @@
 - **First aid:** hold H for 1.5 s for +30. Each kit has 2 uses, shown on its inventory chip. A hint appears below 70 health.
 - **Faint (Days 1-2):** a "YOU PASSED OUT" fade for 5 s. The armful drops where Cane fell, he wakes by the master bed at 35 health with the pulse at resting, and the clock keeps running.
 - **Game over (Day 3):** at 0 health, or if Day 3 ends at 0, a red screen offers a Restart card per saved day plus NEW GAME. No score.
-- Score totals (tasks, hits, openings ever boarded) are saved in each snapshot, so restarts keep them right.
+- **Flood water (Day 3):** 0.5 health per second while wading at 20 cm or deeper.
+- **Injury distance:** measured to the window's box. A bug where every break hurt Cane wherever he was is fixed; see 09.
+- Score totals (tasks, hits, openings ever boarded) are saved in each snapshot, so restarts keep them right. Snapshots also keep the flashlight charge and whether the stairs are blocked.
 
 ## Saves
 **Implemented 2026-10-17** (`Assets/Scripts/Systems/`): `HouseState` snapshot, `SaveSystem` (`persistentDataPath/saves/day{N}.json`), `GameSession` (current day, `StartDay`, `RestartFromDay`) and an Esc pause menu with a Restart card per saved day (drawn by `GameUI`). A snapshot stores: every opening state, where every pickup is (world spot and parent, pockets, arms, stash; tape and first aid uses; generated plank sets), the plank stack count, the radio, health/pulse/battery, score totals, and the player position. Entering the scene counts as a new game (it deletes old saves) until the main menu exists. The phone battery is still a plain number (it doesn't drain yet).

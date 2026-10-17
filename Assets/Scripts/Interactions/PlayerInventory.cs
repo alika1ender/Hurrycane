@@ -66,6 +66,14 @@ public sealed class PlayerInventory : MonoBehaviour
         return true;
     }
 
+    /// <summary>Uses up a specific carried item (e.g. a battery pack put into the flashlight).</summary>
+    public void Remove(Pickup item)
+    {
+        if (!pockets.Remove(item) && !armful.Remove(item)) return;
+        Destroy(item.gameObject);
+        Changed?.Invoke();
+    }
+
     /// <summary>Uses up one carried item of this kind from the arms (e.g. a plank set nailed to a window).</summary>
     public bool ConsumeArmful(ItemKind kind)
     {

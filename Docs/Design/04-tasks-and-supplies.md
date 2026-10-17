@@ -43,7 +43,9 @@ There is no mop. With a towel in the armful, hold E on a puddle for 4 s to remov
 
 ## Task engine (implemented 2026-10-17)
 The tasks below live in `Assets/Resources/HurrycaneData/tasks.json`, and `TaskEngine` checks each task's `condition` against the live house every frame. Condition words are listed at the top of that file. A task is done for good once its condition is true. If it isn't done by the end of its last allowed phase, it shows "too late". Day 1 shows one task at a time on the phone panel; Days 2-3 show the handbook list.
-- **Turned off for now** (`"disabled": true`), because the thing they need doesn't exist yet: wiping water (puddles and towels), picking up the handbook, the door-gap towels, unplugging, utilities, and loose items.
+- **Towels (built, placeholder):** 6 pale-blue slabs, 4 on the bathroom vanity and 2 on the floor beside the basement shelter. They're carried in the arms (up to 4). Holding E at the top of the basement stairs with 2 towels blocks them (`StairBarrier`, 4 s hold). That enables `d3_stairs` (optional, Preparation only) and `d3_flood` (appears when water starts; required).
+- **Flashlight (built):** F toggles it while carried. It drains about 0.55%/s while on (about 3 minutes per pack); when empty it swaps in a battery pack from the pockets automatically. Its chip shows ON and the %.
+- **Still turned off** (`"disabled": true`): wiping water (needs puddles), picking up the handbook, the door-gap towels, unplugging, utilities, and loose items.
 - **Day 1 staging is built:** on a new game, the spare toolkit and 4 plank sets appear on the floor next to the basement stairs (the stack then holds 14).
 - **Friction found in testing:** water and planks are both carried in the arms, so after "Take 3 water bottles" the player must drop (G) or stash the water before grabbing planks. Consider letting a few bottles fit in the pockets.
 

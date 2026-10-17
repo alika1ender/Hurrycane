@@ -11,11 +11,11 @@ Player character: **Cane**. A contact named **Broski** sends texts. There are no
 ## Modules
 | # | Module | Covers | Owner | Status |
 |---|---|---|---|---|
-| 01 | [Core loop and days](Docs/Design/01-core-loop-and-days.md) | Phases, opening cutscene, per-day timings and storm | Ali | Building (day loop done, cutscene pending) |
+| 01 | [Core loop and days](Docs/Design/01-core-loop-and-days.md) | Phases, opening cutscene, per-day timings and storm | Ali | Building (day loop, blackout, flood done; cutscene pending) |
 | 02 | [House and openings](Docs/Design/02-house-and-openings.md) | Rooms, front door, the 14 windows and their days | Ali | Review |
 | 03 | [Breakage, reinforce, repair](Docs/Design/03-breakage-reinforce-repair.md) | Break chances, warnings, action durations | Ali | Building (states, repair, storm rolls done) |
 | 04 | [Tasks and supplies](Docs/Design/04-tasks-and-supplies.md) | 38 pickups, task lists per day, workload targets | Ali | Building (task engine done, 6 tasks disabled) |
-| 05 | [Pulse](Docs/Design/05-pulse.md) | BPM zones, per-day levels, raise/lower rules | Ali | Building (done except darkness/thunder) |
+| 05 | [Pulse](Docs/Design/05-pulse.md) | BPM zones, per-day levels, raise/lower rules | Ali | Building (done except thunder/Broski) |
 | 06 | [Health and saves](Docs/Design/06-health-and-saves.md) | Damage, fainting, game over, autosave | Ali | Building (saves, first aid, faint, game over done) |
 | 07 | [HUD, phone, handbook](Docs/Design/07-hud-phone-handbook.md) | Timer, pulse/health display, task sources | Ali | Building (full screen UI done; phone/handbook props pending) |
 | 08 | [Ending and score](Docs/Design/08-ending-and-score.md) | Ending cutscene, 1000-point score | Ali | Building (score done, cutscene pending) |
@@ -28,7 +28,7 @@ Status values: **Draft** (has gaps) → **Review** (proposals written, team must
 - Unity **6000.5.3f1**, URP, Input System. Repo: `alika1ender/Hurrycane` (uses Git LFS: run `git lfs pull`).
 - Main scene: `Assets/Scenes/HouseMap.unity`. Rebuild menu: **Hurrycane > Rebuild House Map**.
 - Existing scripts (`Assets/Scripts/Interactions`): `CabinetOpenable` (E toggles doors/drawers), `MapExplorer` (first-person movement: walk 2.6 m/s, sprint 4.2 m/s, reach 2.3 m), `MapPlaytest`, `HouseInteractionTest`. Extend these instead of rewriting them.
-- Built so far: all three days are playable end to end. Pickup/carry/hold-to-use, breakable windows and door with reinforce/repair, storm rolls, the task engine, pulse, first aid, faint/game over, day-start autosave + restart, the score screen and the full screen UI (see module 09, "What exists in code"). Not built yet: the Day 2 blackout, Day 3 flooding, puddles/towels, the opening and ending cutscenes, the phone/handbook props and a main menu.
+- Built so far: all three days are playable end to end. Pickup/carry/hold-to-use, breakable windows and door with reinforce/repair, storm rolls, the task engine, pulse, first aid, faint/game over, day-start autosave + restart, the score screen and the full screen UI (see module 09, "What exists in code"). Also the Day 2-3 blackout with the flashlight, and Day 3 basement flooding with towel blocking. Not built yet: puddles, the opening and ending cutscenes, the phone/handbook props and a main menu.
 - Keep `.meta` files with assets. Do not edit `Library/` or `Temp/`.
 - Numbers in the design are starting values for playtesting. Keep them in data (ScriptableObjects/JSON), not hard-coded.
 

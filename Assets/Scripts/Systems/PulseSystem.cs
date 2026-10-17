@@ -73,7 +73,7 @@ public sealed class PulseSystem : MonoBehaviour
         if (!player) return;
         var today = director.Today;
         if (opening.IsDoor && result == OpeningState.Broken) { Add(today.doorBreakSpike); return; }
-        if (Vector3.Distance(opening.transform.position, player.transform.position) > settings.nearbyRadius) return;
+        if (opening.DistanceTo(player.viewCamera.transform.position) > settings.nearbyRadius) return;
         Add(result == OpeningState.Broken ? today.windowBreakSpike : today.windowBreakSpike * .5f);
     }
 
@@ -92,10 +92,14 @@ public sealed class PulseSystem : MonoBehaviour
         if (!Active) { ApplyEffects(PulseZone.Calm, false); player.movementLocked = false; breathHeld = 0; return; }
         var today = director.Today;
         float dt = Time.deltaTime, pulse = session.pulse;
-        pulse = Mathf.MoveTowards(pulse, today.Resting(director.Phase), settings.driftPerSecond * dt);
+        var power = GetComponent<PowerSystem>();
+        var flood = GetComponent<FloodSystem>();
+        float resting = today.Resting(director.Phase) + (power ? power.RestingRise : 0);
+        pulse = Mathf.MoveTowards(pulse, resting, settings.driftPerSecond * dt);
         if (director.TimeLeft <= 10) pulse += settings.lastSecondsRisePerSecond * dt;
         if (today.sprintRaisesPulse && player.Sprinting) pulse += settings.sprintRisePerSecond * dt;
-        if (player.transform.position.y < settings.safeRoomBelowY) pulse -= settings.safeRoomDropPerSecond * dt;
+        bool safeRoom = player.transform.position.y < settings.safeRoomBelowY && !(flood && flood.SafeRoomFlooded);
+        if (safeRoom) pulse -= settings.safeRoomDropPerSecond * dt;
         pulse -= Breathe(dt);
         session.pulse = Mathf.Clamp(pulse, 60, today.pulseCeiling);
 

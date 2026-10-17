@@ -29,6 +29,23 @@
         "panicTaskPenalty": 0.15,
         "peakTaskPenalty": 0.30
     },
+    "power": {
+        "ambientFactor": 0.3,
+        "flashlightDrainPerSecond": 0.55,
+        "darknessRestingRise": 10,
+        "flashlightRestingRise": 6
+    },
+    "flood": {
+        "startSeconds": 40,
+        "earlierPerBreachSeconds": 10,
+        "riseSeconds": 90,
+        "maxDepth": 0.4,
+        "harmfulDepth": 0.2,
+        "damagePerSecond": 0.5,
+        "speedFactor": 0.7,
+        "towelsToBlock": 2,
+        "blockHoldSeconds": 4
+    },
     "health": {
         "faintSeconds": 5,
         "faintWakeHealth": 35,
@@ -48,7 +65,8 @@
             "scripted": [ { "opening": "W01", "atSeconds": 20, "result": "Cracked" } ],
             "restingPrep": 72, "restingDisaster": 80, "restingAfter": 72, "pulseCeiling": 95,
             "windowBreakSpike": 5, "doorBreakSpike": 8, "pulseVisuals": false, "pulsePenalties": false, "sprintRaisesPulse": false,
-            "faintIsGameOver": false
+            "faintIsGameOver": false,
+            "powerOut": false, "floods": false
         },
         {
             "day": 2, "title": "Blackout",
@@ -60,7 +78,8 @@
             "scripted": [],
             "restingPrep": 80, "restingDisaster": 100, "restingAfter": 80, "pulseCeiling": 135,
             "windowBreakSpike": 10, "doorBreakSpike": 15, "pulseVisuals": true, "pulsePenalties": false, "sprintRaisesPulse": false,
-            "faintIsGameOver": false
+            "faintIsGameOver": false,
+            "powerOut": true, "floods": false
         },
         {
             "day": 3, "title": "Survive",
@@ -72,7 +91,8 @@
             "scripted": [],
             "restingPrep": 95, "restingDisaster": 120, "restingAfter": 90, "pulseCeiling": 180,
             "windowBreakSpike": 18, "doorBreakSpike": 25, "pulseVisuals": true, "pulsePenalties": true, "sprintRaisesPulse": true,
-            "faintIsGameOver": true
+            "faintIsGameOver": true,
+            "powerOut": true, "floods": true
         }
     ]
 }

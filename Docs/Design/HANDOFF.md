@@ -14,6 +14,16 @@ Template:
 
 ---
 
+## 2026-10-17 19:10 · Claude (for Ali)
+**Worked on:** the Day 2 blackout and Day 3 basement flooding. Code: `Systems/PowerSystem.cs`, `Systems/FloodSystem.cs`, `Openings/StairBarrier.cs`, `Interactions/GeneratedProps.cs`, plus changes to `DayConfig`, `DayDirector`, `TaskEngine`, `PulseSystem`, `HouseState`, `GameUI` and `MapExplorer`. Data: `power` and `flood` blocks and `powerOut`/`floods` per day in `days.json`; `d3_stairs` and `d3_flood` added to `tasks.json`. Updated 01, 04, 05, 06, 07, 09 and 10.
+**Done:**
+- Blackout on Days 2-3 (room lights off, dim ambient). The flashlight works on F, drains, and swaps in battery packs. Darkness raises the resting pulse (+10, or +6 with the flashlight on).
+- Day 3 flood per 01: down the stairs, 40 s (10 s earlier per ground-floor breach), rising to 40 cm over 90 s. Wading hurts and slows you, and the safe room stops calming. 6 placeholder towels; 2 towels at the top of the stairs block it. Score: reactive tasks that never appeared no longer count as missed.
+- **Fixed a serious bug:** every break hurt Cane wherever he stood (`Collider.ClosestPoint` doesn't work on the non-convex proxies). Injury, pulse and toast distances now use `BreakableOpening.DistanceTo`.
+- Tested in Play mode: Day 2 lights off and the darkness pulse, the flashlight, the near/far injury check, the flood timing, depth, damage, speed and blocking. Screens are in `WalkthroughPreviews/ui/` (not committed).
+**Next:** hands-on playtest (F, Q, H, the towels, the flood). Then: puddles (unlocks wiping tasks), the door-gap towels on Day 2, the opening and ending cutscenes, a main menu, and the phone and handbook props.
+**Blocked / questions:** the same open points as before (water and planks in the arms; the Day 1 door chance; the cracked-boarded repair rule; Q3). New for art: lamps keep glowing in the blackout, and the flood water needs a proper shader.
+
 ## 2026-10-17 18:35 · Claude (for Ali)
 **Worked on:** (1) the real game UI, (2) pulse, health outcomes, mornings and the score. Code: `UI/GameUI.cs`, `UI/UiKit.cs`, `Systems/PulseSystem.cs`, `Systems/HealthSystem.cs`, `Systems/Score.cs`; the old IMGUI `Hud.cs` is deleted. Font: Barlow Condensed (OFL) in `Resources/HurrycaneUI/Fonts`. Updated 01, 05, 06, 07, 08, 09 and 10.
 **Done:**

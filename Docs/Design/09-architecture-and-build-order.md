@@ -48,6 +48,10 @@ All files are in `Assets/Scripts/Interactions/`.
 - `Systems/HealthSystem`: first aid (H), fainting and game over, see [06](06-health-and-saves.md). `DayDirector.GameOver()` and `PlaceAtBedside()` are public.
 - `Systems/Score`: `Score.Compute` → `ScoreReport`, see [08](08-ending-and-score.md). `GameSession` keeps `tasksDone/tasksRequired/hits/reinforcedIds`, which are saved in snapshots. `GameSession.NewGame()` deletes the saves and reloads.
 - `BreakableOpening.CancelStrike()`: in-flight strikes are cancelled at night and on game over. Already-broken openings ignore further hits, so there's no repeated injury.
+- `Systems/PowerSystem`: the blackout (room lights `Light_*`, ambient), the flashlight spot light on the camera, charge and battery swap. `ToggleFlashlight()` is public. Restores the scene ambient on destroy.
+- `Systems/FloodSystem` + `Openings/StairBarrier`: Day 3 water, see [01](01-core-loop-and-days.md). `MapExplorer.speedFactor` slows wading. The barrier's collider ignores the player's CharacterController, so it never blocks walking. Its prompt shows only with towels in the arms or while water is coming.
+- `Interactions/GeneratedProps`: runtime pickups with no scene prop yet (plank sets, towels). Snapshots record `kind` and recreate them through `GeneratedProps.Create`.
+- **Distance bug, fixed:** `Collider.ClosestPoint` returns the input point for the non-convex `COL_*` mesh colliders, so every break counted as "next to Cane". Always use `BreakableOpening.DistanceTo(point)` / `Center`.
 - `GameSession.DayStarting` fires before a fresh day's autosave (for morning setup); `DayStarted` fires after it, and on restores.
 - **Testing tip:** in Play mode, Unity freezes time while the editor is in the background. Run `Application.runInBackground = true` (for example through MCP `execute_code`) so coroutines and timers advance.
 - The aim ray prefers a pickup up to 0.45 m behind the first thing hit (items in open cabinets and on shelves behind their collision boxes), unless a closed door or drawer is in the way.

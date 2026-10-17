@@ -15,12 +15,13 @@ Tick these off as they land in the repo, and note the asset path. Ordered by whe
 - [ ] **Plank set** (decided: simple boards). *Code placeholders exist (brown cubes, `OpeningVisuals` / `PlankStack`); the real prop just replaces them.* A pickup stack of plain planks for the basement workbench (18 sets), and a boarded state: 2-3 planks across each window frame. The door brace is 2 diagonal planks. These can start as scaled Unity cubes with a wood material.
 - [ ] Cracked and broken states for all 14 windows (note: the bathroom window W11 has no separate glass material, so "broken" can't hide its glass yet) (a crack decal on the glass; broken = glass removed plus shards on the floor)
 - [ ] Front door reinforced, cracked and broken states
-- [ ] **Towel** prop (decided instead of sandbags): a folded stack (bathroom vanity, basement shelf) and a rolled-up version for the door gap and stairs
+- [ ] **Towel** prop (decided instead of sandbags): a folded stack (bathroom vanity, basement shelf) and a rolled-up version for the door gap and stairs. *Placeholder slabs and stair rolls exist (`GeneratedProps`, `StairBarrier`).*
 - [ ] Puddle decal (under broken windows, entry hall, living room)
 - [ ] Phone model (simple slab) and notification UI
 - [ ] Emergency handbook model and pages
 - [ ] Shelter stash marker in the basement (a floor mat or tape outline)
-- [ ] Flood water for the basement stairs and basement (a plane that rises)
+- [ ] Flood water for the basement stairs and basement (a placeholder murky plane exists, `FloodSystem`; it needs a real water shader and water pouring down the stairs)
+- [ ] Blackout: lamps and fluorescent tubes keep glowing because their glow is baked into their materials. They need an "off" material or emission switched off by code.
 - [ ] Rain and wind visuals on in-play windows (rain streaks; cut first if short on time)
 - [ ] Ending view: a ruined street outside W01 (a matte painting or billboard is fine)
 
