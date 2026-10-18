@@ -14,6 +14,12 @@ Template:
 
 ---
 
+## 2026-10-18 05:00 · Claude (for krx40)
+**Worked on:** a losing ending. Code: `Systems/CutsceneSystem.cs` (`PlayFailed`, `FailedRoutine`, gloom/fog, flood outside and under the door), `Systems/DayDirector.cs` (`EndGame`, `Failed`, F9/F10 editor keys and context-menu items), `Systems/DayConfig.cs` (`failedScoreBelow`), `Systems/FloodSystem.cs` (`ShowDepth`), `Systems/WindowWeather.cs` (storm sky during it), `UI/GameUI.cs` (FAILED TO SURVIVE card, red score title), `Audio/AudioDirector.cs` (its sound). Data: `failedScoreBelow: 300` in `days.json`, `"failed"` captions in `cutscenes.json`. Updated 08.
+**Done:** below 300/1000 the Day 3 end plays the failed cutscene, then the card, then the score screen (rank FAILED). 300+ is unchanged. Tested in Play mode with F9 and F10: the whole flow, captions, card and score screen; no errors.
+**Next:** a real low-score playthrough; tune the timing and the camera path if any shot clips a wall.
+**Blocked / questions:** the front door is part of `12_Hall_Entry_Visual`, so it can't open; a separate door leaf would allow a swing-open shot. In a new game the basement water shows the live-water glow, which is bright for this shot.
+
 ## 2026-10-18 04:05 · Claude (for Ali)
 **Worked on:** `TaskEngine` (`NeedItem`: the items a job needs glow with it), `days.json` (`locationDelaySeconds` 9). Doc 04.
 **Done and tested in Play mode:** "Reinforce the living room windows" without tools targets both windows, both toolkits and the plank stack (`WalkthroughPreviews/ui/37_tools_glow.png`).

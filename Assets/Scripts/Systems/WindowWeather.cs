@@ -63,8 +63,11 @@ public sealed class WindowWeather : MonoBehaviour
     {
         if (!director) return;
         var phase = director.Phase;
-        bool visible = phase >= DayPhase.Alert && phase <= DayPhase.Night || phase == DayPhase.GameOver;
-        float target = phase == DayPhase.Disaster ? 1 : phase == DayPhase.AfterDisaster ? .55f
+        // The losing cutscene keeps the dark storm sky in the windows (the survival ending shows the clear street).
+        var cutscene = GetComponent<CutsceneSystem>();
+        bool failed = cutscene && cutscene.Playing && cutscene.Kind == "failed";
+        bool visible = phase >= DayPhase.Alert && phase <= DayPhase.Night || phase == DayPhase.GameOver || failed;
+        float target = failed ? .7f : phase == DayPhase.Disaster ? 1 : phase == DayPhase.AfterDisaster ? .55f
             : phase == DayPhase.Night ? .85f : visible ? .23f : 0;
         strength = Mathf.MoveTowards(strength, target, Time.deltaTime * .18f);
         bool finale = phase == DayPhase.Disaster && session && session.CurrentDay == finalDay;

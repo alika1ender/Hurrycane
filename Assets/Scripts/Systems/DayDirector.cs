@@ -97,6 +97,16 @@ public sealed class DayDirector : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
+        // Editor test keys: F9 plays the failed ending, F10 the normal one (from any phase, scored on the current state).
+        var debugKeys = Keyboard.current;
+        if (debugKeys != null && Phase != DayPhase.Ending && Phase != DayPhase.Ended)
+        {
+            // runInBackground: keep playing while another window has focus, so the whole cutscene can be watched (Docs/Design/09).
+            if (debugKeys.f9Key.wasPressedThisFrame) { Application.runInBackground = true; DebugFailedEnding(); return; }
+            if (debugKeys.f10Key.wasPressedThisFrame) { Application.runInBackground = true; DebugNormalEnding(); return; }
+        }
+#endif
         if (Phase == DayPhase.Alert)
         {
             var keyboard = Keyboard.current; var mouse = Mouse.current;
@@ -204,20 +214,34 @@ public sealed class DayDirector : MonoBehaviour
             session.tasksRequired += tasks.Today.Count(t => t.definition.required && t.appeared);
             session.tasksDone += tasks.Today.Count(t => t.definition.required && t.status == TaskStatus.Done);
         }
-        if (session.CurrentDay >= 3)
-        {
-            Score = global::Score.Compute(session, player);
-            NightText = "The storm has passed\n\nThe city outside is in ruins. Your house is still standing.";
-            // The ending walk to the window (Docs/Design/08), then the score screen.
-            var cutscene = GetComponent<CutsceneSystem>();
-            if (cutscene) { Phase = DayPhase.Ending; PhaseChanged?.Invoke(Phase); cutscene.PlayEnding(() => { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); }); }
-            else { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); }
-            return;
-        }
+        if (session.CurrentDay >= 3) { EndGame(null); return; }
         NightText = "Day " + session.CurrentDay + " survived\n\n" + OvernightRecovery();
         Phase = DayPhase.Night;
         TimeLeft = config.nightSeconds;
         PhaseChanged?.Invoke(Phase);
+    }
+
+    /// <summary>True when the final score was below failedScoreBelow: the losing cutscene and "FAILED TO SURVIVE" (08).</summary>
+    public bool Failed { get; private set; }
+
+    /// <summary>
+    /// The end of Day 3: score it, then the ending walk to the window and the score screen (Docs/Design/08). A score below
+    /// failedScoreBelow gets the losing cutscene instead, then the "FAILED TO SURVIVE" card before the score screen.
+    /// </summary>
+    void EndGame(bool? forceFailed)
+    {
+        Score = global::Score.Compute(session, player);
+        if (forceFailed == true) Score.total = Mathf.Min(Score.total, config.failedScoreBelow - 1); // debug only
+        if (forceFailed == false) Score.total = Mathf.Max(Score.total, config.failedScoreBelow);    // debug only
+        Failed = Score.total < config.failedScoreBelow;
+        if (Failed) { Score.rank = "FAILED"; Score.line = "The house didn't hold, and neither did you."; } // never "you survived"
+        NightText = Failed ? "Failed to survive\n\nThe house didn't hold. Neither did you."
+                           : "The storm has passed\n\nThe city outside is in ruins. Your house is still standing.";
+        var cutscene = GetComponent<CutsceneSystem>();
+        if (!cutscene) { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); return; }
+        Phase = DayPhase.Ending; PhaseChanged?.Invoke(Phase);
+        Action done = () => { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); };
+        if (Failed) cutscene.PlayFailed(done); else cutscene.PlayEnding(done);
     }
 
     /// <summary>Cane uses 1 water and 1 food, from the shelter first, then from his arms (Docs/Design/06).</summary>
@@ -316,5 +340,8 @@ public sealed class DayDirector : MonoBehaviour
         return marker;
     }
 
+    // Jump straight to either ending from any point in Play mode (Day 3 scoring runs on the current state).
+    [ContextMenu("Debug: Play failed ending")] void DebugFailedEnding() { CancelStrikes(); SetControl(false); schedule.Clear(); EndGame(true); }
+    [ContextMenu("Debug: Play normal ending")] void DebugNormalEnding() { CancelStrikes(); SetControl(false); schedule.Clear(); EndGame(false); }
     [ContextMenu("Debug: Skip to next phase")] void DebugSkip() { if (Phase == DayPhase.Alert) DismissAlert(); else TimeLeft = 0; }
 }

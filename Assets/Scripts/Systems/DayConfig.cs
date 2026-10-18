@@ -10,6 +10,8 @@ public sealed class DaysConfig
     public float stormHoldMultiplier = 1.5f, warningLeadSeconds = 3, hitWindowStart = .15f, hitWindowEnd = .85f, minSecondsBetweenHits = 6;
     public float prepBreakWindowSeconds = 30, prepBreakFactor = .25f, injuryRadius = 2, nightSeconds = 6;
     public float recoveryEnough = 50, recoverySome = 30, recoveryNone = 10;
+    /// <summary>A final score below this (out of 1000) plays the losing cutscene and "FAILED TO SURVIVE" (Docs/Design/08).</summary>
+    public int failedScoreBelow = 300;
     public PulseSettings pulse = new PulseSettings();
     public HealthSettings health = new HealthSettings();
     public PowerSettings power = new PowerSettings();

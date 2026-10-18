@@ -373,7 +373,8 @@ public sealed class AudioDirector : MonoBehaviour
         float musicBase = day <= 1 ? .16f : day == 2 ? .28f : .46f;
         float musicPhase = phase == DayPhase.Disaster ? 1.3f : phase == DayPhase.AfterDisaster ? .6f : phase == DayPhase.Night ? .2f : 1f;
         float musicPulse = day >= 3 && pulse && pulse.Bpm > 130 ? .12f : 0;
-        ambience.target = phase == DayPhase.GameOver ? .08f : phase == DayPhase.Menu ? .14f : phase == DayPhase.Ending || phase == DayPhase.Ended ? .25f
+        bool failedEnd = director && director.Failed && (phase == DayPhase.Ending || phase == DayPhase.Ended); // the losing ending: almost silent
+        ambience.target = phase == DayPhase.GameOver || failedEnd ? .06f : phase == DayPhase.Menu ? .14f : phase == DayPhase.Ending || phase == DayPhase.Ended ? .25f
             : playing ? Mathf.Clamp01(musicBase * musicPhase + musicPulse) : .16f;
 
         // Random wind gusts between the loops; more often as the storm builds.
@@ -496,7 +497,27 @@ public sealed class AudioDirector : MonoBehaviour
             citySirens.target = endingClock > 5f && endingClock < 21f ? Mathf.Lerp(0f, .38f, Mathf.Clamp01((endingClock - 5f) / 8f)) : 0;
         }
         else { endingClock = 0; citySirens.target = 0; }
+
+        // Failed ending: no city sirens, no music. Gusts and a heartbeat that slows, Broski's texts buzzing, then the fall.
+        bool failed = cutscene && cutscene.Playing && cutscene.Kind == "failed";
+        if (failed)
+        {
+            float before = failedClock;
+            failedClock += dt;
+            bool Crossed(float at) => before < at && failedClock >= at;
+            if (Crossed(.5f) || Crossed(8.8f) || Crossed(13.5f)) Shot("wind_gust", .55f, Random.Range(.85f, .95f));
+            if (Crossed(15.2f) || Crossed(18.4f)) Shot("phone_vibrate", .6f);
+            if (Crossed(21.4f)) Shot("faint_thud", .9f);
+            if (failedClock >= nextFailedBeat && failedClock < 21.4f)
+            {
+                float k = Mathf.Clamp01(failedClock / 21f);
+                Shot("heartbeat_cycle", Mathf.Lerp(.55f, .25f, k), Mathf.Lerp(.95f, .8f, k));
+                nextFailedBeat = failedClock + Mathf.Lerp(.95f, 2.4f, k); // slowing down
+            }
+        }
+        else { failedClock = 0; nextFailedBeat = 0; }
     }
+    float failedClock, nextFailedBeat;
     bool yawnPlayed, vibratePlayed, mumblePlayed; float endingClock, sirenStart = -1;
 
     // ---- TV news anchor (mumble). Clip: tv_news_mumble (forward, muffled). Try tv_news_mumble_alt for a babble version.

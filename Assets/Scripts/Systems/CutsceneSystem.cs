@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 [Serializable]
 public sealed class CutsceneConfig
 {
-    public CaptionLine[] opening = new CaptionLine[0], ending = new CaptionLine[0];
+    public CaptionLine[] opening = new CaptionLine[0], ending = new CaptionLine[0], failed = new CaptionLine[0];
     public static CutsceneConfig Load()
     {
         var file = Resources.Load<TextAsset>("HurrycaneData/cutscenes");
@@ -67,6 +67,8 @@ public sealed class CutsceneSystem : MonoBehaviour
 
     public void PlayOpening(Action done) => Play("opening", OpeningRoutine(), config.opening, done);
     public void PlayEnding(Action done) => Play("ending", EndingRoutine(), config.ending, done);
+    /// <summary>The losing ending (score below failedScoreBelow): a stagger through the wrecked, dark house, then black.</summary>
+    public void PlayFailed(Action done) => Play("failed", FailedRoutine(), config.failed, done);
 
     void Play(string kind, IEnumerator routine, CaptionLine[] lines, Action done)
     {
@@ -349,7 +351,7 @@ public sealed class CutsceneSystem : MonoBehaviour
             player.viewCamera.clearFlags = CameraClearFlags.SolidColor;
             player.viewCamera.backgroundColor = new Color(.72f, .76f, .80f); // pale overcast sky
             // Morning haze: the wrecked trees and houses outside stay readable, the far street fades out.
-            if (savedFog == null) savedFog = (RenderSettings.fog, RenderSettings.fogMode, RenderSettings.fogColor, RenderSettings.fogStartDistance, RenderSettings.fogEndDistance);
+            SaveFog();
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogColor = player.viewCamera.backgroundColor;
@@ -358,7 +360,12 @@ public sealed class CutsceneSystem : MonoBehaviour
         }
     }
 
-    (bool on, FogMode mode, Color color, float start, float end)? savedFog;
+    (bool on, FogMode mode, Color color, float start, float end, float density)? savedFog;
+    void SaveFog()
+    {
+        if (savedFog == null)
+            savedFog = (RenderSettings.fog, RenderSettings.fogMode, RenderSettings.fogColor, RenderSettings.fogStartDistance, RenderSettings.fogEndDistance, RenderSettings.fogDensity);
+    }
 
     void OnDestroy()
     {
@@ -366,9 +373,123 @@ public sealed class CutsceneSystem : MonoBehaviour
         if (savedFog is { } fog)
         {
             RenderSettings.fog = fog.on; RenderSettings.fogMode = fog.mode; RenderSettings.fogColor = fog.color;
-            RenderSettings.fogStartDistance = fog.start; RenderSettings.fogEndDistance = fog.end;
+            RenderSettings.fogStartDistance = fog.start; RenderSettings.fogEndDistance = fog.end; RenderSettings.fogDensity = fog.density;
         }
     }
+
+    // ------------------------------------------------------------------ failed ending (score below failedScoreBelow, Docs/Design/08)
+
+    IEnumerator FailedRoutine()
+    {
+        var director = GetComponent<DayDirector>();
+        var door = FindObjectsByType<BreakableOpening>(FindObjectsInactive.Exclude).FirstOrDefault(o => o.IsDoor);
+        BuildStreet();
+        SetGloom();
+        FloodOutside(door);
+        var flood = GetComponent<FloodSystem>();
+        if (flood && director) flood.ShowDepth(director.Config.flood.maxDepth); // the basement stays under water
+        Fade = 1;
+
+        // 1. The living room's broken window: dark storm, rain blowing in.
+        var windowEye = new Vector3(-2.3f, 1.5f, -1.5f); var windowLook = new Vector3(-2.3f, 1.25f, 2f);
+        float clock = 0;
+        yield return Tween(1.4f, t => { Fade = 1 - t; clock += Time.deltaTime; Unsteady(windowEye, windowLook, clock, 0); });
+        yield return Tween(2.8f, t => { clock += Time.deltaTime; Unsteady(windowEye + new Vector3(0, 0, .15f * t), windowLook, clock, 0); });
+        yield return Tween(.6f, t => { Fade = t; clock += Time.deltaTime; });
+
+        // 2. The top of the basement stairs: the shelter is under water.
+        var stairEye = new Vector3(-9.0f, 1.55f, -8.2f); var stairLook = new Vector3(-9.7f, -2.2f, -2.5f);
+        yield return Tween(.6f, t => { Fade = 1 - t; clock += Time.deltaTime; Unsteady(stairEye, stairLook, clock, 0); });
+        yield return Tween(3f, t => { clock += Time.deltaTime; Unsteady(stairEye + new Vector3(0, -.1f * t, .25f * t), stairLook, clock, 0); });
+        yield return Tween(.6f, t => { Fade = t; clock += Time.deltaTime; });
+
+        // 3. A stagger to the front door, with a stumble halfway.
+        Vector3 outward = door ? Outward(door) : Vector3.forward;
+        Vector3 doorCentre = door ? door.Center : new Vector3(-2.3f, 1.1f, 0);
+        float floorY = door ? door.GetComponent<Collider>().bounds.min.y : 0;
+        var stand = new Vector3(doorCentre.x, floorY + 1.5f, doorCentre.z) - outward * 1.7f;
+        var outside = new Vector3(doorCentre.x, floorY + .9f, doorCentre.z) + outward * 8;
+        var start = new Vector3(-5.0f, 1.5f, -1.9f);
+        yield return Tween(.6f, t => { Fade = 1 - t; clock += Time.deltaTime; Unsteady(start, stand, clock, 0); });
+        yield return Tween(5f, t =>
+        {
+            clock += Time.deltaTime;
+            float stumble = Mathf.Exp(-Mathf.Pow((t - .55f) * 9, 2)); // a sharp lurch around 55%
+            var eye = Vector3.Lerp(start, stand, Smooth(t)) + Vector3.down * .35f * stumble;
+            Unsteady(eye, Vector3.Lerp(stand, outside, Smooth(t)) + Vector3.down * .8f * stumble, clock, 14 * stumble);
+        });
+
+        // 4. The front door is smashed in and the flood is seeping under it. (The door is part of the hall mesh, so it
+        // can't swing open; the broken-door look from OpeningVisuals shows it gave way.)
+        if (door && door.State != OpeningState.Broken) door.SetState(OpeningState.Broken);
+        var doorFace = new Vector3(doorCentre.x, floorY + 1.1f, doorCentre.z);
+        yield return Tween(4.2f, t => { clock += Time.deltaTime; Unsteady(stand + outward * .45f * Smooth(t), Vector3.Lerp(doorFace, doorFace + Vector3.down * .9f, Smooth(t)), clock, 0); });
+        var lastLook = doorFace + Vector3.down * .9f; // where the eyes were last; the fall below tips away from here
+
+        // 5. His legs give way: the view tips and sinks, eyes close, black.
+        yield return Tween(3.4f, t =>
+        {
+            clock += Time.deltaTime;
+            float fall = Smooth(t);
+            Unsteady(stand + outward * .45f + Vector3.down * 1.05f * fall, lastLook + Vector3.down * 2.4f * fall, clock, 28 * fall);
+            Eyelids = Mathf.Clamp01(t < .5f ? Mathf.Sin(t * Mathf.PI * 4) * .5f * t * 2 : (t - .5f) * 2.2f);
+        });
+        Eyelids = 1; Fade = 1;
+        yield return Wait(.9f);
+    }
+
+    /// <summary>Handheld, unsteady first-person framing: small drifting sway plus an optional roll in degrees.</summary>
+    void Unsteady(Vector3 eye, Vector3 target, float time, float roll)
+    {
+        var sway = new Vector3(Mathf.Sin(time * 1.3f) * .03f, Mathf.Sin(time * 2.1f) * .02f, 0);
+        var drift = new Vector3(Mathf.Sin(time * .9f) * .12f, Mathf.Sin(time * 1.7f) * .05f, 0);
+        Shot(eye + sway, target + drift);
+        var e = player.viewCamera.transform.localEulerAngles;
+        player.viewCamera.transform.localRotation = Quaternion.Euler(e.x, 0, roll + Mathf.Sin(time * 1.1f) * 1.5f);
+    }
+
+    /// <summary>Power still out, a cold dark haze inside and out: the opposite of the survival ending's morning.</summary>
+    void SetGloom()
+    {
+        var power = GetComponent<PowerSystem>();
+        if (power) power.SetPower(false);
+        var gloom = new Color(.09f, .1f, .12f);
+        player.viewCamera.clearFlags = CameraClearFlags.SolidColor;
+        player.viewCamera.backgroundColor = gloom;
+        SaveFog();
+        RenderSettings.fog = true;
+        RenderSettings.fogMode = FogMode.Exponential;
+        RenderSettings.fogColor = gloom;
+        RenderSettings.fogDensity = .075f; // rooms readable, the street swallowed after ~15 m
+        if (sun) sun.enabled = false;      // BuildStreet's morning sun
+    }
+
+    /// <summary>
+    /// The street outside is under water, and it is seeping in under the front door: a muddy sheet across the street and
+    /// a glossy wet spread on the entry hall floor.
+    /// </summary>
+    void FloodOutside(BreakableOpening door)
+    {
+        var outward = door ? Outward(door) : Vector3.forward;
+        var c = door ? door.Center : new Vector3(-2.3f, 1.1f, 0);
+        float floorY = door ? door.GetComponent<Collider>().bounds.min.y : 0;
+        var muddy = Mat(new Color(.2f, .18f, .13f), .92f);
+        var street = Block(PrimitiveType.Cube, muddy, new Vector3(c.x, floorY - .12f, c.z) + outward * 20.4f, new Vector3(60, .05f, 40), Vector3.zero);
+        street.transform.rotation = Quaternion.LookRotation(outward);
+        street.name = "FailedFloodWater";
+        var seep = Block(PrimitiveType.Cube, muddy, new Vector3(c.x, floorY + .012f, c.z) - outward * .8f, new Vector3(1.5f, .006f, 1.5f), Vector3.zero);
+        seep.transform.rotation = Quaternion.LookRotation(outward);
+        seep.name = "FailedSeepWater";
+    }
+
+    /// <summary>Points out of the house through an opening (the house footprint centre is about (-6, -5)).</summary>
+    static Vector3 Outward(BreakableOpening opening)
+    {
+        var b = opening.GetComponent<Collider>().bounds;
+        bool thinX = b.size.x < b.size.z;
+        return thinX ? new Vector3(-Mathf.Sign(-6 - b.center.x), 0, 0) : new Vector3(0, 0, -Mathf.Sign(-5 - b.center.z));
+    }
+
 
     GameObject Block(PrimitiveType type, Material material, Vector3 position, Vector3 scale, Vector3 euler)
     {

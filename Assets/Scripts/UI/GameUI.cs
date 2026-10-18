@@ -132,6 +132,7 @@ public sealed class GameUI : MonoBehaviour
         faintText.rectTransform.Stretch(); faintText.text = "YOU PASSED OUT\n<size=32><color=#9AA0AA>Waking up by the bed... the clock kept running.</color></size>";
         BuildGameOver();
         BuildScore();
+        BuildFailedCard();
         BuildPhone();
         BuildHandbook();
         BuildCutscene();
@@ -837,11 +838,15 @@ public sealed class GameUI : MonoBehaviour
         {
             shownPhase = phase;
             gameOverOverlay.SetActive(gameOver);
-            scoreOverlay.SetActive(ended);
+            // A failed run shows the "FAILED TO SURVIVE" card first; the score screen follows when it is dismissed.
+            bool failedRun = ended && director.Failed;
+            scoreOverlay.SetActive(ended && !failedRun);
+            ShowFailedCard(failedRun, director);
             if (gameOver) { FillCards(gameOverCards); gameOverReason.text = "Day 3. " + director.GameOverReason + " Try again from the start of a day."; }
             if (ended) FillScore(director);
             if (phase == DayPhase.Menu) FillMenu();
         }
+        UpdateFailedCard();
         var health = session.GetComponent<HealthSystem>();
         faintGroup.alpha = Mathf.MoveTowards(faintGroup.alpha, health && health.Fainted ? 1 : 0, Time.unscaledDeltaTime * .7f);
         if (alert) alertFooter.color = Color.Lerp(UiKit.TextColor, UiKit.Amber, .5f + .5f * Mathf.Sin(Time.unscaledTime * 4));
@@ -1116,10 +1121,67 @@ public sealed class GameUI : MonoBehaviour
         vitalHints.text = string.Join("      ", hints);
     }
 
+    // ------------------------------------------------------------------ failed card (Docs/Design/08)
+
+    GameObject failedCard;
+    CanvasGroup failedText;
+    Text failedScore, failedFact, failedHint;
+    float failedShownAt = -1;
+
+    /// <summary>Full black screen, a big red "FAILED TO SURVIVE", the score and one preparedness fact.</summary>
+    void BuildFailedCard()
+    {
+        var shade = UiKit.Panel(transform, "Failed", Color.black, false);
+        shade.rectTransform.Stretch(); shade.raycastTarget = true;
+        failedCard = shade.gameObject;
+        var column = UiKit.Node("Text", shade.transform).Stretch();
+        failedText = column.gameObject.AddComponent<CanvasGroup>(); failedText.alpha = 0;
+        var title = UiKit.Label(column, "Title", UiKit.Bold, 148, UiKit.Red, TextAnchor.MiddleCenter);
+        title.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, 70), new Vector2(1600, 170));
+        title.text = "FAILED TO SURVIVE";
+        title.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(3, -3);
+        failedScore = UiKit.Label(column, "Score", UiKit.SemiBold, 40, UiKit.TextColor, TextAnchor.MiddleCenter);
+        failedScore.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, -50), new Vector2(1200, 50));
+        failedFact = UiKit.Label(column, "Fact", UiKit.Medium, 28, UiKit.Dim, TextAnchor.UpperCenter, true);
+        failedFact.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, -110), new Vector2(1100, 90));
+        failedFact.rectTransform.pivot = new Vector2(.5f, 1);
+        failedHint = UiKit.Label(column, "Hint", UiKit.Medium, 24, new Color(1, 1, 1, .4f), TextAnchor.MiddleCenter);
+        failedHint.rectTransform.Place(new Vector2(.5f, 0), new Vector2(0, 70), new Vector2(800, 34));
+        failedHint.text = "Space  continue";
+        failedCard.SetActive(false);
+    }
+
+    void ShowFailedCard(bool show, DayDirector director)
+    {
+        failedCard.SetActive(show);
+        failedShownAt = show ? Time.unscaledTime : -1;
+        failedText.alpha = 0;
+        if (!show || director.Score == null) return;
+        failedScore.text = "Score  " + director.Score.total + " <color=#9AA0AA>/ 1000</color>";
+        failedFact.text = "Did you know?  " + director.Score.fact;
+    }
+
+    /// <summary>The text fades in; after a moment Space, Enter or a click (or 7 s) moves on to the score screen.</summary>
+    void UpdateFailedCard()
+    {
+        if (failedShownAt < 0) return;
+        float shown = Time.unscaledTime - failedShownAt;
+        failedText.alpha = Mathf.Clamp01((shown - .4f) / 1.2f);
+        failedHint.color = new Color(1, 1, 1, shown > 2 ? .4f : 0);
+        var keyboard = UnityEngine.InputSystem.Keyboard.current; var mouse = UnityEngine.InputSystem.Mouse.current;
+        bool pressed = (keyboard != null && (keyboard.spaceKey.wasPressedThisFrame || keyboard.enterKey.wasPressedThisFrame))
+            || (mouse != null && mouse.leftButton.wasPressedThisFrame);
+        if (shown < 7 && !(shown > 2 && pressed)) return;
+        failedShownAt = -1;
+        failedCard.SetActive(false);
+        scoreOverlay.SetActive(true);
+    }
+
     void FillScore(DayDirector director)
     {
         var lines = director.NightText.Split('\n');
         scoreTitle.text = lines[0].ToUpperInvariant();
+        scoreTitle.color = director.Failed ? UiKit.Red : UiKit.TextColor;
         scoreSub.text = string.Join(" ", lines.Skip(1).Where(l => l.Length > 0));
         foreach (Transform child in scoreRows) Destroy(child.gameObject);
         var r = director.Score;

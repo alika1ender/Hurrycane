@@ -142,6 +142,9 @@ public sealed class FloodSystem : MonoBehaviour
         wasTouching = true;
     }
 
+    /// <summary>Sets the water level directly (the losing cutscene shows the basement flooded).</summary>
+    public void ShowDepth(float depth) => SetDepth(depth);
+
     void SetDepth(float depth)
     {
         Depth = depth;
