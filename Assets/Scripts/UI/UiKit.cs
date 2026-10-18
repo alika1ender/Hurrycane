@@ -83,6 +83,7 @@ public static class UiKit
         text.verticalOverflow = VerticalWrapMode.Overflow;
         text.supportRichText = true;
         text.raycastTarget = false;
+        text.gameObject.AddComponent<LocalizedLabel>(); // swaps in Turkish when chosen in Settings (see Loc)
         return text;
     }
 

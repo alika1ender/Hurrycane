@@ -141,6 +141,7 @@ public sealed class GameUI : MonoBehaviour
         BuildMenu();
         BuildPause();
         BuildControls(); // above pause, so CONTROLS from the pause menu shows on top
+        SettingsOverlay.Build(transform); // language choice, above the menus
     }
 
     void BuildPhone()
@@ -381,6 +382,7 @@ public sealed class GameUI : MonoBehaviour
         shade.rectTransform.Stretch();
         alertOverlay = shade.gameObject;
         var artwork = Resources.Load<Texture2D>("HurrycaneUI/PhoneAlert");
+        GameObject[] artworkParts = null; // the artwork's text is part of the picture, so Turkish uses the drawn phone below instead
         if (artwork)
         {
             // The supplied artwork includes its own handset, clock, message and warning.
@@ -399,9 +401,10 @@ public sealed class GameUI : MonoBehaviour
             alertFooter.rectTransform.anchorMax = new Vector2(.95f, .095f);
             alertFooter.rectTransform.offsetMin = alertFooter.rectTransform.offsetMax = Vector2.zero;
             alertFooter.text = "Click or press Space to open the alert";
-            return;
+            artworkParts = new[] { area.gameObject, alertFooter.gameObject };
         }
-        var phone = UiKit.Panel(shade.transform, "Phone", new Color(.02f, .02f, .03f, 1));
+        var fallbackRoot = UiKit.Node("PhoneFallback", shade.transform).Stretch();
+        var phone = UiKit.Panel(fallbackRoot, "Phone", new Color(.02f, .02f, .03f, 1));
         phone.rectTransform.Place(new Vector2(.5f, .5f), Vector2.zero, new Vector2(470, 760));
         var screen = UiKit.Panel(phone.transform, "Screen", new Color(.09f, .1f, .13f, 1));
         screen.rectTransform.Stretch(14);
@@ -428,9 +431,11 @@ public sealed class GameUI : MonoBehaviour
         var body = UiKit.Label(bodyBox, "Body", UiKit.Medium, 27, UiKit.TextColor, TextAnchor.UpperLeft, true);
         body.text = AlertBody;
 
-        alertFooter = UiKit.Label(column, "Footer", UiKit.SemiBold, 28, UiKit.TextColor, TextAnchor.MiddleCenter, true);
-        alertFooter.text = "Tap to open the alert\n<size=20><color=#9AA0AA>Click or press Space</color></size>";
-        alertFooter.Size(-1, 80);
+        var tapFooter = UiKit.Label(column, "Footer", UiKit.SemiBold, 28, UiKit.TextColor, TextAnchor.MiddleCenter, true);
+        tapFooter.text = "Tap to open the alert\n<size=20><color=#9AA0AA>Click or press Space</color></size>";
+        tapFooter.Size(-1, 80);
+        if (artworkParts == null) alertFooter = tapFooter;
+        else shade.gameObject.AddComponent<LocalizedSwap>().Setup(artworkParts, fallbackRoot.gameObject, alertFooter, tapFooter);
     }
 
     void BuildPause()
@@ -448,6 +453,7 @@ public sealed class GameUI : MonoBehaviour
         pauseSubtitle = UiKit.Label(panel.transform, "Subtitle", UiKit.Medium, 26, UiKit.Dim, TextAnchor.MiddleCenter);
         UiKit.Button(panel.transform, "Resume", "RESUME", PauseMenu.Resume, out _, 32).Size(-1, 64);
         UiKit.Button(panel.transform, "Controls", "CONTROLS", OpenControlsFromMenu, out _, 26).Size(-1, 52);
+        UiKit.Button(panel.transform, "Settings", "SETTINGS", () => SettingsOverlay.Open(true), out _, 26).Size(-1, 52);
         var restartTitle = UiKit.Label(panel.transform, "RestartTitle", UiKit.SemiBold, 22, UiKit.Dim, TextAnchor.MiddleLeft);
         restartTitle.text = "RESTART FROM THE START OF A DAY";
         pauseCards = UiKit.Node("Cards", panel.transform);
@@ -538,6 +544,7 @@ public sealed class GameUI : MonoBehaviour
         UiKit.Button(menuButtons, "NewGame", saves.Count > 0 ? "NEW GAME  <size=22><color=#9AA0AA>(replaces your saves)</color></size>" : "NEW GAME",
             () => { if (GameSession.Instance) GameSession.Instance.StartNewGame(); }, out _, 34).Size(-1, 72);
         UiKit.Button(menuButtons, "Controls", "HOW TO PLAY", OpenControlsFromMenu, out _, 30).Size(-1, 60);
+        UiKit.Button(menuButtons, "Settings", "SETTINGS", () => SettingsOverlay.Open(false), out _, 30).Size(-1, 60);
         UiKit.Button(menuButtons, "Quit", "QUIT", Quit, out _, 30).Size(-1, 60);
     }
 
