@@ -83,6 +83,14 @@ public sealed class GameSession : MonoBehaviour
         StartDay(firstDay);
     }
 
+    /// <summary>Return to the title; retain day-start saves so Continue works.</summary>
+    public static void ReturnToMenu()
+    {
+        Time.timeScale = 1;
+        pendingRestore = null; skipMenuOnce = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
+    }
+
     /// <summary>Main menu CONTINUE: restart from the latest saved day.</summary>
     public static void ContinueLatest()
     {

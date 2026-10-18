@@ -455,3 +455,7 @@ FIRST AID => İLK YARDIM
 SUPPLY ROOM => MALZEME ODASI
 BASEMENT => BODRUM
 SUPPLY STORAGE  /  DOWN => MALZEME DEPOSU  /  AŞAĞI
+
+MAIN MENU => ANA MENÜ
+EXIT GAME => OYUNDAN ÇIK
+Esc  resume. Main menu keeps your day-start save. => Esc ile devam et. Ana menüye dönüşte gün başı kaydın korunur.

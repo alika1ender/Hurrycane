@@ -99,3 +99,6 @@ Still missing: real phone and book models (cubes for now), the illustrated categ
 ## Open questions
 - **Q4. Decided:** first-person prop with a UI overlay.
 - **Q6. Decided:** above the pulse, bottom left.
+
+## Esc menüsü ve net görüntü (18 Ekim)
+PauseMenu açık durumunu kendisi tutar; Esc açar/kapatır. Devam, ayarlar, kontroller, ana menü, çıkış ve gün başı kayıt kartları iki sütunlu menüdedir. NativeDisplay Windows başlangıcında monitörün doğal çözünürlüğünü kullanır. Kaydedilmiş düşük çözünürlükteki tam ekran UI büyütülmez.

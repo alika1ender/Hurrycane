@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public sealed class SettingsOverlay : MonoBehaviour
 {
     static SettingsOverlay instance;
+    public static bool IsOpen => instance && instance.gameObject.activeSelf;
     Text englishLabel, turkishLabel;
     bool fromPause;
     DayDirector director;
@@ -64,6 +65,6 @@ public sealed class SettingsOverlay : MonoBehaviour
     {
         // Closes itself when the menu it was opened from goes away (Esc on the pause menu, New Game on the main menu).
         if (!director) director = FindAnyObjectByType<DayDirector>();
-        if (fromPause ? !PauseMenu.Active : (director && director.Phase != DayPhase.Menu)) Close();
+        if (fromPause ? !PauseMenu.IsPaused : (director && director.Phase != DayPhase.Menu)) Close();
     }
 }

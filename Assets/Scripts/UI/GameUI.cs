@@ -440,26 +440,26 @@ public sealed class GameUI : MonoBehaviour
 
     void BuildPause()
     {
-        var shade = UiKit.Panel(transform, "Pause", new Color(0, 0, 0, .72f), false);
-        shade.rectTransform.Stretch();
-        shade.raycastTarget = true;
-        pauseOverlay = shade.gameObject;
+        var shade = UiKit.Panel(transform, "Pause", new Color(0, 0, 0, .78f), false);
+        shade.rectTransform.Stretch(); shade.raycastTarget = true; pauseOverlay = shade.gameObject;
         var panel = UiKit.Panel(shade.transform, "Panel", UiKit.PanelColor);
-        panel.rectTransform.Place(new Vector2(.5f, .5f), Vector2.zero, new Vector2(660, 0));
-        panel.Layout<VerticalLayoutGroup>(32, 14, TextAnchor.UpperCenter);
-        panel.Fit(false, true);
-        var title = UiKit.Label(panel.transform, "Title", UiKit.Bold, 64, UiKit.TextColor, TextAnchor.MiddleCenter);
-        title.text = "PAUSED";
+        panel.rectTransform.Place(new Vector2(.5f, .5f), Vector2.zero, new Vector2(1120, 0));
+        panel.Layout<VerticalLayoutGroup>(32, 14, TextAnchor.UpperCenter); panel.Fit(false, true);
+        UiKit.Label(panel.transform, "Title", UiKit.Bold, 64, UiKit.TextColor, TextAnchor.MiddleCenter).text = "PAUSED";
         pauseSubtitle = UiKit.Label(panel.transform, "Subtitle", UiKit.Medium, 26, UiKit.Dim, TextAnchor.MiddleCenter);
-        UiKit.Button(panel.transform, "Resume", "RESUME", PauseMenu.Resume, out _, 32).Size(-1, 64);
-        UiKit.Button(panel.transform, "Controls", "CONTROLS", OpenControlsFromMenu, out _, 26).Size(-1, 52);
-        UiKit.Button(panel.transform, "Settings", "SETTINGS", () => SettingsOverlay.Open(true), out _, 26).Size(-1, 52);
-        var restartTitle = UiKit.Label(panel.transform, "RestartTitle", UiKit.SemiBold, 22, UiKit.Dim, TextAnchor.MiddleLeft);
-        restartTitle.text = "RESTART FROM THE START OF A DAY";
-        pauseCards = UiKit.Node("Cards", panel.transform);
-        pauseCards.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter);
-        var help = UiKit.Label(panel.transform, "Help", UiKit.Medium, 22, UiKit.Dim, TextAnchor.MiddleCenter, true);
-        help.text = "WASD move  ·  Shift run  ·  E use (hold for some)  ·  G drop armful  ·  Tab phone / handbook  ·  F flashlight  ·  Q breathe  ·  H first aid";
+        var row = UiKit.Node("Columns", panel.transform);
+        var layout = row.Layout<HorizontalLayoutGroup>(0, 32, TextAnchor.UpperCenter);
+        layout.childControlWidth = true; layout.childForceExpandWidth = true;
+        var actions = UiKit.Node("Actions", row); actions.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter); actions.Size(-1, -1, 1);
+        UiKit.Button(actions, "Resume", "RESUME", PauseMenu.Resume, out _, 32).Size(-1, 64);
+        UiKit.Button(actions, "Settings", "SETTINGS", () => SettingsOverlay.Open(true), out _, 28).Size(-1, 56);
+        UiKit.Button(actions, "Controls", "CONTROLS", OpenControlsFromMenu, out _, 28).Size(-1, 56);
+        UiKit.Button(actions, "MainMenu", "MAIN MENU", GameSession.ReturnToMenu, out _, 28).Size(-1, 56);
+        UiKit.Button(actions, "ExitGame", "EXIT GAME", Quit, out _, 28).Size(-1, 56);
+        var restart = UiKit.Node("Restart", row); restart.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter); restart.Size(-1, -1, 1);
+        UiKit.Label(restart, "Title", UiKit.SemiBold, 22, UiKit.Dim).text = "RESTART FROM THE START OF A DAY";
+        pauseCards = UiKit.Node("Cards", restart); pauseCards.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter);
+        UiKit.Label(panel.transform, "Help", UiKit.Medium, 22, UiKit.Dim, TextAnchor.MiddleCenter, true).text = "Esc  resume. Main menu keeps your day-start save.";
         pauseOverlay.SetActive(false);
     }
 
@@ -681,6 +681,12 @@ public sealed class GameUI : MonoBehaviour
     }
 
     /// <summary>Menu / pause "CONTROLS" button: the same card, closed by its button.</summary>
+    public bool CloseManualControls()
+    {
+        if (!controlsFromMenu) return false;
+        controlsFromMenu = false; controlsOverlay.SetActive(false); return true;
+    }
+
     void OpenControlsFromMenu() { controlsFromMenu = true; controlsOverlay.SetActive(true); }
 
     void UpdateControls(DayDirector director)
