@@ -71,14 +71,14 @@ Two uploads say they are remixes of other CC0 sounds, with no source named: "Woo
 | `faint_thud.wav` | Synthesised with ffmpeg (low sine thumps). No third-party material. |
 | `door_break_heavy.wav` | `Wooden Door breaks` (Saladsounds, CC0) pitched down, with a synthesised boom and echo. |
 | `tape_rip.wav` | Three pitch-shifted copies of `duct tape.ogg` (adharca, CC0). |
-| `tv_news_mumble.wav`, `tv_news_mumble_alt.wav` | The news anchor mumble. **Generated with the Windows built-in speech voice (Microsoft Zira)**, then made unintelligible (low-passed, reverb, or reversed). Microsoft's licence for output of its built-in voices is not as clear-cut as CC0. It is unrecognisable as speech, which is fine for a jam. Before a wider release, replace it with a CC0 mumble. |
+| `tv_news_mumble.wav`, `tv_news_mumble_alt.wav` | The news anchor mumble. **Generated with the Windows built-in speech voice (Microsoft Zira)**, then made unintelligible (low-passed, reverb, or reversed). Microsoft's licence for output of its built-in voices is not as clear-cut as CC0. Being unintelligible does not establish redistribution permission. Confirm the applicable voice-output terms before submission, or replace it with a recording with verified permission. |
 
 All other files in `Resources/HurrycaneAudio` are edits of the CC0 sounds above (cut, looped, filtered, level-balanced).
 
 ## What you should do
 
-1. Add the "Needs credit" line to the game's credits screen and to the submission text. It is the only legal obligation in the audio.
+1. Add the "Needs credit" line to the game's credits screen and to the submission text. Also retain the other source/license records and verify any unresolved permissions below.
 2. Put this file (or a shortened copy) into the repo, for example `Docs/Audio/CREDITS.md`, and list the sources in the competition disclosure log.
 3. Keep the download date and the Freesound links (done above). If a page disappears later, this file is your proof of the licence at the time.
 4. Decide about the storm sound: credit the three authors (works, no new files), or swap in non-mixed CC0 storm recordings.
-5. Decide about the news mumble: fine for the jam, replace it before a real release.
+5. Resolve the news-mumble redistribution permission before submission, or replace it with a recording with verified permission.

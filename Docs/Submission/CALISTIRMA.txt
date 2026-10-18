@@ -1,0 +1,24 @@
+﻿HURRYCANE — ÇALIŞTIRMA TALİMATLARI
+
+Platform: Windows masaüstü. Türkçe ve İngilizce dil seçenekleri mevcuttur.
+ZIP dosyasını tamamen bir klasöre çıkarın. İçindeki Hurrycane/Hurrycane.exe dosyasını açın; .exe, UnityPlayer.dll ve *_Data klasörü birlikte kalmalıdır. Oyuncunun Unity kurması gerekmez.
+Ana menüden NEW GAME / YENİ OYUN ile başlayın. CONTINUE / DEVAM ET son kaydedilen günün başına döner. Dil seçimi Settings / Ayarlar içindedir.
+
+Amaç: Cane'in evini üç günlük kasırgaya hazırlamak, malzemeleri toplamak, açıklıkları güçlendirmek ve hasarı onarmak. Hazırlık, afet ve afet sonrası aşamaları süreli ilerler.
+
+Kontroller:
+WASD: hareket; fare: bakış; sol Shift: koşma.
+E: kapı/dolap açma ve eşya alma. Süreli işler için E'yi basılı tutun.
+G: kollarda taşınan eşyaları bırakma.
+Tab: telefon / alındıktan sonra el kitabı.
+F: taşınan el fenerini açma/kapatma.
+Q basılı: nefes egzersizi. H basılı: ilk yardım (malzeme gerektirir).
+Esc: duraklatma, kontroller ve gün başından yeniden başlatma.
+Space: uyarı/kontrol kartını ilerletme; ara sahnelerde basılı tutarak geçme.
+
+Geliştirme ortamı: Unity 6000.5.3f1, URP. Bu bilgi oyuncu için kurulum gereksinimi değildir.
+Donanım: ölçülmüş asgari donanım gereksinimi henüz belirlenmedi. Son build farklı bir Windows bilgisayarda test edilmelidir.
+Kaynak kod: https://github.com/alika1ender/Hurrycane
+Krediler ve lisanslar: CREDITS.txt ve beraberindeki LICENSES klasörü.
+
+Teslim derlemesi: Windows x86-64, Mono, release (Development kapalı). Unity build raporu: 0 hata, 0 uyarı. Tek sahne: HouseMap.
