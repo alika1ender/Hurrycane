@@ -14,6 +14,7 @@ public sealed class DaysConfig
     public HealthSettings health = new HealthSettings();
     public PowerSettings power = new PowerSettings();
     public FloodSettings flood = new FloodSettings();
+    public HouseSettings house = new HouseSettings();
     public PuddleSettings puddles = new PuddleSettings();
     public DoorGapSettings doorGap = new DoorGapSettings();
     public DayConfig[] days = new DayConfig[0];
@@ -41,6 +42,8 @@ public sealed class DayConfig
     // Pulse (Docs/Design/05) and health (06).
     public float restingPrep = 72, restingDisaster = 80, restingAfter = 72, pulseCeiling = 95, windowBreakSpike = 5, doorBreakSpike = 8;
     public bool pulseVisuals, pulsePenalties, sprintRaisesPulse, faintIsGameOver;
+    /// <summary>Seconds after a task is given before its location (hint text + glow through walls) is shown. Day 1: 0.</summary>
+    public float locationDelaySeconds;
     /// <summary>Blackout (Day 2 on) and basement flooding (Day 3), Docs/Design/01.</summary>
     public bool powerOut, floods;
 
@@ -69,6 +72,10 @@ public sealed class PulseSettings
     public float breathWindupSeconds = 4, breathMaxSeconds = 4, breathDropPerSecond = 8, breathCooldownSeconds = 20;
     public float lastSecondsRisePerSecond = 2, unfinishedTaskRise = 2, unfinishedTaskRiseMax = 12, sprintRisePerSecond = 6;
     public float panicTaskPenalty = .15f, peakTaskPenalty = .30f;
+    /// <summary>At or above this BPM the heart rate is critical: slower walking, blurred vision, the monitor blinks.</summary>
+    public float criticalBpm = 145, criticalSpeedFactor = .65f;
+    /// <summary>At this BPM Cane freezes for freezeSeconds ("Press Q to take a deep breath"); re-arms below freezeBpm - freezeRearm.</summary>
+    public float freezeBpm = 180, freezeSeconds = 5, freezeRearm = 15;
 }
 
 [Serializable]
@@ -85,6 +92,13 @@ public sealed class FloodSettings
     public int towelsToBlock = 2;
     /// <summary>Main breaker still on: touching the flood water shocks for this much health, at most once per interval.</summary>
     public float shockDamage = 10, shockIntervalSeconds = 2;
+}
+
+/// <summary>House health losses (HouseHealth): per broken/cracked opening, flood at full depth, per puddle.</summary>
+[Serializable]
+public sealed class HouseSettings
+{
+    public float brokenWindow = 8, brokenDoor = 15, crackedWindow = 3, crackedDoor = 5, floodMax = 15, puddle = 1, puddleMax = 8;
 }
 
 [Serializable]

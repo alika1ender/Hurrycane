@@ -27,13 +27,17 @@ public sealed class GameUI : MonoBehaviour
     RectTransform gameOverCards, scoreRows;
     Text scoreTitle, scoreSub, scoreTotal, scoreRank, scoreLine, scoreFact;
     float heartPhase;
+    Image vitalsPanel;
+    Text gameOverReason, houseValue;
+    Image houseFill;
+    float lastHouse = -1;
     GameObject phoneOverlay, phoneDeadScreen, handbookOverlay;
     RectTransform phoneThread, handbookList, groundMap, upperMap;
     Text phoneStatus, phoneTask, phoneHint, handbookSubtitle;
     string overlaySignature;
     float overlayRefresh;
     DayPhase shownPhase = (DayPhase)(-1);
-    Text phaseLabel, timeLabel, healthValue, promptKey, promptText, promptMissing;
+    Text phaseLabel, timeLabel, healthValue, promptKey, promptText, promptMissing, freezeLabel;
     RectTransform prompt, inventoryRow, taskPanel, toastColumn;
     CanvasGroup bannerGroup, nightGroup;
     Text bannerTitle, bannerSub, nightTitle, nightBody, nightFooter, alertFooter;
@@ -78,7 +82,7 @@ public sealed class GameUI : MonoBehaviour
     }
     void OnText(PhoneMessage message) => Toast("Broski:  " + message.text, UiKit.Amber);
     void OnFlood() => Toast("Water is pouring down the basement stairs!", UiKit.Red);
-    void OnShock() => Toast("ELECTRIC SHOCK!  The power was never switched off.", UiKit.Red);
+    void OnShock() => Toast("ZAP!  The flood water is live. Switch off the main breaker first.", UiKit.Red);
     void OnDestroy() => MapExplorer.DrawDebugHud = true;
 
     // ------------------------------------------------------------------ build
@@ -221,7 +225,7 @@ public sealed class GameUI : MonoBehaviour
         panel.Layout<VerticalLayoutGroup>(32, 14, TextAnchor.UpperCenter);
         panel.Fit(false, true);
         UiKit.Label(panel.transform, "Title", UiKit.Bold, 64, UiKit.Red, TextAnchor.MiddleCenter).text = "YOU DIDN'T MAKE IT";
-        UiKit.Label(panel.transform, "Sub", UiKit.Medium, 26, UiKit.Dim, TextAnchor.MiddleCenter, true).text = "Day 3. Your health ran out in the storm. Try again from the start of a day.";
+        gameOverReason = UiKit.Label(panel.transform, "Sub", UiKit.Medium, 26, UiKit.Dim, TextAnchor.MiddleCenter, true);
         gameOverCards = UiKit.Node("Cards", panel.transform);
         gameOverCards.Layout<VerticalLayoutGroup>(0, 10, TextAnchor.UpperCenter);
         UiKit.Button(panel.transform, "NewGame", "NEW GAME", GameSession.NewGame, out _, 28).Size(-1, 56);
@@ -267,7 +271,8 @@ public sealed class GameUI : MonoBehaviour
     void BuildHealth()
     {
         var panel = UiKit.Panel(hud, "Vitals", UiKit.PanelColor);
-        panel.rectTransform.Place(new Vector2(0, 0), new Vector2(28, 28), new Vector2(360, 140));
+        vitalsPanel = panel;
+        panel.rectTransform.Place(new Vector2(0, 0), new Vector2(28, 28), new Vector2(360, 70));
         // Pulse row (top): beating heart dot, BPM number, zone word. Colour is never the only signal (07).
         heart = UiKit.Node("Heart", panel.transform).Place(new Vector2(0, 1), new Vector2(26, -24), new Vector2(22, 22)).gameObject.AddComponent<Image>();
         heart.sprite = UiKit.Disc; heart.raycastTarget = false;
@@ -276,17 +281,27 @@ public sealed class GameUI : MonoBehaviour
         pulseValue.rectTransform.Place(new Vector2(0, 1), new Vector2(54, -12), new Vector2(200, 46));
         pulseZone = UiKit.Label(panel.transform, "Zone", UiKit.SemiBold, 22, UiKit.Green, TextAnchor.MiddleRight);
         pulseZone.rectTransform.Place(new Vector2(1, 1), new Vector2(-18, -20), new Vector2(160, 30));
-        // Health row (bottom).
+        // House health (middle, the big bar): goes down when windows break, the basement floods or puddles spread.
         var title = UiKit.Label(panel.transform, "Label", UiKit.SemiBold, 20, UiKit.Dim);
-        title.rectTransform.Place(new Vector2(0, 0), new Vector2(20, 44), new Vector2(200, 26));
-        title.text = "HEALTH";
-        UiKit.Bar(panel.transform, "Bar", new Color(1, 1, 1, .12f), UiKit.Green, out healthFill)
-            .Place(new Vector2(0, 0), new Vector2(20, 22), new Vector2(250, 14));
-        healthValue = UiKit.Label(panel.transform, "Value", UiKit.Bold, 40, UiKit.TextColor, TextAnchor.MiddleRight);
-        healthValue.rectTransform.Place(new Vector2(1, 0), new Vector2(-16, 10), new Vector2(80, 50));
+        title.rectTransform.Place(new Vector2(0, 0), new Vector2(20, 82), new Vector2(200, 26));
+        title.text = "HOUSE";
+        var houseBar = UiKit.Bar(panel.transform, "HouseBar", new Color(1, 1, 1, .12f), UiKit.Blue, out houseFill)
+            .Place(new Vector2(0, 0), new Vector2(20, 58), new Vector2(250, 18));
+        houseValue = UiKit.Label(panel.transform, "HouseValue", UiKit.Bold, 40, UiKit.TextColor, TextAnchor.MiddleRight);
+        houseValue.rectTransform.Place(new Vector2(1, 0), new Vector2(-16, 46), new Vector2(90, 50));
+        // Cane's own health (bottom, thin): glass injuries, first aid, fainting.
+        var you = UiKit.Label(panel.transform, "YouLabel", UiKit.SemiBold, 18, UiKit.Dim);
+        you.rectTransform.Place(new Vector2(0, 0), new Vector2(20, 16), new Vector2(60, 24));
+        you.text = "YOU";
+        var youBar = UiKit.Bar(panel.transform, "Bar", new Color(1, 1, 1, .12f), UiKit.Green, out healthFill)
+            .Place(new Vector2(0, 0), new Vector2(66, 22), new Vector2(204, 8));
+        healthValue = UiKit.Label(panel.transform, "Value", UiKit.SemiBold, 22, UiKit.TextColor, TextAnchor.MiddleRight);
+        healthValue.rectTransform.Place(new Vector2(1, 0), new Vector2(-16, 12), new Vector2(80, 30));
+        // Playtest 2026-10-18: no health bars on screen. They still run (score, damage flashes), just hidden.
+        foreach (var bar in new Component[] { title, houseBar, houseValue, you, youBar, healthValue }) bar.gameObject.SetActive(false);
         // Contextual key hints just above the panel.
         vitalHints = UiKit.Label(hud, "VitalHints", UiKit.SemiBold, 22, UiKit.TextColor);
-        vitalHints.rectTransform.Place(new Vector2(0, 0), new Vector2(30, 176), new Vector2(600, 30));
+        vitalHints.rectTransform.Place(new Vector2(0, 0), new Vector2(30, 106), new Vector2(600, 30));
         vitalHints.gameObject.AddComponent<Shadow>().effectDistance = new Vector2(1, -1);
     }
 
@@ -311,6 +326,19 @@ public sealed class GameUI : MonoBehaviour
         promptMissing = UiKit.Label(hud, "Missing", UiKit.Medium, 24, UiKit.Amber, TextAnchor.UpperCenter);
         promptMissing.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, -124), new Vector2(700, 30));
         promptMissing.rectTransform.pivot = new Vector2(.5f, 1);
+        // Black outline so the prompt reads over bright walls and the glow.
+        foreach (var t in new[] { promptText, promptMissing })
+        {
+            var o = t.gameObject.AddComponent<Outline>();
+            o.effectColor = new Color(0, 0, 0, .95f); o.effectDistance = new Vector2(2, -2);
+        }
+
+        // 180 BPM freeze: big centre message.
+        freezeLabel = UiKit.Label(hud, "Freeze", UiKit.Bold, 46, UiKit.TextColor, TextAnchor.MiddleCenter);
+        freezeLabel.rectTransform.Place(new Vector2(.5f, .5f), new Vector2(0, 110), new Vector2(1100, 120));
+        var fo = freezeLabel.gameObject.AddComponent<Outline>();
+        fo.effectColor = new Color(0, 0, 0, .95f); fo.effectDistance = new Vector2(3, -3);
+        freezeLabel.text = "";
     }
 
     void BuildInventory()
@@ -706,7 +734,7 @@ public sealed class GameUI : MonoBehaviour
             if (hand && hand.HasHandbook)
                 Tip("handbook", "Tab", "THE HANDBOOK", "Tab opens it: today's full checklist and a live floor plan of every window.");
             if (power && power.PowerOut && power.HasFlashlight && !power.FlashlightOn)
-                Tip("flashlight", "F", "IT'S DARK", "F switches the flashlight on. It drains; spare batteries refill it automatically.");
+                Tip("flashlight", "F", "IT'S DARK", "F switches the flashlight on and off.");
             if (pulse && pulse.Zone != PulseZone.Calm)
                 Tip("breathe", "Q", "HEART RACING", "Hold Q and stand still to breathe. A racing heart slows your work on Day 3.");
             if (health && health.CanUseFirstAid && session.health < 70)
@@ -730,6 +758,61 @@ public sealed class GameUI : MonoBehaviour
     }
 
     void OnNewGame() { tipsShown.Clear(); tipQueue.Clear(); tipUntil = 0; }
+
+    // ------------------------------------------------------------------ task beacons
+
+    readonly List<Image> beacons = new List<Image>();
+    RectTransform beaconLayer;
+
+    /// <summary>
+    /// A pulsing amber marker over each target of the current task (once its location is revealed), so even a small item
+    /// behind a wall is easy to find. Works with TaskGlow, which makes the object itself shine through walls.
+    /// </summary>
+    void UpdateBeacons(GameSession session, bool playing)
+    {
+        if (!beaconLayer) { beaconLayer = UiKit.Node("Beacons", hud).Stretch(); beaconLayer.SetAsFirstSibling(); }
+        var engine = session.GetComponent<TaskEngine>();
+        var targets = playing && engine ? engine.Targets : null;
+        int count = 0;
+        if (targets != null)
+        {
+            var cam = explorer.viewCamera;
+            float pulse = .5f + .5f * Mathf.Sin(Time.unscaledTime * 5f);
+            foreach (var target in targets)
+            {
+                if (!target || !target.gameObject.activeInHierarchy || count >= 8) continue;
+                var world = TargetCenter(target);
+                var screen = cam.WorldToScreenPoint(world);
+                if (screen.z <= .2f) continue;
+                if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(beaconLayer, screen, null, out var local)) continue;
+                if (count == beacons.Count)
+                {
+                    var image = UiKit.Node("Beacon", beaconLayer).gameObject.AddComponent<Image>();
+                    image.sprite = UiKit.Ring; image.raycastTarget = false;
+                    beacons.Add(image);
+                }
+                var beacon = beacons[count++];
+                beacon.gameObject.SetActive(true);
+                beacon.rectTransform.anchorMin = beacon.rectTransform.anchorMax = new Vector2(.5f, .5f);
+                beacon.rectTransform.anchoredPosition = local;
+                float distance = Vector3.Distance(cam.transform.position, world);
+                float size = Mathf.Lerp(54, 30, Mathf.InverseLerp(2, 14, distance)) * (1 + .18f * pulse);
+                beacon.rectTransform.sizeDelta = new Vector2(size, size);
+                var c = UiKit.Amber; c.a = .55f + .4f * pulse;
+                beacon.color = c;
+            }
+        }
+        for (int i = count; i < beacons.Count; i++) beacons[i].gameObject.SetActive(false);
+    }
+
+    static Vector3 TargetCenter(Component target)
+    {
+        if (target is BreakableOpening opening) return opening.Center;
+        var renderers = target.GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers) if (r.enabled) { var b = r.bounds; foreach (var o in renderers) if (o.enabled) b.Encapsulate(o.bounds); return b.center; }
+        var collider = target.GetComponent<Collider>();
+        return collider ? collider.bounds.center : target.transform.position;
+    }
 
     // ------------------------------------------------------------------ update
 
@@ -755,7 +838,7 @@ public sealed class GameUI : MonoBehaviour
             shownPhase = phase;
             gameOverOverlay.SetActive(gameOver);
             scoreOverlay.SetActive(ended);
-            if (gameOver) FillCards(gameOverCards);
+            if (gameOver) { FillCards(gameOverCards); gameOverReason.text = "Day 3. " + director.GameOverReason + " Try again from the start of a day."; }
             if (ended) FillScore(director);
             if (phase == DayPhase.Menu) FillMenu();
         }
@@ -776,6 +859,7 @@ public sealed class GameUI : MonoBehaviour
             UpdateTasks(session, director);
         }
         UpdateHandheld(session, director, playing);
+        UpdateBeacons(session, playing);
         UpdateControls(director);
         UpdateTips(session, director, playing);
         UpdateToasts();
@@ -799,11 +883,19 @@ public sealed class GameUI : MonoBehaviour
     void UpdateHealth(GameSession session)
     {
         float health = session.health;
-        if (lastHealth >= 0 && health < lastHealth - .5f) { var c = damageFlash.color; c.a = .45f; damageFlash.color = c; }
+        if (lastHealth >= 0 && health < lastHealth - .5f) damageFlash.color = new Color(.75f, .05f, .05f, .45f);
         lastHealth = health;
         UiKit.SetFill(healthFill, health / 100f);
         healthFill.color = health > 50 ? UiKit.Green : health > 25 ? UiKit.Amber : UiKit.Red;
         healthValue.text = Mathf.RoundToInt(health).ToString();
+        var house = session.GetComponent<HouseHealth>();
+        float value = house ? house.Value : 100;
+        // The house losing health flashes amber (Cane getting hurt flashes red, above).
+        if (lastHouse >= 0 && value < lastHouse - .5f && damageFlash.color.a < .2f) damageFlash.color = new Color(.85f, .5f, .05f, .3f);
+        lastHouse = value;
+        UiKit.SetFill(houseFill, value / 100f);
+        houseFill.color = value > 60 ? UiKit.Blue : value > 30 ? UiKit.Amber : UiKit.Red;
+        houseValue.text = Mathf.RoundToInt(value) + "<size=24>%</size>";
     }
 
     void UpdatePrompt()
@@ -988,8 +1080,28 @@ public sealed class GameUI : MonoBehaviour
         heart.color = color;
         heart.rectTransform.localScale = Vector3.one * (1 + .45f * beat);
         pulseValue.text = Mathf.RoundToInt(bpm) + " <size=22><color=#9AA0AA>BPM</color></size>";
-        pulseZone.text = zone.ToString().ToUpperInvariant();
+        pulseZone.text = pulse.Critical ? "CRITICAL" : zone.ToString().ToUpperInvariant();
         pulseZone.color = color;
+        // Critical: the heart monitor blinks red (panel, number and zone word), fast.
+        bool blinkOn = pulse.Critical && Mathf.Repeat(Time.unscaledTime * 2.6f, 1f) < .5f;
+        if (pulse.Frozen && !pulse.Breathing)
+        {
+            freezeLabel.text = "YOUR HEART IS AT " + Mathf.RoundToInt(bpm) + " BPM. YOU CAN'T MOVE.\n<size=56><color=#F5A524>PRESS  Q  TO TAKE A DEEP BREATH</color></size>";
+            freezeLabel.color = Color.Lerp(UiKit.TextColor, UiKit.Red, .5f + .5f * Mathf.Sin(Time.unscaledTime * 6));
+        }
+        else
+        {
+            var water = session.GetComponent<FloodSystem>();
+            if (water && water.BlockedRecently)
+            {
+                freezeLabel.text = "THE WATER IS LIVE. YOU CAN'T GO IN.\n<size=40><color=#5AB0FF>Switch off the main breaker (glowing, by the stairs)</color></size>";
+                freezeLabel.color = UiKit.TextColor;
+            }
+            else freezeLabel.text = "";
+        }
+        vitalsPanel.color = blinkOn ? new Color(.55f, .08f, .08f, .92f) : UiKit.PanelColor;
+        pulseValue.color = pulse.Critical && !blinkOn ? UiKit.Red : UiKit.TextColor;
+        if (pulse.Critical) pulseZone.color = blinkOn ? Color.white : UiKit.Red;
 
         var hints = new List<string>();
         if (zone != PulseZone.Calm && !pulse.Breathing)
@@ -997,7 +1109,7 @@ public sealed class GameUI : MonoBehaviour
         var power = session.GetComponent<PowerSystem>();
         if (power && power.PowerOut && power.HasFlashlight && !power.FlashlightOn) hints.Add("F  flashlight");
         var flood = session.GetComponent<FloodSystem>();
-        if (flood && flood.PlayerTouchingWater && flood.Live) hints.Add("<color=#E5484D>The water is live! Get out!</color>");
+        if (flood && flood.Live && flood.Flooding) hints.Add("<color=#E5484D>The water is live. Switch off the main breaker.</color>");
         else if (flood && flood.PlayerInWater) hints.Add("<color=#E5484D>You're wading in flood water</color>");
         if (health && health.CanUseFirstAid && session.health < 70)
             hints.Add("H  hold for first aid  <color=#9AA0AA>(" + explorer.Inventory.Uses(ItemKind.FirstAid) + ")</color>");
@@ -1012,7 +1124,8 @@ public sealed class GameUI : MonoBehaviour
         foreach (Transform child in scoreRows) Destroy(child.gameObject);
         var r = director.Score;
         if (r == null) return;
-        ScoreRow("Health remaining", r.health, 300, Mathf.RoundToInt(GameSession.Instance.health) + "%");
+        ScoreRow("House health", r.house, 150, Mathf.RoundToInt(r.houseValue) + "%");
+        ScoreRow("Your health", r.health, 150, Mathf.RoundToInt(GameSession.Instance.health) + "%");
         ScoreRow("Openings still intact", r.openings, 250, r.intact + " / " + r.openingCount);
         ScoreRow("Reinforcements made", r.reinforcements, 150, r.reinforcedCount + " / 15");
         ScoreRow("Supplies left", r.supplies, 100, r.supplyCount.ToString());
@@ -1036,27 +1149,17 @@ public sealed class GameUI : MonoBehaviour
         value.Size(130);
     }
 
+    /// <summary>Only what's in Cane's arms, e.g. "HOLDING  Water 3   3/6". Nothing when the arms are empty.</summary>
     void UpdateInventory()
     {
-        var power = GameSession.Instance ? GameSession.Instance.GetComponent<PowerSystem>() : null;
         var inventory = explorer.Inventory;
-        var chips = new List<string>();
-        foreach (var group in inventory.Pockets.GroupBy(p => p.Kind))
-        {
-            int uses = group.Sum(p => p.UsesLeft);
-            string extra = uses > 0 ? "  <color=#9AA0AA>" + uses + " uses</color>" : "";
-            if (group.Key == ItemKind.Flashlight && power) extra = "  <color=" + (power.FlashlightOn ? "#F2A93B" : "#9AA0AA") + ">" + (power.FlashlightOn ? "ON " : "") + Mathf.CeilToInt(power.Charge) + "%</color>";
-            chips.Add(Pickup.DisplayName(group.Key) + (group.Count() > 1 ? "  ×" + group.Count() : "") + extra);
-        }
         string arms = "";
         if (inventory.Armful.Count > 0)
-            arms = "ARMS  " + string.Join(", ", inventory.Armful.GroupBy(p => p.Kind).Select(g => Pickup.DisplayName(g.Key) + " " + g.Count()))
-                + "  <color=#9AA0AA>" + inventory.Armful.Count + "/" + PlayerInventory.Capacity(inventory.ArmfulGroup.Value) + "</color>";
-        string signature = string.Join("|", chips) + "#" + arms;
-        if (signature == inventorySignature) return;
-        inventorySignature = signature;
+            arms = "HOLDING  " + string.Join(", ", inventory.Armful.GroupBy(p => p.Kind).Select(g => Pickup.DisplayName(g.Key) + (g.Count() > 1 ? " " + g.Count() : "")))
+                + "   <color=#9AA0AA>" + inventory.Armful.Count + "/" + PlayerInventory.Capacity(inventory.ArmfulGroup.Value) + "</color>";
+        if (arms == inventorySignature) return;
+        inventorySignature = arms;
         foreach (Transform child in inventoryRow) Destroy(child.gameObject);
-        foreach (var chip in chips) Chip(chip, UiKit.PanelColor, UiKit.TextColor);
         if (arms != "") Chip(arms, new Color(UiKit.Amber.r * .35f, UiKit.Amber.g * .35f, UiKit.Amber.b * .35f, .92f), UiKit.Amber);
     }
 
@@ -1068,60 +1171,80 @@ public sealed class GameUI : MonoBehaviour
         label.text = text;
     }
 
+    Image taskHighlight;
+    RectTransform taskCard;
+    string highlightedTask;
+    bool highlightedRevealed;
+    float highlightAt = -99;
+
+    /// <summary>
+    /// Top right: ONE task at a time on every day (TaskEngine.Current). Day 1 shows where at once; later days show
+    /// "location in N s" first. An amber frame blinks hard when a task arrives or its location appears, then keeps a
+    /// gentle pulse so the eye always finds what to do. Tab still opens the full checklist in the survival guide.
+    /// </summary>
     void UpdateTasks(GameSession session, DayDirector director)
     {
         var engine = session.GetComponent<TaskEngine>();
         var hand = session.GetComponent<HandheldSystem>();
         if (!engine) return;
         bool hasBook = hand && hand.HasHandbook;
-        // Day 1 (and Days 2-3 until the handbook is found) the phone guides one task at a time.
-        bool phone = director.Today.taskSource == "phone" || !hasBook;
         bool dead = hand && hand.PhoneDead;
         int unread = hand ? hand.Unread : 0;
         var current = engine.Current;
-        string signature = (phone ? "P" + (current == null ? "-" : current.definition.id) + Mathf.RoundToInt(session.phoneBattery) + dead
-            : "H" + string.Join(",", engine.Today.Select(t => t.definition.id + (int)t.status))) + "u" + unread;
+        bool revealed = engine.LocationRevealed;
+        string id = current == null ? "-" : current.definition.id;
+        if (id != highlightedTask || (revealed && !highlightedRevealed)) highlightAt = Time.unscaledTime;
+        highlightedTask = id; highlightedRevealed = revealed;
+        AnimateTaskHighlight();
+
+        string signature = id + "|" + revealed + "|" + Mathf.CeilToInt(engine.RevealIn) + "|" + dead + "|" + unread + "|" + hasBook + "|" + Mathf.RoundToInt(session.phoneBattery);
         if (signature == taskSignature) return;
         taskSignature = signature;
         foreach (Transform child in taskPanel) Destroy(child.gameObject);
-        var panel = UiKit.Panel(taskPanel, "Panel", UiKit.PanelColor);
-        var rt = panel.rectTransform.Place(new Vector2(1, 1), Vector2.zero, new Vector2(phone ? 400 : 460, 0));
+
+        // The blinking frame sits behind the card (drawn first) and is sized to it every frame.
+        taskHighlight = UiKit.Panel(taskPanel, "Highlight", UiKit.Amber);
+        taskHighlight.rectTransform.Place(new Vector2(1, 1), new Vector2(7, 7), Vector2.zero);
+        var panel = UiKit.Panel(taskPanel, "Panel", new Color(UiKit.PanelColor.r, UiKit.PanelColor.g, UiKit.PanelColor.b, .97f)); // opaque, so the frame reads as a border
+        taskCard = panel.rectTransform.Place(new Vector2(1, 1), Vector2.zero, new Vector2(420, 0));
         panel.Layout<VerticalLayoutGroup>(20, 8, TextAnchor.UpperLeft);
         panel.Fit(false, true);
 
-        var header = UiKit.Node("Header", rt);
+        var header = UiKit.Node("Header", taskCard);
         header.Layout<HorizontalLayoutGroup>(0, 8, TextAnchor.MiddleLeft);
         var title = UiKit.Label(header, "Title", UiKit.SemiBold, 22, UiKit.Dim);
-        title.text = phone ? (dead ? "PHONE  <color=#E5484D>DEAD</color>" : "PHONE") : "EMERGENCY HANDBOOK";
+        title.text = hasBook ? "SURVIVAL GUIDE" : dead ? "PHONE  <color=#E5484D>DEAD</color>" : "PHONE";
         title.Size(-1, -1, 1);
-        if (phone && !dead) UiKit.Label(header, "Battery", UiKit.SemiBold, 22, session.phoneBattery < 15 ? UiKit.Red : UiKit.Dim, TextAnchor.MiddleRight).text = Mathf.RoundToInt(session.phoneBattery) + "%";
-        if (phone)
-        {
-            if (current == null)
-                UiKit.Label(rt, "Done", UiKit.Bold, 30, UiKit.Green, TextAnchor.UpperLeft, true).text = "All set for now. Stay safe.";
-            else
-            {
-                UiKit.Label(rt, "Kicker", UiKit.SemiBold, 20, UiKit.Amber).text = "NEXT TASK";
-                UiKit.Label(rt, "Task", UiKit.Bold, 32, UiKit.TextColor, TextAnchor.UpperLeft, true).text = current.definition.text;
-                UiKit.Label(rt, "Hint", UiKit.Medium, 24, UiKit.Dim, TextAnchor.UpperLeft, true).text = current.definition.hint;
-            }
-        }
+        if (!hasBook && !dead) UiKit.Label(header, "Battery", UiKit.SemiBold, 22, session.phoneBattery < 15 ? UiKit.Red : UiKit.Dim, TextAnchor.MiddleRight).text = Mathf.RoundToInt(session.phoneBattery) + "%";
+
+        if (current == null)
+            UiKit.Label(taskCard, "Done", UiKit.Bold, 30, UiKit.Green, TextAnchor.UpperLeft, true).text = "All set for now. Stay safe.";
         else
-            foreach (var task in engine.Today)
-            {
-                if (task.status == TaskStatus.Hidden) continue;
-                var row = UiKit.Node("Row", rt);
-                row.Layout<HorizontalLayoutGroup>(0, 12, TextAnchor.UpperLeft);
-                var box = UiKit.Panel(row, "Box", task.status == TaskStatus.Done ? UiKit.Green : task.status == TaskStatus.Locked ? new Color(UiKit.Red.r, UiKit.Red.g, UiKit.Red.b, .5f) : new Color(1, 1, 1, .16f));
-                box.Size(20, 20);
-                bool closed = task.status != TaskStatus.Open;
-                var text = UiKit.Label(row, "Text", UiKit.Medium, 24, closed ? UiKit.Dim : UiKit.TextColor, TextAnchor.UpperLeft, true);
-                text.text = task.definition.text + (task.status == TaskStatus.Locked ? "  <color=#E5484D>too late</color>" : !task.definition.required ? "  <color=#9AA0AA>optional</color>" : "");
-                text.Size(-1, -1, 1);
-            }
-        string footer = hasBook ? "Tab  open the handbook (floor plan)" : dead ? "" : "Tab  open the phone";
+        {
+            bool urgent = id == "store" || !string.IsNullOrEmpty(current.definition.appearsWhen);
+            UiKit.Label(taskCard, "Kicker", UiKit.SemiBold, 20, urgent ? UiKit.Red : UiKit.Amber).text =
+                (urgent ? "NOW" : "YOUR TASK") + (current.definition.required || id == "store" ? "" : "  <color=#9AA0AA>(optional)</color>");
+            UiKit.Label(taskCard, "Task", UiKit.Bold, 32, UiKit.TextColor, TextAnchor.UpperLeft, true).text = current.definition.text;
+            var where = UiKit.Label(taskCard, "Where", UiKit.Medium, 24, revealed ? UiKit.TextColor : UiKit.Dim, TextAnchor.UpperLeft, true);
+            where.text = revealed
+                ? "<color=#F2A93B>WHERE</color>  " + current.definition.hint + (engine.Targets.Count > 0 ? "\n<size=20><color=#9AA0AA>It's glowing, even through walls.</color></size>" : "")
+                : "<color=#9AA0AA>Location in " + Mathf.CeilToInt(engine.RevealIn) + " s...</color>";
+        }
+        string footer = hasBook ? "Tab  full checklist and floor plan" : dead ? "" : "Tab  open the phone";
         if (unread > 0 && !dead) footer = "<color=#F2A93B>" + unread + " new message" + (unread > 1 ? "s" : "") + "</color>   " + footer;
-        if (footer != "") UiKit.Label(rt, "Footer", UiKit.SemiBold, 20, UiKit.Dim, TextAnchor.UpperLeft, true).text = footer;
+        if (footer != "") UiKit.Label(taskCard, "Footer", UiKit.SemiBold, 20, UiKit.Dim, TextAnchor.UpperLeft, true).text = footer;
+    }
+
+    void AnimateTaskHighlight()
+    {
+        if (!taskHighlight || !taskCard) return;
+        taskHighlight.rectTransform.sizeDelta = taskCard.rect.size + new Vector2(14, 14);
+        float since = Time.unscaledTime - highlightAt;
+        float alpha = since < 3.5f
+            ? (Mathf.Repeat(since * 3f, 1f) < .5f ? .95f : .2f)                       // fresh task: hard blink
+            : .16f + .2f * (.5f + .5f * Mathf.Sin(Time.unscaledTime * 3.2f));        // afterwards: gentle pulse
+        var c = UiKit.Amber; c.a = alpha;
+        taskHighlight.color = c;
     }
 
     void UpdateNight(bool night, DayDirector director)

@@ -136,9 +136,9 @@ public sealed class BreakableOpening : MonoBehaviour, IInteractable
         {
             switch (Next)
             {
-                case Job.Reinforce: return isDoor ? "Brace front door" : "Board up window";
+                case Job.Reinforce: return isDoor ? "Reinforce front door" : "Reinforce window";
                 case Job.Repair: return "Repair " + Noun + (state == OpeningState.Cracked ? " (cracked)" : " (broken)");
-                default: return InPlay ? (isDoor ? "Front door braced" : "Window boarded up") : null;
+                default: return InPlay ? (isDoor ? "Front door reinforced" : "Window reinforced") : null;
             }
         }
     }

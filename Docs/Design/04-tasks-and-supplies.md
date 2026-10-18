@@ -53,6 +53,16 @@ The tasks below live in `Assets/Resources/HurrycaneData/tasks.json`, and `TaskEn
 - **Day 1 staging is built:** on a new game, the spare toolkit and 4 plank sets appear on the floor next to the basement stairs (the stack then holds 14).
 - **Friction found in testing:** water and planks are both carried in the arms, so after "Take 3 water bottles" the player must drop (G) or stash the water before grabbing planks. Consider letting a few bottles fit in the pockets.
 
+## One task at a time (built 2026-10-18, playtest request)
+- **Every day** the top-right panel shows ONE task (`TaskEngine.Current`): the first open task in list order. Tasks that appear mid-day (`appearsWhen`: repairs, the flood, puddles) interrupt and are labelled **NOW**. Tab still opens the full checklist in the survival guide.
+- **Location:** the `hint` is the location. Day 1 shows it at once; Days 2-3 show "Location in N s..." for `locationDelaySeconds` (7) in `days.json`, then the location.
+- **Glow:** once revealed, the task's targets shine through walls (`TaskGlow`, shader `Resources/TaskGlow`) and get a pulsing amber ring on screen. Targets are worked out from the task condition (items to fetch, windows, the supply box, switches, loose items, the stair barrier, puddles).
+- **Supply box:** while carrying food or water, the task becomes "Put the food and water in the supply box" (master bedroom) and the box glows at once.
+- **Task wording:** windows are now "Reinforce ..." and split by room (Day 1: living room, entry hall; Day 2: kitchen, back hall, master bedroom; Day 3: study, bathroom, landing, stair hall). The front door is "Reinforce the front door".
+- **Batteries removed:** the flashlight doesn't run down (`flashlightDrainPerSecond` 0) and battery props are hidden. `d2_radio` is gone; `d3_prep` is now "Put the blanket in the supply box"; the go-bag is backpack + first aid.
+- **Enough tape and planks for the whole game:** 2 tape rolls × 10 uses (`openings.json`), and 32 plank sets in the stack.
+- Every pickup has a brighter, wider, shimmering outline (`PickupHighlight`).
+
 ## Tasks
 Phases: **P** Preparation, **D** Disaster, **A** After-Disaster. Seconds = Preparation cost (x1.5 in D and A). "Req" tasks count for completion score; "Opt" tasks count only if done.
 
@@ -115,3 +125,12 @@ Removed on purpose: all "bucket under a leak" tasks, attic, bathtub, sandbags (r
 
 ## Open questions
 - **Q2. Decided:** towels and blankets instead of sandbags.
+
+## Shorter days (2026-10-18)
+Days are now 1:30, 1:30 and 3:00 in total (01), so the task lists were cut to fit one task at a time. Cut tasks stay in `tasks.json` with `"disabled": true`, so they can come back.
+- **Day 1 (50 s prep):** survival guide, alert, flashlight, toolkit + planks, living room windows, front door; then repair the crack (W01 cracks 8 s into the storm) and wipe. Cut: radio, 3 water, entry window, bonus first aid.
+- **Day 2 (50 s prep):** toolkit + planks, kitchen windows, back hall window, door gap, supply box 2 water + 2 food, utilities (valve + main breaker); then wipe and repair. Cut: survival guide, master bedroom windows, unplug, loose items, first aid.
+- **Day 3 (95 s prep):** supply box 3 water + 3 food, first aid, toolkit + planks + tape, study windows, stair hall windows, utilities (optional; needed for live flood water), block the stairs (optional); then the flood, repair, wipe. Cut: blanket, bathroom and landing windows, door again, go-bag, loose items.
+- The location of the current task is shown after 9 s on Days 2-3 (`locationDelaySeconds`), at once on Day 1.
+- **Needed items glow too:** once the location shows, whatever the job needs and Cane isn't holding glows through walls with the target: toolkit + planks (plank stack) for reinforcing, toolkit + repair tape for repairs, a towel for puddles, the stairs and the door gap. The 2 nearest of each kind.
+- The toolkit and planks are on top of the basement workbench (hints fixed; they used to say "top of the basement stairs").

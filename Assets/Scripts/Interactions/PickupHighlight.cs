@@ -8,8 +8,9 @@ using UnityEngine;
 /// </summary>
 public sealed class PickupHighlight : MonoBehaviour
 {
-    const float NearRadius = 3.5f, RefreshSeconds = .5f;
-    static readonly Color Near = new Color(1, .82f, .35f, .35f), Focused = new Color(1, .86f, .4f, .95f);
+    const float NearRadius = 6f, RefreshSeconds = .5f;
+    // Brighter than before and gently shimmering, so everything you can take catches the eye.
+    static readonly Color Near = new Color(1, .84f, .38f, .75f), Focused = new Color(1, .9f, .5f, 1f);
     static readonly int ColorId = Shader.PropertyToID("_Color"), WidthId = Shader.PropertyToID("_Width"), CenterId = Shader.PropertyToID("_Center");
 
     MapExplorer player;
@@ -67,8 +68,9 @@ public sealed class PickupHighlight : MonoBehaviour
             if (!any) { bounds = r.bounds; any = true; } else bounds.Encapsulate(r.bounds);
         }
         if (!any) return;
-        block.SetColor(ColorId, focused ? Focused : Near);
-        block.SetFloat(WidthId, focused ? .014f : .007f);
+        var near = Near; near.a *= .6f + .4f * Mathf.Sin(Time.time * 3f + bounds.center.x * 2f); // shimmer, out of step per item
+        block.SetColor(ColorId, focused ? Focused : near);
+        block.SetFloat(WidthId, focused ? .018f : .012f);
         block.SetVector(CenterId, bounds.center);
         var parameters = new RenderParams(material) { matProps = block, shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off, receiveShadows = false };
         foreach (var filter in filters)

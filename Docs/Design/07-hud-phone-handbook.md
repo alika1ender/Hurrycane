@@ -20,6 +20,10 @@ Physical object on the living room table, highlighted. After pickup it opens wit
 Style: **emergency broadcast**. Dark translucent rounded panels and white **Barlow Condensed** type (OFL license, in `Assets/Resources/HurrycaneUI/Fonts`). Phase colours are amber for Preparation, red for Disaster and blue for After-Disaster; green means done or healthy. It's built in code with uGUI (1920x1080 reference, scales to any screen), so the scene file is untouched. Rounded panels and rings are drawn procedurally, so no image assets are needed. Screenshots: `WalkthroughPreviews/ui/` (not committed).
 - **Timer** (top centre): "DAY N · PHASE" in the phase colour, a large mm:ss, and a draining progress bar. The digits pulse red in the last 10 s.
 - **Health** (bottom left): bar plus number, green, then amber below 50, then red below 25. The screen flashes red when Cane is hurt.
+- **No health bars (later 2026-10-18):** both bars below are hidden; the vitals panel shows only the heart monitor. House and Cane health still count for the score and still flash the screen.
+- **House + you (2026-10-18, now hidden):** the vitals panel led with a big HOUSE bar (percent; blue, then amber at 60% or less, then red at 30% or less; the screen flashes amber when the house loses health) and a thin YOU bar for Cane's health underneath (06).
+- **Prompt text** under the crosshair has a black outline so it reads over bright walls and glows.
+- **Centre messages:** the 180 BPM freeze ("PRESS Q TO TAKE A DEEP BREATH", 05) and live flood water ("THE WATER IS LIVE. YOU CAN'T GO IN", 01).
 - **Crosshair and prompt:** a dot that turns amber on something usable, and a key cap "E" with the action ("HOLD" for hold actions). Missing items show in amber underneath ("Need: toolkit, planks"). A radial ring fills around the crosshair while holding.
 - **Carried items** (bottom centre): chips for pocket items (tape shows uses), plus an amber ARMS chip with a count (for example 4/8).
 - **Task panel** (top right): PHONE on Day 1 (battery %, NEXT TASK, hint). EMERGENCY HANDBOOK checklist on Days 2-3: green box = done, red = too late, plus "optional" tags.
@@ -47,6 +51,11 @@ Style: **emergency broadcast**. Dark translucent rounded panels and white **Barl
   - **How to play card:** after the Day 1 alert, before the clock starts, a card lists every key in four groups (MOVE, DO THINGS, GEAR, GAME) with key caps, plus a one-line summary of the goal. Space or LET'S GO starts Preparation. It's also on the main menu (HOW TO PLAY) and the pause menu (CONTROLS).
   - **First-time tips:** a key-cap card at mid-left, about 6.5 s each and one at a time, the first time each control matters: tap E, hold E, full arms (G), the phone (Tab), the handbook (Tab), the dark (F), a racing heart (Q), hurt (H), the storm arriving, and Esc. Each shows once per new game.
   - **Always on:** the bottom-right key strip, the E prompt under the crosshair, and the Q/H hints above the vitals.
+
+- **Playtest changes (2026-10-18):**
+  - The bottom item chips are gone; a single "HOLDING ..." label shows only what's in your arms.
+  - The task card is opaque with an amber frame that blinks hard for 3.5 s when a task arrives or its location appears, then pulses gently. It shows YOUR TASK / NOW, the task, and WHERE (or "Location in N s..."), with "It's glowing, even through walls."
+  - Pulsing amber rings mark the task's targets on screen.
 
 Still missing: real phone and book models (cubes for now), the illustrated category pages (Water, Windows, Power, First aid).
 

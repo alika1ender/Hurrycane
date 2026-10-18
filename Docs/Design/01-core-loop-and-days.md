@@ -4,7 +4,7 @@
 > **Code:** `PhaseTimer`, `DayConfig` (not built yet)
 
 ## Pitch (short)
-First-person survival game set inside one house, in the style of 60 Seconds. One hurricane hits over three days. Cane has a short, timed window each day to prepare the house, then rides out the storm, then repairs. Whatever is left unfixed carries into the next day. Total play time about 14 minutes.
+First-person survival game set inside one house, in the style of 60 Seconds. One hurricane hits over three days. Cane has a short, timed window each day to prepare the house, then rides out the storm, then repairs. Whatever is left unfixed carries into the next day. Total play time about 6 minutes (shortened 2026-10-18).
 
 ## Core loop (every day)
 1. Day starts (autosave snapshot taken when control is given).
@@ -25,10 +25,10 @@ Draft alert text: "EMERGENCY ALERT: Hurricane warning in effect for your area. L
 ## Days
 | | Day 1 · Tutorial | Day 2 · Blackout | Day 3 · Survive |
 |---|---|---|---|
-| Preparation Time | 01:30 | 02:30 | 03:00 |
-| Disaster Time | 01:00 | 01:45 | 02:30 |
-| After-Disaster Time | 00:30 | 00:45 | 00:30 |
-| Day total | 3:00 | 5:00 | 6:00 |
+| Preparation Time | 00:50 | 00:50 | 01:35 |
+| Disaster Time | 00:25 | 00:25 | 01:00 |
+| After-Disaster Time | 00:15 | 00:15 | 00:25 |
+| Day total | 1:30 | 1:30 | 3:00 |
 | New windows | 3 | 5 | 6 |
 | Storm | Outer rain bands | Landfall, power out | Back half, flooding |
 | Task source | Phone, one task and hint at a time | Handbook | Handbook |
@@ -67,8 +67,9 @@ Locked tasks show as greyed out and struck through on the handbook ("Too late").
 
 ### Day 3 flooding (stairs only, decided)
 - Water only enters the basement down the stairs from the stair hall. There are no basement windows and no ground-floor flood mesh beyond puddles.
-- **Start:** 40 s into Day 3 Disaster Time. Each unrepaired ground-floor breach (W01-W06, W13 or the front door) makes it start 10 s earlier, down to the moment Disaster Time begins.
-- **Rise:** the basement water level rises from 0 to 40 cm over 90 s, then stops.
+- **Start:** 20 s into Day 3 Disaster Time. Each unrepaired ground-floor breach (W01-W06, W13 or the front door) makes it start 6 s earlier, down to the moment Disaster Time begins.
+- **Rise:** the basement water level rises from 0 to 40 cm over 50 s, then stops (both shortened 2026-10-18 with the shorter day).
+- **Live water (built 2026-10-18):** while the main breaker (`Basement_FusePanel`, beside the basement stairs) is on, the flood water is electrified. Blue-white arcs crackle over it with a flickering blue light. It does no damage, but Cane can't step into it: he is put back where he last stood dry, with a "ZAP!" toast, the centre message "THE WATER IS LIVE. YOU CAN'T GO IN. Switch off the main breaker", and the breaker glowing through walls for 8 s. The breaker can be reached from the stairs (the stair rail no longer blocks aiming). If the water rises under him he can still walk out.
 - **Blocking:** towels and blankets at the top of the stairs (Prep task, 20 s) mean the flood never starts. Blocking during the flood (Disaster task, 38 s) stops the rise at the current level. Water already in the basement stays.
 - **Effects at 20 cm or more:** the safe room no longer lowers pulse; standing in the water costs 0.5 health per second; walking speed in the water is 70%.
 - Supplies on the low basement shelves are not destroyed (keeps scoring simple).

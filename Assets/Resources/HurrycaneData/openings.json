@@ -5,9 +5,9 @@
     "repairWindowSeconds": 5.3,
     "repairDoorSeconds": 5.3,
     "upgradeWindowSeconds": 3.3,
-    "tapeUsesPerRoll": 4,
+    "tapeUsesPerRoll": 10,
     "doorRepairTapeUses": 2,
-    "plankSetsInStack": 18,
+    "plankSetsInStack": 32,
     "warningSeconds": 3,
     "openings": [
         { "id": "W01", "collider": "COL_Window_Glass",      "room": "Living room, south",          "firstDay": 1 },

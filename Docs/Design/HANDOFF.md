@@ -14,6 +14,29 @@ Template:
 
 ---
 
+## 2026-10-18 04:05 · Claude (for Ali)
+**Worked on:** `TaskEngine` (`NeedItem`: the items a job needs glow with it), `days.json` (`locationDelaySeconds` 9). Doc 04.
+**Done and tested in Play mode:** "Reinforce the living room windows" without tools targets both windows, both toolkits and the plank stack (`WalkthroughPreviews/ui/37_tools_glow.png`).
+**Next:** Ali's hands-on playtest. **Blocked / questions:** nothing committed yet.
+
+## 2026-10-18 03:45 · Claude (for Ali)
+**Worked on:** `GameUI` (health bars hidden, smaller vitals panel), `HouseHealth` (`gameOverAtZero` off), `days.json` (days 1:30 / 1:30 / 3:00, `locationDelaySeconds` 11, flood starts at 20 s and rises over 50 s, Day 1 crack at 8 s), `tasks.json` (lists cut to fit, workbench hints). Docs 01, 04, 06, 07.
+**Done and tested in Play mode:** prep timers 50/50/95 s, the Day 3 reveal counts down from 11 s, the HUD has no bars (`WalkthroughPreviews/ui/36_no_bars.png`), the toolkit is on the bench top (the hint now says so).
+**Next:** time a real run of each day by hand. Day 2's 50 s prep with 6 tasks in the dark is the tightest.
+**Blocked / questions:** nothing committed yet.
+
+## 2026-10-18 03:15 · Claude (for Ali)
+**Worked on:** Ali's next playtest list. Code: new `Systems/HouseHealth.cs`; `PulseSystem` (180 BPM freeze), `FloodSystem` (live water blocks entry instead of hurting, arcs, no wading damage), `PowerSystem` (room lamps aimed at the floor), `MapExplorer` (the basement stair rail is ignored when aiming), `TaskEngine` (the breaker glows while live water blocks Cane), `GameUI` (HOUSE/YOU bars, prompt outline, centre messages), `Score` (House health 150 + Your health 150), `DayDirector.GameOver(reason)`, `DayConfig`/`days.json` (`house` block, `freezeBpm`/`freezeSeconds`/`freezeRearm`). Docs 01, 05, 06, 07, 08.
+**Done and tested in Play mode** (captures `WalkthroughPreviews/ui/30`-`35`): even room lighting; the HOUSE bar drops to 84% with two broken windows; the Day 3 freeze triggers at 180 with the centre message; stepping into live water puts Cane back, shows the message and targets the breaker; the breaker can be used from the stairs; arcs are visible. The door/drawer test passes 31/31.
+**Balance reasoning:** the house bar makes repairs during and after the storm pay off visibly, and Day 3's "house at 0%" loss needs about 8 broken windows on top of the broken door, a full flood and puddles, so it punishes skipping preparation, not bad luck. Live water is a gate (do the breaker task) rather than a damage trap.
+**Next:** a hands-on playtest of Day 3: is the freeze reachable often enough, does the house loss threshold feel fair, and are the arcs readable with the flashlight. `FloodSettings.damagePerSecond`/`shockDamage` are now unused.
+**Blocked / questions:** none. Nothing committed yet (Ali wants to play first); the 02:20 batch is also uncommitted.
+
+## 2026-10-18 02:20 · Claude (for Ali)
+**Worked on:** Ali's playtest requests. Code: `TaskEngine` (one task at a time, urgent interrupts, the supply-box override, location delay, targets), new `TaskGlow` + `Resources/TaskGlow.shader`, `PickupHighlight` (shinier), `GameUI` (single-task card with a blinking frame, beacons, the holding label, the critical monitor), `PulseSystem` (critical: slower and blur), `MapExplorer.pulseSpeedFactor`, `GameplaySetup` (batteries hidden), `BreakableOpening` (the "Reinforce" prompt). Data: `tasks.json` (reinforce tasks split by room, battery tasks changed), `days.json` (`locationDelaySeconds` 0/7/7, no flashlight drain, `criticalBpm`), `openings.json` (10 tape uses per roll, 32 planks). Updated 04, 05 and 07.
+**Done and tested in Play mode** (captures `WalkthroughPreviews/ui/25`-`28`): Day 1 shows the task and location at once; Day 2 reveals the location after 7 s; targets glow through walls with an on-screen ring; carrying water switches to "put it in the supply box" with the box glowing; critical pulse at 175 BPM slows to 65%, blurs and blinks the monitor. The door/drawer test passes 31/31.
+**Next:** another hands-on playtest. Check whether one task at a time is too slow on Day 3 (11 tasks), and whether 145 BPM for critical feels right.
+
 ## 2026-10-18 00:40 · Claude (for krx40)
 **Worked on:** a 17-item playtest list. Code: `Openings/OpeningVisuals.cs`, `Openings/PlankStack.cs`, `Interactions/PickupHighlight.cs` (new) + `Resources/PickupOutline.shader` (new), `Interactions/GameplaySetup.cs`, `GeneratedProps.cs`, `MapExplorer.cs`, `Pickup.cs`, `PlayerInventory.cs` (new `ItemKind.Phone`, appended), `Systems/FloodSystem.cs`, `PowerSystem.cs`, `PulseSystem.cs`, `PuddleSystem.cs`, `WindowWeather.cs`, `CutsceneSystem.cs`, `DayDirector.cs`, `HandheldSystem.cs`, `DayConfig.cs`, `UI/GameUI.cs`, `Audio/AudioDirector.cs` (one call per thunder clap); data in `openings.json`, `tasks.json`, `days.json`.
 **Done:**

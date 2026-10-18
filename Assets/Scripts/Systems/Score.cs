@@ -4,9 +4,10 @@ using UnityEngine;
 /// <summary>The end-of-game breakdown (Docs/Design/08). Each part is already in points.</summary>
 public sealed class ScoreReport
 {
-    public int health, openings, reinforcements, supplies, tasks, repairs, total;
+    public int health, house, openings, reinforcements, supplies, tasks, repairs, total;
     public string rank, line, fact;
     // Raw numbers behind the points, for the score screen.
+    public float houseValue;
     public int intact, openingCount, reinforcedCount, supplyCount, tasksDone, tasksRequired, damagedNow, hits;
 }
 
@@ -42,13 +43,17 @@ public static class Score
         report.damagedNow = openings.Count(o => o.State == OpeningState.Cracked || o.State == OpeningState.Broken);
         report.hits = session.hits;
 
-        report.health = Mathf.RoundToInt(300 * Mathf.Clamp01(session.health / 100f));
+        // Health is split: the house (150) and Cane himself (150).
+        report.health = Mathf.RoundToInt(150 * Mathf.Clamp01(session.health / 100f));
+        var houseHealth = session.GetComponent<HouseHealth>();
+        report.houseValue = houseHealth ? houseHealth.Value : 100;
+        report.house = Mathf.RoundToInt(150 * Mathf.Clamp01(report.houseValue / 100f));
         report.openings = Mathf.RoundToInt(250f * report.intact / Mathf.Max(1, report.openingCount));
         report.reinforcements = Mathf.RoundToInt(150f * report.reinforcedCount / 15f);
         report.supplies = Mathf.RoundToInt(100 * Mathf.Clamp01(report.supplyCount / (float)SuppliesForFullPoints));
         report.tasks = Mathf.RoundToInt(100 * Mathf.Clamp01(report.tasksDone / (float)Mathf.Max(1, report.tasksRequired)));
         report.repairs = report.hits == 0 ? 100 : Mathf.RoundToInt(100 * Mathf.Clamp01(1 - report.damagedNow / (float)report.hits));
-        report.total = report.health + report.openings + report.reinforcements + report.supplies + report.tasks + report.repairs;
+        report.total = report.health + report.house + report.openings + report.reinforcements + report.supplies + report.tasks + report.repairs;
 
         if (report.total >= 900) { report.rank = "PREPARED"; report.line = "The house held. So did you."; }
         else if (report.total >= 700) { report.rank = "SURVIVOR"; report.line = "Battered, but you made it through."; }

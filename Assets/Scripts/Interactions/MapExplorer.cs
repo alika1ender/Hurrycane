@@ -22,6 +22,8 @@ public sealed class MapExplorer : MonoBehaviour
     public float pulseHoldFactor = 1;
     /// <summary>Walking speed factor, e.g. 0.7 while wading through flood water.</summary>
     public float speedFactor = 1;
+    /// <summary>Walking speed factor from a critical heart rate (PulseSystem).</summary>
+    public float pulseSpeedFactor = 1;
     /// <summary>Walking speed factor from puddles (0.6 inside one).</summary>
     public float puddleSpeedFactor = 1;
     /// <summary>Set while the phone or handbook is raised: walking is fine, using things is not (Docs/Design/07).</summary>
@@ -85,7 +87,7 @@ public sealed class MapExplorer : MonoBehaviour
         if (controller.isGrounded && verticalSpeed < 0) verticalSpeed = -2;
         verticalSpeed += Physics.gravity.y * Time.deltaTime;
         Sprinting = keyboard.leftShiftKey.isPressed && axis.sqrMagnitude > .01f; // carrying no longer stops running
-        float speed = (Sprinting ? 4.2f : 2.6f) * Mathf.Min(speedFactor, puddleSpeedFactor);
+        float speed = (Sprinting ? 4.2f : 2.6f) * Mathf.Min(speedFactor, puddleSpeedFactor) * pulseSpeedFactor;
         controller.Move(((transform.right * axis.x + transform.forward * axis.y) * speed + Vector3.up * verticalSpeed) * Time.deltaTime);
         if (transform.position.y < -8) Respawn();
         if (movementLocked || interactLocked) { focus = null; ReleaseHold(); return; }
@@ -136,6 +138,10 @@ public sealed class MapExplorer : MonoBehaviour
     {
         var ray = new Ray(viewCamera.transform.position, viewCamera.transform.forward);
         int count = Physics.RaycastNonAlloc(ray, hits, reach, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        // The basement stair guard rail is see-through for aiming, so the main breaker behind it can be reached from the stairs.
+        int kept = 0;
+        for (int i = 0; i < count; i++) if (!hits[i].collider.name.StartsWith("COL_Basement_Stair_Guard")) hits[kept++] = hits[i];
+        count = kept;
         if (count == 0) return null;
         Array.Sort(hits, 0, count, System.Collections.Generic.Comparer<RaycastHit>.Create((a, b) => a.distance.CompareTo(b.distance)));
         var first = hits[0].collider.GetComponentInParent<IInteractable>();

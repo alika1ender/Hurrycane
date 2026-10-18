@@ -32,6 +32,12 @@ Pulse drifts back to the current resting level at about 3 BPM per second. No tie
 - **Not built yet:** thunder and Broski-text effects (no thunder or text system exists yet).
 - **Untested by hand:** Q breathing and H first aid were checked only for logic, not with a real keyboard.
 
+## Critical heart rate (built 2026-10-18)
+At `criticalBpm` (145, so in practice only on Day 3) and above: walking slows to `criticalSpeedFactor` (65%), vision blurs (a Gaussian depth of field fading in), and the heart monitor blinks red with "CRITICAL". Values are in the `days.json` `pulse` block.
+
+## Freeze at 180 BPM (built 2026-10-18)
+At `freezeBpm` (180, Day 3's ceiling) Cane locks up for `freezeSeconds` (5 s). He can't walk or use anything, and the middle of the screen says "YOUR HEART IS AT 180 BPM. YOU CAN'T MOVE. PRESS Q TO TAKE A DEEP BREATH". Q works during the freeze even on cooldown. The freeze arms again only once the pulse drops below 165 (`freezeRearm` 15), so it can't chain.
+
 ## Decisions (proposed 2026-10-17, change freely)
 - **Storm level** is already built into the resting level per phase (the table above). No separate modifier.
 - **Darkness** (Day 2-3, in a room with no light and the flashlight off): resting level +10.

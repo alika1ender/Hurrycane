@@ -7,7 +7,8 @@ After Day 3's After-Disaster timer: ending cutscene (the city in ruins seen from
 
 | Part | Points | Measures |
 |---|---|---|
-| Health remaining | 300 | Health percent at the end of Day 3 |
+| House health | 150 | House health percent at the end of Day 3 (06; added 2026-10-18) |
+| Your health | 150 | Cane's health percent at the end of Day 3 |
 | Openings still intact | 250 | Share of the 14 windows and the door unbroken at the end |
 | Reinforcements made | 150 | Total across the three days (maximum 15 openings) |
 | Supplies left | 100 | Water, food, medical items |

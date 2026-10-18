@@ -57,9 +57,32 @@ public sealed class PowerSystem : MonoBehaviour
         // Room fixtures go out; the "Window"/daylight fills stay (they stand in for daylight through the glass).
         roomLights.AddRange(FindObjectsByType<Light>(FindObjectsInactive.Include)
             .Where(l => l != flashlight && (l.name.StartsWith("Light_") || l.name.StartsWith("BF_Light") || l.name.StartsWith("BasementLight"))));
+        foreach (var light in roomLights.ToArray()) roomLights.Add(AimAtFloor(light));
         foreach (var light in FindObjectsByType<Light>(FindObjectsInactive.Include))
             if (light != flashlight && light.name.Contains("Window")) { windowLights.Add(light); windowColors.Add(light.color); }
         ambientSky = RenderSettings.ambientSkyColor; ambientEquator = RenderSettings.ambientEquatorColor; ambientGround = RenderSettings.ambientGroundColor;
+    }
+
+    /// <summary>
+    /// The ceiling lamps were point lights 30 cm under the ceiling: the ceiling glared and the floor stayed dim. Each one
+    /// becomes a wide spot aimed down (lights the floor like a real fixture) and gets a soft point fill for the ceiling
+    /// and walls, returned so the blackout switches it too.
+    /// </summary>
+    static Light AimAtFloor(Light light)
+    {
+        float original = light.intensity, range = light.range;
+        var fill = new GameObject(light.name + "_Fill").AddComponent<Light>();
+        fill.transform.SetParent(light.transform, false);
+        fill.type = LightType.Point; fill.color = light.color; fill.shadows = LightShadows.None;
+        fill.intensity = original * .3f; fill.range = range;
+        fill.enabled = light.enabled;
+
+        light.type = LightType.Spot;
+        light.transform.rotation = Quaternion.LookRotation(Vector3.down, Vector3.forward);
+        light.spotAngle = 150; light.innerSpotAngle = 70;
+        light.intensity = original * 3f;
+        light.range = range * 1.5f;
+        return fill;
     }
 
     // The window fill lamps are cool blue. With the room lights out they were the only light left, so the whole house

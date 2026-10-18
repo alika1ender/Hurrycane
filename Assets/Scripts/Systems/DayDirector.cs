@@ -27,6 +27,8 @@ public sealed class DayDirector : MonoBehaviour
     float phaseClock;
 
     public DayPhase Phase { get; private set; } = DayPhase.Menu;
+    /// <summary>Why Day 3 was lost (Cane's health or the house), for the game over screen.</summary>
+    public string GameOverReason { get; private set; } = "";
     public float TimeLeft { get; private set; }
     public bool AlertRead { get; private set; }
     /// <summary>Text for the night card / ending card.</summary>
@@ -246,9 +248,10 @@ public sealed class DayDirector : MonoBehaviour
     }
 
     /// <summary>Day 3 at zero health: the restart menu, no score (Docs/Design/06).</summary>
-    public void GameOver()
+    public void GameOver(string reason = null)
     {
         if (Phase == DayPhase.GameOver) return;
+        GameOverReason = reason ?? "Your health ran out in the storm.";
         schedule.Clear();
         CancelStrikes();
         SetControl(false);

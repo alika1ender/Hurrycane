@@ -28,18 +28,23 @@
         "unfinishedTaskRiseMax": 12,
         "sprintRisePerSecond": 6,
         "panicTaskPenalty": 0.15,
-        "peakTaskPenalty": 0.30
+        "peakTaskPenalty": 0.30,
+        "criticalBpm": 145,
+        "criticalSpeedFactor": 0.65,
+        "freezeBpm": 180,
+        "freezeSeconds": 5,
+        "freezeRearm": 15
     },
     "power": {
         "ambientFactor": 0.3,
-        "flashlightDrainPerSecond": 0.55,
+        "flashlightDrainPerSecond": 0,
         "darknessRestingRise": 10,
         "flashlightRestingRise": 6
     },
     "flood": {
-        "startSeconds": 40,
-        "earlierPerBreachSeconds": 10,
-        "riseSeconds": 90,
+        "startSeconds": 20,
+        "earlierPerBreachSeconds": 6,
+        "riseSeconds": 50,
         "maxDepth": 0.4,
         "harmfulDepth": 0.2,
         "damagePerSecond": 0.5,
@@ -48,6 +53,15 @@
         "blockHoldSeconds": 4,
         "shockDamage": 10,
         "shockIntervalSeconds": 2
+    },
+    "house": {
+        "brokenWindow": 8,
+        "brokenDoor": 15,
+        "crackedWindow": 3,
+        "crackedDoor": 5,
+        "floodMax": 15,
+        "puddle": 1,
+        "puddleMax": 8
     },
     "puddles": {
         "radius": 1.5,
@@ -70,20 +84,20 @@
     "days": [
         {
             "day": 1, "title": "Tutorial",
-            "prepSeconds": 90, "disasterSeconds": 60, "afterSeconds": 30,
+            "prepSeconds": 50, "disasterSeconds": 25, "afterSeconds": 15,
             "taskSource": "phone", "alertFirst": true, "prepBreaks": false,
             "window": { "unreinforced": 0.30, "repaired": 0.15, "reinforced": 0.0 },
             "door":   { "unreinforced": 0.50, "repaired": 0.30, "reinforced": 0.0 },
             "glassDamage": 0, "doorDamage": 0,
-            "scripted": [ { "opening": "W01", "atSeconds": 20, "result": "Cracked" } ],
+            "scripted": [ { "opening": "W01", "atSeconds": 8, "result": "Cracked" } ],
             "restingPrep": 72, "restingDisaster": 80, "restingAfter": 72, "pulseCeiling": 95,
             "windowBreakSpike": 5, "doorBreakSpike": 8, "pulseVisuals": false, "pulsePenalties": false, "sprintRaisesPulse": false,
             "faintIsGameOver": false,
-            "powerOut": false, "floods": false
+            "locationDelaySeconds": 0, "powerOut": false, "floods": false
         },
         {
             "day": 2, "title": "Blackout",
-            "prepSeconds": 150, "disasterSeconds": 105, "afterSeconds": 45,
+            "prepSeconds": 50, "disasterSeconds": 25, "afterSeconds": 15,
             "taskSource": "handbook", "alertFirst": false, "prepBreaks": true,
             "window": { "unreinforced": 0.50, "repaired": 0.15, "reinforced": 0.10 },
             "door":   { "unreinforced": 0.70, "repaired": 0.30, "reinforced": 0.20 },
@@ -92,11 +106,11 @@
             "restingPrep": 80, "restingDisaster": 100, "restingAfter": 80, "pulseCeiling": 135,
             "windowBreakSpike": 10, "doorBreakSpike": 15, "pulseVisuals": true, "pulsePenalties": false, "sprintRaisesPulse": false,
             "faintIsGameOver": false,
-            "powerOut": true, "floods": false
+            "locationDelaySeconds": 9, "powerOut": true, "floods": false
         },
         {
             "day": 3, "title": "Survive",
-            "prepSeconds": 180, "disasterSeconds": 150, "afterSeconds": 30,
+            "prepSeconds": 95, "disasterSeconds": 60, "afterSeconds": 25,
             "taskSource": "handbook", "alertFirst": false, "prepBreaks": true,
             "window": { "unreinforced": 0.80, "repaired": 0.15, "reinforced": 0.10 },
             "door":   { "unreinforced": 0.95, "repaired": 0.30, "reinforced": 0.20 },
@@ -105,7 +119,7 @@
             "restingPrep": 95, "restingDisaster": 120, "restingAfter": 90, "pulseCeiling": 180,
             "windowBreakSpike": 18, "doorBreakSpike": 25, "pulseVisuals": true, "pulsePenalties": true, "sprintRaisesPulse": true,
             "faintIsGameOver": true,
-            "powerOut": true, "floods": true
+            "locationDelaySeconds": 9, "powerOut": true, "floods": true
         }
     ]
 }

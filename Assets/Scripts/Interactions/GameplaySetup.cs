@@ -87,6 +87,8 @@ public static class GameplaySetup
                 if (!t.name.StartsWith("PICKUP_") || t.name.EndsWith("_Visual")) continue;
                 var kind = Pickup.KindFromName(t.name);
                 if (kind == null) { Debug.LogWarning("GameplaySetup: unknown pickup type for " + t.name); continue; }
+                // Batteries were cut (the flashlight no longer runs down): hide the scene's battery props.
+                if (kind == ItemKind.Batteries) { t.gameObject.SetActive(false); continue; }
                 if (kind == ItemKind.Radio) { if (!t.GetComponent<RadioSwitch>()) t.gameObject.AddComponent<RadioSwitch>(); }
                 else if (!t.GetComponent<Pickup>())
                     t.gameObject.AddComponent<Pickup>().Configure(kind.Value, kind == ItemKind.RepairTape ? config.tapeUsesPerRoll : kind == ItemKind.FirstAid ? FirstAidUses : 0);
@@ -125,10 +127,12 @@ public static class GameplaySetup
             var director = host.GetComponent<DayDirector>();
             host.AddComponent<FloodSystem>().Bind(explorer, StairBarrier.Create(explorer, director.Config.flood));
             host.AddComponent<PuddleSystem>().Bind(explorer, DoorGap.Create(explorer, director.Config.doorGap));
+            host.AddComponent<HouseHealth>();
             host.AddComponent<HandheldSystem>().Bind(explorer);
             host.AddComponent<CutsceneSystem>().Bind(explorer);
             host.AddComponent<WindowWeather>();
             host.AddComponent<PickupHighlight>().Bind(explorer);
+            host.AddComponent<TaskGlow>().Bind(explorer);
             newSession.Begin(explorer, config.startDay);
         }
     }

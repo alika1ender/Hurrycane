@@ -22,9 +22,18 @@ public sealed class PulseSystem : MonoBehaviour
     float breathHeld, cooldownUntil;
     Vignette vignette;
     ColorAdjustments color;
+    DepthOfField blur;
+    float blurAmount;
     Vector3 cameraHome;
 
     public float Bpm => session.pulse;
+    /// <summary>Critical heart rate (Day 3 only in practice): slower, blurry, the monitor blinks.</summary>
+    /// <summary>Frozen in place by a 180 BPM heart rate (5 s).</summary>
+    public bool Frozen => Time.time < frozenUntil;
+    public float FrozenLeft => Mathf.Max(0, frozenUntil - Time.time);
+    float frozenUntil;
+    bool freezeArmed = true, breathLock;
+    public bool Critical => Active && Bpm >= settings.criticalBpm;
     public PulseZone Zone => Bpm >= 160 ? PulseZone.Peak : Bpm >= 130 ? PulseZone.Panic : Bpm >= 100 ? PulseZone.Tense : PulseZone.Calm;
     public bool Breathing => breathHeld > 0;
     /// <summary>0..1 while winding up a breath, 1 while it is lowering the pulse.</summary>
@@ -62,6 +71,11 @@ public sealed class PulseSystem : MonoBehaviour
         var profile = ScriptableObject.CreateInstance<VolumeProfile>();
         vignette = profile.Add<Vignette>(true); vignette.intensity.Override(0); vignette.smoothness.Override(.45f); vignette.color.Override(Color.black);
         color = profile.Add<ColorAdjustments>(true); color.saturation.Override(0);
+        // Critical heart rate blurs vision: a Gaussian depth of field that starts right in front of the eyes.
+        blur = profile.Add<DepthOfField>(true);
+        blur.mode.Override(DepthOfFieldMode.Gaussian);
+        blur.gaussianStart.Override(12f); blur.gaussianEnd.Override(20f); blur.gaussianMaxRadius.Override(.5f); blur.highQualitySampling.Override(true);
+        blur.active = false;
         volume.sharedProfile = profile;
     }
 
@@ -92,9 +106,9 @@ public sealed class PulseSystem : MonoBehaviour
     void Update()
     {
         if (!player) return;
-        if (!Active) { ApplyEffects(PulseZone.Calm, false); player.movementLocked = false; breathHeld = 0; return; }
+        if (!Active) { ApplyEffects(PulseZone.Calm, false); player.movementLocked = false; player.pulseSpeedFactor = 1; breathHeld = 0; breathLock = false; frozenUntil = 0; freezeArmed = true; return; }
         var today = director.Today;
-        float dt = Time.deltaTime, pulse = session.pulse;
+        float dt = Time.deltaTime, pulse = session.pulse, peak = pulse; // peak: spikes land between frames, drift would hide them
         var power = GetComponent<PowerSystem>();
         var flood = GetComponent<FloodSystem>();
         float resting = today.Resting(director.Phase) + (power ? power.RestingRise : 0);
@@ -106,7 +120,13 @@ public sealed class PulseSystem : MonoBehaviour
         pulse -= Breathe(dt);
         session.pulse = Mathf.Clamp(pulse, 60, today.pulseCeiling);
 
+        // 180 BPM: Cane locks up for a few seconds ("Press Q to take a deep breath"). Re-arms once the pulse drops.
+        if (freezeArmed && Mathf.Max(peak, session.pulse) >= settings.freezeBpm) { frozenUntil = Time.time + settings.freezeSeconds; freezeArmed = false; }
+        if (!freezeArmed && !Frozen && session.pulse < settings.freezeBpm - settings.freezeRearm) freezeArmed = true;
+        player.movementLocked = breathLock || Frozen;
+
         var zone = Zone;
+        player.pulseSpeedFactor = Critical ? settings.criticalSpeedFactor : 1;
         player.pulseHoldFactor = !today.pulsePenalties ? 1 : zone == PulseZone.Peak ? 1 + settings.peakTaskPenalty : zone == PulseZone.Panic ? 1 + settings.panicTaskPenalty : 1;
         ApplyEffects(zone, today.pulseVisuals);
     }
@@ -132,21 +152,22 @@ public sealed class PulseSystem : MonoBehaviour
     float Breathe(float dt)
     {
         var keyboard = Keyboard.current;
-        bool canBreathe = player.enabled && Cursor.lockState == CursorLockMode.Locked && Time.time >= cooldownUntil;
+        // While frozen at 180 BPM the screen says "press Q", so breathing ignores the cooldown then.
+        bool canBreathe = player.enabled && Cursor.lockState == CursorLockMode.Locked && (Time.time >= cooldownUntil || Frozen);
         bool held = canBreathe && keyboard != null && keyboard.qKey.isPressed;
         if (!held)
         {
             if (breathHeld > settings.breathWindupSeconds) cooldownUntil = Time.time + settings.breathCooldownSeconds;
-            if (breathHeld > 0) player.movementLocked = false;
+            if (breathHeld > 0) breathLock = false;
             breathHeld = 0;
             return 0;
         }
         breathHeld += dt;
-        player.movementLocked = true;
+        breathLock = true;
         if (breathHeld >= settings.breathWindupSeconds + settings.breathMaxSeconds)
         {
             cooldownUntil = Time.time + settings.breathCooldownSeconds;
-            breathHeld = 0; player.movementLocked = false;
+            breathHeld = 0; breathLock = false;
             return 0;
         }
         return breathHeld > settings.breathWindupSeconds ? settings.breathDropPerSecond * dt : 0;
@@ -159,6 +180,13 @@ public sealed class PulseSystem : MonoBehaviour
         float targetSaturation = visuals && zone == PulseZone.Peak ? -55 : 0;
         vignette.intensity.value = Mathf.MoveTowards(vignette.intensity.value, targetVignette, Time.unscaledDeltaTime * .5f);
         color.saturation.value = Mathf.MoveTowards(color.saturation.value, targetSaturation, Time.unscaledDeltaTime * 60);
+        // Fade the blur in from far away to right in front of the eyes. (URP clamps the blur radius to at least 0.5,
+        // so "no blur" has to switch the effect off rather than set the radius to 0.)
+        blurAmount = Mathf.MoveTowards(blurAmount, Critical ? 1 : 0, Time.unscaledDeltaTime * .8f);
+        blur.active = blurAmount > .01f;
+        blur.gaussianStart.value = Mathf.Lerp(12f, .2f, blurAmount);
+        blur.gaussianEnd.value = Mathf.Lerp(20f, 3f, blurAmount);
+        blur.gaussianMaxRadius.value = Mathf.Lerp(.5f, 1.5f, blurAmount);
         float shake = !visuals || Time.timeScale == 0 ? 0 : zone == PulseZone.Peak ? .007f : zone == PulseZone.Panic ? .0035f : 0;
         player.viewCamera.transform.localPosition = cameraHome + (shake > 0 ? Random.insideUnitSphere * shake : Vector3.zero);
     }
