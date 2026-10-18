@@ -459,3 +459,9 @@ SUPPLY STORAGE  /  DOWN => MALZEME DEPOSU  /  AŞAĞI
 MAIN MENU => ANA MENÜ
 EXIT GAME => OYUNDAN ÇIK
 Esc  resume. Main menu keeps your day-start save. => Esc ile devam et. Ana menüye dönüşte gün başı kaydın korunur.
+
+A THREE-DAY SURVIVAL STORY => ÜÇ GÜNLÜK BİR HAYATTA KALMA HİKÂYESİ
+01  /  PREPARE => 01  /  HAZIRLAN
+02  /  ENDURE => 02  /  DAYAN
+03  /  SURVIVE => 03  /  HAYATTA KAL
+WASD  move    E  use    Tab  phone    Esc  pause => WASD  hareket    E  kullan    Tab  telefon    Esc  duraklat

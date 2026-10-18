@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -470,28 +470,57 @@ public sealed class GameUI : MonoBehaviour
     Text captionText, skipHint;
     Image sirenRed, cutFade;
 
+    static readonly Color MenuInk = new Color(.045f, .105f, .12f, .96f);
+    static readonly Color MenuPaper = new Color(.95f, .91f, .79f);
+    static readonly Color MenuMuted = new Color(.59f, .70f, .68f);
+
+    static FacetedPanel MenuFacet(Transform parent, string name, Color color, float corner = 16)
+    {
+        var graphic = UiKit.Node(name, parent).gameObject.AddComponent<FacetedPanel>();
+        graphic.color = color; graphic.corner = corner; graphic.raycastTarget = false;
+        return graphic;
+    }
+
     void BuildMenu()
     {
-        var shade = UiKit.Panel(transform, "Menu", new Color(.02f, .03f, .05f, .55f), false);
+        var shade = UiKit.Panel(transform, "Menu", new Color(.025f, .065f, .08f, .24f), false);
         shade.rectTransform.Stretch(); shade.raycastTarget = true;
         menuOverlay = shade.gameObject;
-        var side = UiKit.Panel(shade.transform, "Side", new Color(.02f, .03f, .05f, .82f), false);
-        side.rectTransform.anchorMin = Vector2.zero; side.rectTransform.anchorMax = new Vector2(0, 1); side.rectTransform.pivot = new Vector2(0, .5f);
-        side.rectTransform.sizeDelta = new Vector2(720, 0); side.rectTransform.anchoredPosition = Vector2.zero;
-        var title = UiKit.Label(side.transform, "Title", UiKit.Bold, 150, UiKit.TextColor);
-        title.rectTransform.Place(new Vector2(0, 1), new Vector2(90, -150), new Vector2(620, 170));
+        var side = MenuFacet(shade.transform, "TitleCard", MenuInk, 32);
+        side.rectTransform.Place(new Vector2(0, .5f), new Vector2(72, 0), new Vector2(650, 900));
+        var edge = UiKit.Panel(side.transform, "AmberEdge", UiKit.Amber, false);
+        edge.rectTransform.Place(new Vector2(0, 1), new Vector2(48, -48), new Vector2(48, 5));
+        var eyebrow = UiKit.Label(side.transform, "Eyebrow", UiKit.SemiBold, 20, MenuMuted);
+        eyebrow.rectTransform.Place(new Vector2(0, 1), new Vector2(112, -36), new Vector2(380, 30));
+        eyebrow.text = "A THREE-DAY SURVIVAL STORY";
+        var title = UiKit.Label(side.transform, "Title", UiKit.Bold, 112, MenuPaper, TextAnchor.UpperLeft);
+        title.rectTransform.Place(new Vector2(0, 1), new Vector2(44, -142), new Vector2(570, 140));
         title.text = "HURRY<color=#F2A93B>CANE</color>";
         BuildTornado(side.transform);
-        var tagline = UiKit.Label(side.transform, "Tagline", UiKit.Medium, 34, UiKit.Dim, TextAnchor.UpperLeft, true);
-        tagline.rectTransform.Place(new Vector2(0, 1), new Vector2(96, -320), new Vector2(560, 90));
+        var tagline = UiKit.Label(side.transform, "Tagline", UiKit.Medium, 29, MenuMuted, TextAnchor.UpperLeft, true);
+        tagline.rectTransform.Place(new Vector2(0, 1), new Vector2(48, -268), new Vector2(535, 76));
         tagline.text = "One house. Three days. One hurricane.\nGet ready before it hits.";
-        menuButtons = UiKit.Node("Buttons", side.transform).Place(new Vector2(0, 1), new Vector2(96, -460), new Vector2(460, 0));
-        menuButtons.pivot = new Vector2(0, 1);
-        menuButtons.Layout<VerticalLayoutGroup>(0, 14, TextAnchor.UpperLeft);
+        menuButtons = UiKit.Node("Buttons", side.transform).Place(new Vector2(0, 1), new Vector2(48, -380), new Vector2(554, 0));
+        menuButtons.Layout<VerticalLayoutGroup>(0, 12, TextAnchor.UpperLeft);
         menuButtons.Fit(false, true);
-        var foot = UiKit.Label(side.transform, "Foot", UiKit.Medium, 22, new Color(1, 1, 1, .35f), TextAnchor.LowerLeft, true);
-        foot.rectTransform.Place(new Vector2(0, 0), new Vector2(96, 50), new Vector2(560, 60));
-        foot.text = "Game Jam build · WASD move · E use · Tab phone/handbook · Esc pause";
+        var rule = UiKit.Panel(side.transform, "FooterRule", new Color(.59f, .70f, .68f, .2f), false);
+        rule.rectTransform.Place(new Vector2(0, 0), new Vector2(48, 107), new Vector2(554, 1));
+        var foot = UiKit.Label(side.transform, "Foot", UiKit.Medium, 20, MenuMuted, TextAnchor.LowerLeft, true);
+        foot.rectTransform.Place(new Vector2(0, 0), new Vector2(48, 42), new Vector2(554, 48));
+        foot.text = "WASD  move    E  use    Tab  phone    Esc  pause";
+
+        // Three small facets echo the game's three days, without covering the house.
+        var chapters = UiKit.Node("Chapters", shade.transform).Place(new Vector2(1, 0), new Vector2(-72, 72), new Vector2(680, 112));
+        string[] captions = { "01  /  PREPARE", "02  /  ENDURE", "03  /  SURVIVE" };
+        for (int i = 0; i < 3; i++)
+        {
+            var tile = MenuFacet(chapters, "Day" + (i + 1), new Color(.045f, .105f, .12f, .84f), 12);
+            tile.rectTransform.Place(new Vector2(0, 0), new Vector2(i * 230, 0), new Vector2(220, 86));
+            var accent = UiKit.Panel(tile.transform, "Accent", i == 0 ? UiKit.Amber : MenuMuted, false);
+            accent.rectTransform.Place(new Vector2(0, 1), new Vector2(22, -18), new Vector2(28, 3));
+            var text = UiKit.Label(tile.transform, "Chapter", UiKit.SemiBold, 24, MenuPaper);
+            text.rectTransform.Stretch(22); text.text = captions[i];
+        }
         menuOverlay.SetActive(false);
     }
 
@@ -501,20 +530,20 @@ public sealed class GameUI : MonoBehaviour
     /// <summary>A small swaying tornado touching down on the "CANE" half of the title: stacked rounded bars, grey to amber.</summary>
     void BuildTornado(Transform side)
     {
-        var root = UiKit.Node("Tornado", side).Place(new Vector2(0, 1), new Vector2(440, -64), new Vector2(130, 118));
+        var root = UiKit.Node("Tornado", side).Place(new Vector2(0, 1), new Vector2(510, -82), new Vector2(82, 64));
         const int count = 8;
         for (int i = 0; i < count; i++)
         {
             float k = i / (count - 1f);
             var color = Color.Lerp(new Color(.72f, .75f, .8f, .9f), UiKit.Amber, k * k);
-            var band = UiKit.Panel(root, "Band" + i, color);
+            var band = UiKit.Panel(root, "Band" + i, color, false);
             band.pixelsPerUnitMultiplier = 2.6f; // smaller rounded corners so the thin bands stay pill-shaped
             var bar = band.rectTransform;
-            float width = Mathf.Lerp(124, 12, Mathf.Pow(k, .8f));
+            float width = Mathf.Lerp(72, 8, Mathf.Pow(k, .8f));
             bar.anchorMin = bar.anchorMax = new Vector2(.5f, 1); bar.pivot = new Vector2(.5f, 1);
-            bar.sizeDelta = new Vector2(width, 11);
+            bar.sizeDelta = new Vector2(width, 6);
             float home = Mathf.Lerp(-8, 10, k) * Mathf.Sin(k * 2.6f); // a slight S-curve
-            bar.anchoredPosition = new Vector2(home, -i * 14.5f);
+            bar.anchoredPosition = new Vector2(home, -i * 8f);
             tornadoBars.Add(bar); tornadoHome.Add(home);
         }
     }
@@ -531,21 +560,46 @@ public sealed class GameUI : MonoBehaviour
         }
     }
 
+    Button MenuButton(Transform parent, string name, string caption, UnityEngine.Events.UnityAction action, bool primary = false)
+    {
+        var face = MenuFacet(parent, name, Color.white, 12);
+        face.raycastTarget = true;
+        var button = face.gameObject.AddComponent<Button>();
+        button.targetGraphic = face;
+        var colors = button.colors;
+        colors.normalColor = primary ? UiKit.Amber : new Color(.10f, .19f, .21f);
+        colors.highlightedColor = primary ? new Color(1, .77f, .39f) : new Color(.17f, .30f, .31f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.pressedColor = primary ? new Color(.79f, .49f, .13f) : new Color(.07f, .14f, .16f);
+        colors.fadeDuration = .12f;
+        button.colors = colors;
+        button.onClick.AddListener(action);
+        var text = UiKit.Label(face.transform, "Label", UiKit.SemiBold, primary ? 32 : 27, primary ? MenuInk : MenuPaper);
+        text.rectTransform.Stretch(); text.rectTransform.offsetMin = new Vector2(24, 0); text.rectTransform.offsetMax = new Vector2(-54, 0);
+        text.text = caption;
+        var arrow = UiKit.Label(face.transform, "Arrow", UiKit.Medium, 30, primary ? MenuInk : MenuMuted, TextAnchor.MiddleRight);
+        arrow.rectTransform.Stretch(22); arrow.text = ">";
+        button.Size(-1, primary ? 76 : 60);
+        return button;
+    }
+
     void FillMenu()
     {
         foreach (Transform child in menuButtons) Destroy(child.gameObject);
         var saves = SaveSystem.All();
         if (saves.Count > 0)
         {
+            MenuButton(menuButtons, "Continue", "CONTINUE", GameSession.ContinueLatest, true);
             var last = saves[saves.Count - 1];
-            UiKit.Button(menuButtons, "Continue", "CONTINUE  <size=24><color=#9AA0AA>Day " + last.day + " · Health " + Mathf.RoundToInt(last.health) + "</color></size>",
-                GameSession.ContinueLatest, out _, 34).Size(-1, 72);
+            var save = UiKit.Label(menuButtons, "SaveInfo", UiKit.Medium, 21, MenuMuted);
+            save.text = "Day " + last.day + " · Health " + Mathf.RoundToInt(last.health);
+            save.Size(-1, 26);
         }
-        UiKit.Button(menuButtons, "NewGame", saves.Count > 0 ? "NEW GAME  <size=22><color=#9AA0AA>(replaces your saves)</color></size>" : "NEW GAME",
-            () => { if (GameSession.Instance) GameSession.Instance.StartNewGame(); }, out _, 34).Size(-1, 72);
-        UiKit.Button(menuButtons, "Controls", "HOW TO PLAY", OpenControlsFromMenu, out _, 30).Size(-1, 60);
-        UiKit.Button(menuButtons, "Settings", "SETTINGS", () => SettingsOverlay.Open(false), out _, 30).Size(-1, 60);
-        UiKit.Button(menuButtons, "Quit", "QUIT", Quit, out _, 30).Size(-1, 60);
+        MenuButton(menuButtons, "NewGame", saves.Count > 0 ? "NEW GAME  <size=18><color=#96B3AD>(replaces your saves)</color></size>" : "NEW GAME",
+            () => { if (GameSession.Instance) GameSession.Instance.StartNewGame(); }, saves.Count == 0);
+        MenuButton(menuButtons, "Controls", "HOW TO PLAY", OpenControlsFromMenu);
+        MenuButton(menuButtons, "Settings", "SETTINGS", () => SettingsOverlay.Open(false));
+        MenuButton(menuButtons, "Quit", "QUIT", Quit);
     }
 
     static void Quit()
