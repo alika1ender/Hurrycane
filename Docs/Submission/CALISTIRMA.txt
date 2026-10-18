@@ -21,4 +21,6 @@ Donanım: ölçülmüş asgari donanım gereksinimi henüz belirlenmedi. Son bui
 Kaynak kod: https://github.com/alika1ender/Hurrycane
 Krediler ve lisanslar: CREDITS.txt ve beraberindeki LICENSES klasörü.
 
-Teslim derlemesi: Windows x86-64, Mono, release (Development kapalı). Unity build raporu: 0 hata, 0 uyarı. Tek sahne: HouseMap.
+Teslim derlemesi: Windows x86-64, Mono, release (Development kapalı). Güncel Unity build raporu: 0 hata, 2 eski-API uyarısı. Tek sahne: HouseMap.
+
+Güncel sürüm: 061d733. İlk veya ikinci günde o gün hiçbir oyun görevi tamamlanmazsa gün sonunda başarısız son açılır; sonraki güne geçilmez.

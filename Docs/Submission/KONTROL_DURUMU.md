@@ -26,3 +26,6 @@ Son yeni teslim kaydı: 18 Ekim 2026 18.00 (Türkiye/Kuzey Kıbrıs). Takım eri
 - Submission/TESLIM_EDILECEK/Hurrycane_Windows_x64.zip
 - Submission/TESLIM_EDILECEK/Hurrycane_Trailer.mp4
 Dosya SHA-256 değerleri ve boyutları Submission/DELIVERY_MANIFEST.json içinde tutulur. İlk build denemesi Input System assembly-yol hatasıyla durdu; script domain yenilemesinden sonra ikinci deneme başarılı oldu. Paket yalnız başarılı ikinci build'den hazırlandı. Mevcut oyuncu kayıtları testten önce yedeklendi ve sonrasında geri kopyalandı.
+
+## Güncel paket — 061d733
+Önceki 28eca29 Windows ZIP'i yenilendi. Yeni oyun kaynak commit'i 061d733e68fbfd3a56dad6c326d97f3ef045cebd. Day 1 ve Day 2'de sıfır iş ile gün sonunda başarısız son açıldığı, sonraki güne geçilmediği x60 Play Mode testinde ayrı ayrı doğrulandı. Temiz kopyada Windows x86-64 release build: 0 hata, 2 CS0618 (eski Unity API kullanımı) uyarısı. Paket CRC ve çıkarılan Assembly-CSharp.dll eşitliği kontrol edildi. Eski EXE yolu da yeni runtime dosyalarıyla güncellendi. Ayrıntılar UPDATE_061d733.md ve yerel Submission/DELIVERY_MANIFEST.json içinde.

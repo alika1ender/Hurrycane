@@ -12,3 +12,6 @@
 - Lisans belirsizlikleri KONTROL_DURUMU.md içinde açıkça kayıtlıdır.
 
 Kaynak sürümü paket içindeki BUILD_SOURCE.txt dosyasına yazılır. Bu build mevcut takip edilen oyun kodu ve Unity'nin build sırasında yeniden yazdığı render/proje ayarlarından alınmıştır. Trailer, recovery sahneleri ve yerel önizlemeler kaynak teslim commit'ine eklenmemiştir; derlemenin tek sahnesi HouseMap'tir.
+
+## Son güncelleme
+061d733 oyun kodundan temiz kopyada release build alındı; 0 hata ve AudioDirector.cs içindeki eski Unity API çağrıları için 2 CS0618 uyarısı. Yerel ZIP ve önceki doğrudan EXE yolu güncellendi. Önceki build ZIP'i Submission/PreviousReleases altında tutulur. Day 1/2 sıfır iş başarısızlığı testleri UPDATE_061d733.md içinde kayıtlıdır.
