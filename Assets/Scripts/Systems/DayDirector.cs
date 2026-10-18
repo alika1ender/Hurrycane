@@ -67,6 +67,7 @@ public sealed class DayDirector : MonoBehaviour
     {
         GeneratedProps.StageLivingRoomItems(); // restored saves skip DayStarting; older saves lack the book and phone
         AlertRead = false; ShowingControls = false;
+        Failed = false; BarelySurvived = false;
         if (Today.alertFirst)
         {
             SetControl(false);
@@ -205,17 +206,20 @@ public sealed class DayDirector : MonoBehaviour
     void StartNight()
     {
         CancelStrikes();
-        if (Today.faintIsGameOver && session.health <= 0) { GameOver(); return; }
         SetControl(false);
         var tasks = GetComponent<TaskEngine>();
         if (tasks)
         {
+            tasks.RefreshProgress();
             // Reactive tasks that never appeared (no flood, nothing broke) don't count against the player.
             session.tasksRequired += tasks.Today.Count(t => t.definition.required && t.appeared);
             session.tasksDone += tasks.Today.Count(t => t.definition.required && t.status == TaskStatus.Done);
+            BarelySurvived = tasks.DailyWorkDone > 0 && tasks.DailyWorkDone < tasks.DailyWorkAvailable * .5f;
+            if (tasks.DailyWorkDone == 0) { schedule.Clear(); EndGame(true); return; }
         }
+        if (Today.faintIsGameOver && session.health <= 0) { GameOver(); return; }
         if (session.CurrentDay >= 3) { EndGame(null); return; }
-        NightText = "Day " + session.CurrentDay + " survived\n\n" + OvernightRecovery();
+        NightText = "Day " + session.CurrentDay + (BarelySurvived ? " survived (barely)" : " survived") + "\n\n" + OvernightRecovery();
         Phase = DayPhase.Night;
         TimeLeft = config.nightSeconds;
         PhaseChanged?.Invoke(Phase);
@@ -223,6 +227,7 @@ public sealed class DayDirector : MonoBehaviour
 
     /// <summary>True when the final score was below failedScoreBelow: the losing cutscene and "FAILED TO SURVIVE" (08).</summary>
     public bool Failed { get; private set; }
+    public bool BarelySurvived { get; private set; }
 
     /// <summary>
     /// The end of Day 3: score it, then the ending walk to the window and the score screen (Docs/Design/08). A score below
@@ -231,12 +236,11 @@ public sealed class DayDirector : MonoBehaviour
     void EndGame(bool? forceFailed)
     {
         Score = global::Score.Compute(session, player);
-        if (forceFailed == true) Score.total = Mathf.Min(Score.total, config.failedScoreBelow - 1); // debug only
-        if (forceFailed == false) Score.total = Mathf.Max(Score.total, config.failedScoreBelow);    // debug only
-        Failed = Score.total < config.failedScoreBelow;
+        Failed = forceFailed ?? Score.total < config.failedScoreBelow;
         if (Failed) { Score.rank = "FAILED"; Score.line = "The house didn't hold, and neither did you."; } // never "you survived"
+        else if (BarelySurvived) { Score.rank = "SURVIVED (BARELY)"; Score.line = "You survived (barely). Next time, prepare earlier."; }
         NightText = Failed ? "Failed to survive\n\nThe house didn't hold. Neither did you."
-                           : "The storm has passed\n\nThe city outside is in ruins. Your house is still standing.";
+                           : (BarelySurvived ? "Survived (barely)" : "The storm has passed") + "\n\nThe city outside is in ruins. Your house is still standing.";
         var cutscene = GetComponent<CutsceneSystem>();
         if (!cutscene) { Phase = DayPhase.Ended; PhaseChanged?.Invoke(Phase); return; }
         Phase = DayPhase.Ending; PhaseChanged?.Invoke(Phase);

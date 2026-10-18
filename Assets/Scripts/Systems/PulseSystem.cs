@@ -112,7 +112,10 @@ public sealed class PulseSystem : MonoBehaviour
         var power = GetComponent<PowerSystem>();
         var flood = GetComponent<FloodSystem>();
         float resting = today.Resting(director.Phase) + (power ? power.RestingRise : 0);
-        pulse = Mathf.MoveTowards(pulse, resting, settings.driftPerSecond * dt);
+        bool disaster = director.Phase == DayPhase.Disaster;
+        float drift = settings.driftPerSecond * (disaster && pulse < resting ? settings.disasterRiseSpeedMultiplier : 1);
+        pulse = Mathf.MoveTowards(pulse, resting, drift * dt);
+        if (disaster) pulse += settings.disasterRisePerSecond * dt;
         if (director.TimeLeft <= 10) pulse += settings.lastSecondsRisePerSecond * dt;
         if (today.sprintRaisesPulse && player.Sprinting) pulse += settings.sprintRisePerSecond * dt;
         bool safeRoom = InShelter(player.transform.position, flood);

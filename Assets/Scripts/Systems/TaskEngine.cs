@@ -20,6 +20,7 @@ public sealed class TaskState
     public TaskDefinition definition;
     public TaskStatus status;
     public bool appeared;
+    public bool completedAtDayStart;
 }
 
 /// <summary>
@@ -48,6 +49,11 @@ public sealed class TaskEngine : MonoBehaviour
     DoorGap doorGap;
 
     public IReadOnlyList<TaskState> Today => today;
+    bool loadingDay;
+    // Intro acknowledgement and work already satisfied at dawn are not work done today.
+    public int DailyWorkDone => today.Count(t => t.definition.condition != "alert" && !t.completedAtDayStart && t.status == TaskStatus.Done);
+    public int DailyWorkAvailable => today.Count(t => t.definition.condition != "alert" && !t.completedAtDayStart && t.appeared);
+    public void RefreshProgress() => Evaluate();
 
     // ---- one task at a time (every day) ----
     TaskState assigned;
@@ -125,7 +131,9 @@ public sealed class TaskEngine : MonoBehaviour
         flood = GetComponent<FloodSystem>();
         puddles = GetComponent<PuddleSystem>();
         doorGap = FindAnyObjectByType<DoorGap>();
+        loadingDay = true;
         Evaluate();
+        loadingDay = false;
     }
 
     void Update()
@@ -237,6 +245,7 @@ public sealed class TaskEngine : MonoBehaviour
             if (Check(task.definition.condition))
             {
                 task.status = TaskStatus.Done;
+                task.completedAtDayStart = loadingDay;
                 TaskCompleted?.Invoke(task);
             }
             else task.status = TaskStatus.Open;

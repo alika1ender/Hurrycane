@@ -70,6 +70,7 @@ public sealed class DayConfig
 [Serializable]
 public sealed class PulseSettings
 {
+    public float disasterRisePerSecond = 4, disasterRiseSpeedMultiplier = 2;
     public float driftPerSecond = 3, nearbyRadius = 4, taskDoneDrop = 6, safeRoomDropPerSecond = 5, safeRoomBelowY = -1.5f;
     public float breathWindupSeconds = 4, breathMaxSeconds = 4, breathDropPerSecond = 8, breathCooldownSeconds = 20;
     public float lastSecondsRisePerSecond = 2, unfinishedTaskRise = 2, unfinishedTaskRiseMax = 12, sprintRisePerSecond = 6;
